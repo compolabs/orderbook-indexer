@@ -14,9 +14,11 @@ Within the repository, you can find the test file: `test-cases/data_encode.test.
 
 Follow these steps to clone the repository, set up your environment, build the contracts, and run the tests:
 
-1. **Clone the Repository**
+1. **Clone the Repository and install dependencies**
    ```
    git clone git@github.com:compolabs/orderbook-indexer-synchronizer.git
+   cd orderbook-indexer-synchronizer
+   npm i
    ```
 
 2. **Create a `.env` File**
@@ -41,7 +43,8 @@ Follow these steps to clone the repository, set up your environment, build the c
 ```
 git clone git@github.com:compolabs/orderbook-indexer-synchronizer.git
 cd orderbook-indexer-synchronizer
-echo "ALICE=<YOUR PRIVATE KEY>" >> .env
+npm i
+echo "ALICE=0x2548b84e9c1581e2c379b84393464e282b7751c2e15a231b0fe7fe3a708f8fd3" >> .env
 forc build
 npm run test
 ```
