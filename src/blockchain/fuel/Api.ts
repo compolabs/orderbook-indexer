@@ -35,9 +35,10 @@ export class Api {
         sellOrder: string,
         buyOrder: string,
         wallet: WalletLocked | WalletUnlocked,
+        contractAddress?: string
     ): Promise<string> => {
         const orderbookFactory = OrderbookAbi__factory.connect(
-            CONTRACT_ADDRESSES.spotMarket,
+            contractAddress ?? CONTRACT_ADDRESSES.spotMarket,
             wallet,
         );
 
@@ -56,9 +57,10 @@ export class Api {
         size: string,
         price: string,
         wallet: WalletLocked | WalletUnlocked,
-    ): Promise<string> => {
+        contractAddress?: string
+    ): Promise<{ txId: string, orderId: string }> => {
         const orderbookFactory = OrderbookAbi__factory.connect(
-            CONTRACT_ADDRESSES.spotMarket,
+            contractAddress ?? CONTRACT_ADDRESSES.spotMarket,
             wallet,
         );
 
@@ -88,6 +90,28 @@ export class Api {
         const {gasUsed: gasValue} = await tx.getTransactionCost();
         const res = await tx.txParams({gasLimit: gasValue})
             .call();
+        return {txId: res.transactionId, orderId: res.value};
+    };
+    createSpotMarket = async (
+        baseToken: Token,
+        decimals: number,
+        wallet: WalletLocked | WalletUnlocked,
+        contractAddress?: string
+    ): Promise<string> => {
+        const orderbookFactory = OrderbookAbi__factory.connect(
+            contractAddress ?? CONTRACT_ADDRESSES.spotMarket,
+            wallet,
+        );
+
+        const assetId: AssetIdInput = {value: baseToken.assetId};
+
+        const tx = orderbookFactory.functions
+            .create_market(assetId, decimals)
+            .txParams({gasPrice: 1});
+
+        const {gasUsed: gasValue} = await tx.getTransactionCost();
+        const res = await tx.txParams({gasLimit: gasValue})
+            .call();
         return res.transactionId;
     };
 
@@ -112,9 +136,10 @@ export class Api {
     cancelSpotOrder = async (
         orderId: string,
         wallet: WalletLocked | WalletUnlocked,
+        contractAddress?: string
     ): Promise<void> => {
         const orderbookFactory = OrderbookAbi__factory.connect(
-            CONTRACT_ADDRESSES.spotMarket,
+            contractAddress ?? CONTRACT_ADDRESSES.spotMarket,
             wallet,
         );
 
@@ -147,9 +172,12 @@ export class Api {
             },
         };
 
-        await tokenFactoryContract.functions
+        const tx = tokenFactoryContract.functions
             .mint(identity, hash, amount.toString())
-            .txParams({gasPrice: 1, gasLimit: GAS_LIMIT})
+            .txParams({gasPrice: 1});
+
+        const {gasUsed: gasValue} = await tx.getTransactionCost();
+        await tx.txParams({gasLimit: gasValue})
             .call();
     };
 

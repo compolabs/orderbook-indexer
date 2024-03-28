@@ -29,7 +29,7 @@ export class FuelNetwork extends BlockchainNetwork {
 
     private providerPromise: Promise<Provider>;
 
-    private walletManager = new WalletManager();
+     walletManager = new WalletManager();
     private api = new Api();
 
     public network = NETWORKS[0];
@@ -105,6 +105,23 @@ export class FuelNetwork extends BlockchainNetwork {
             size,
             price,
             this.walletManager.wallet,
+        ).then(res => res.txId);
+    };
+
+    createSpotMarket = async (
+        baseTokenAddress: string,
+        decimals: number,
+    ): Promise<string> => {
+        if (!this.walletManager.wallet) {
+            throw new Error("Wallet does not exist");
+        }
+
+        const baseToken = this.getTokenByAssetId(baseTokenAddress);
+
+        return this.api.createSpotMarket(
+            baseToken,
+            decimals,
+            this.walletManager.wallet,
         );
     };
 
@@ -116,9 +133,7 @@ export class FuelNetwork extends BlockchainNetwork {
             throw new Error("Wallet does not exist");
         }
 
-        return this.api.matchSpotOrders(sellOrder
-            , buyOrder,
-            this.walletManager.wallet,
+        return this.api.matchSpotOrders(sellOrder, buyOrder, this.walletManager.wallet,
         );
     };
 
