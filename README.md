@@ -40,6 +40,7 @@ Follow these steps to clone the repository, set up your environment, build the c
 
 ```
 git clone git@github.com:compolabs/orderbook-indexer-synchronizer.git
+cd orderbook-indexer-synchronizer
 echo "ALICE=<YOUR PRIVATE KEY>" >> .env
 forc build
 npm run test
