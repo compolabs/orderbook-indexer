@@ -10,7 +10,7 @@ import {readFileSync, writeFileSync} from "fs";
 import {Api} from "../src/blockchain/fuel/Api";
 import {decodeIndexerResponse, decodeOrder} from "../src/testItils";
 
-describe("Spot Test", () => {
+describe("Envio indexer data encode test", () => {
     let fuelNetwork: FuelNetwork;
 
     beforeEach(async () => {
