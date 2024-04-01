@@ -9,20 +9,17 @@ import ordersRoutes from './routes/orders';
 import orderChangeEventsRoutes from './routes/orderChangeEvents';
 import tradeEventsRoutes from './routes/tradeEvents';
 import {CONTRACT_ID, PORT, PRIVATE_KEY, START_BLOCK} from "./config";
-import {checkFieldsInObject, getEventFields} from "./sdk/testItils";
 import {FuelNetwork} from "./sdk/blockchain";
 import {OrderbookAbi, OrderbookAbi__factory} from "./sdk/blockchain/fuel/types/orderbook";
-import axios from "axios";
-import {getDecodedLogs, sleep, TransactionResultReceipt} from "fuels";
-import {BN} from "@fuel-ts/math";
-import {ReceiptLogData} from "@fuel-ts/transactions/dist/coders/receipt";
-import {Nullable} from "tsdef";
-import MarketCreateEvent from "./models/marketCreateEvent";
-import OrderChangeEvent from "./models/orderChangeEvent";
 import TradeEvent from "./models/tradeEvent";
 import SystemSettings from "./models/settings";
+import fetchReceiptsFromEnvio from "./utils/fetchReceiptsFromEnvio";
+import isEvent from "./utils/isEvent";
+import {decodeReceipts} from "./utils/decodeReceipts";
+import MarketCreateEvent from "./models/marketCreateEvent";
+import OrderChangeEvent from "./models/orderChangeEvent";
 import Order from "./models/order";
-import OrderChangeEvents from "./routes/orderChangeEvents";
+import BN from "./utils/BN";
 
 const app = express();
 
@@ -51,36 +48,7 @@ app.use('/orderChangeEvents', orderChangeEventsRoutes);
 app.use('/tradeEvents', tradeEventsRoutes);
 
 type TIndexerSettings = { contractId: string, startBlock: number, privateKey: string }
-type TGetReceiptsResult = {
-    archiveHeight: number,
-    nextBlock: number,
-    receipts: Array<TransactionResultReceipt>
-}
-type TMarketCreateEvent = {
-    asset_id: string,
-    asset_decimals: number,
-    timestamp: string
-}
-type TOrderChangeEvent = {
-    order_id: string,
-    trader: string,
-    base_token: string,
-    base_size_change: string,
-    base_price: string,
-    timestamp: string
-}
-type TTradeEvent = {
-    base_token: string
-    order_matcher: string
-    seller: string
-    buyer: string
-    trade_size: string
-    trade_price: string
-    timestamp: string
-}
-type TDecodedEvent = TMarketCreateEvent
-    | TOrderChangeEvent
-    | TTradeEvent
+
 
 class Indexer {
     private fuelNetwork = new FuelNetwork();
@@ -119,11 +87,11 @@ class Indexer {
         const currentBlock = await this.getSettings()
         const fromBlock = currentBlock === 0 ? +START_BLOCK : currentBlock
         const toBlock = fromBlock + 1000
-        const receiptsResult = await this.fetchReceipts(fromBlock, toBlock)
+        const receiptsResult = await fetchReceiptsFromEnvio(fromBlock, toBlock, this.settings.contractId)
         if (receiptsResult === null) return;
         for (let i = 0; i < receiptsResult.receipts.length; i++) {
             const receipt = receiptsResult.receipts[i]
-            const decodedEvents = this.decodeReceipt(receipt)
+            const decodedEvents = decodeReceipts([receipt], this.orderbookAbi!)
             for (let eventIndex in decodedEvents) {
                 const event = decodedEvents[eventIndex]
                 console.log(event)
@@ -133,35 +101,27 @@ class Indexer {
                 if (this.isEvent("OrderChangeEvent", event)) {
                     await OrderChangeEvent.create(event);
                     const [order, created] = await Order.findOrCreate({
-                        where: {order_id: (event as TOrderChangeEvent).order_id},
-                        defaults: {...event, base_size: (event as TOrderChangeEvent).base_size_change}
+                        where: {order_id: (event as any).order_id},
+                        defaults: {...event, base_size: (event as any).base_size_change}
                     });
 
-                    if (!created) await order.set("base_size", (event as TOrderChangeEvent).base_size_change).save()
+                    if (!created) await order.set("base_size", (event as any).base_size_change).save()
 
-                    // const order = await Order.findOne({where: {order_id: (event as TOrderChangeEvent).order_id}})
-                    // if (order === null){
-                    //     await Order.create({
-                    //         order_id: event.order_id,
-                    //         trader: event.trader,
-                    //         base_token: event.base_token,
-                    //         base_size: event.base_size,
-                    //         order_price: event.order_price,
-                    //         timestamp: event.timestamp,
-                    //     })
-                    // }else {
-                    //     await order.set("base_size", event.base_size).save()
-                    // }
-
-                    // order_id
-                    // trader
-                    // base_token
-                    // base_size
-                    // order_price
-                    // timestamp
                 }
                 if (this.isEvent("TradeEvent", event)) {
                     await TradeEvent.create(event);
+
+                    const [buyOrder, sellOrder] = await Promise.all([Order.findOne({where: {order_id: (event as any).buy_order_id}}), Order.findOne({where: {order_id: (event as any).sell_order_id}})])
+                    if (buyOrder != null) {
+                        const oldSize = buyOrder.get("base_size")
+                        const newSize = new BN(oldSize as string).minus((event as any).trade_size).toString()
+                        await buyOrder.set("base_size", newSize).save()
+                    }
+                    if (sellOrder != null) {
+                        const oldSize = sellOrder.get("base_size")
+                        const newSize = new BN(oldSize as string).plus((event as any).trade_size).toString()
+                        await sellOrder.set("base_size", newSize).save()
+                    }
                 }
             }
         }
@@ -170,94 +130,15 @@ class Indexer {
     }
 
 
-    private async fetchReceipts(fromBlock: number, toBlock: number): Promise<Nullable<TGetReceiptsResult>> {
-        console.log({fromBlock, toBlock})
-        if (this.orderbookAbi == null) return null;
-        const request = {
-            "from_block": fromBlock,
-            "to_block": toBlock,
-            "receipts": [
-                {"contract_id": [this.settings.contractId], "receipt_type": [6]},
-                {"root_contract_id": [this.settings.contractId], "receipt_type": [6]}
-            ],
-            "field_selection": {"receipt": ["receipt_type", "contract_id", "ra", "rb", "ptr", "len", "digest", "pc", "is", "data", "root_contract_id"]}
-        }
-        const indexerData = await axios.post("https://fuel-next.hypersync.xyz/query", request).then(response => response.data);
-        const rawReceipts = (indexerData as any).data[0].receipts.filter(({receipt_type}: any) => receipt_type == 6);
-        const receipts: TransactionResultReceipt[] = rawReceipts.map((receipt: any) => ({
-            type: receipt.receipt_type,
-            id: receipt.contract_id,
-            val0: new BN(receipt.ra),
-            val1: new BN(receipt.rb),
-            ptr: new BN(receipt.ptr),
-            len: new BN(receipt.len),
-            digest: receipt.digest,
-            pc: new BN(receipt.pc),
-            is: new BN(receipt.is),
-            data: receipt.data
-        } as ReceiptLogData & { data: string }))
+    isEvent = (eventName: string, object: any) => isEvent(eventName, object, this.orderbookAbi!)
 
-        return {
-            archiveHeight: indexerData.archive_height,
-            nextBlock: indexerData.next_block,
-            receipts
-        }
-    }
-
-
-    isEvent = (eventName: string, object: any) => checkFieldsInObject(object, getEventFields(eventName, this.orderbookAbi!)!)
-
-    decodeReceipt(receipt: TransactionResultReceipt): TDecodedEvent[] {
-        try {
-            const logs = getDecodedLogs([receipt], this.orderbookAbi!.interface)
-            const decodedLogs = logs.map((log: any) => {
-                // MarketCreateEvent
-                if (this.isEvent("MarketCreateEvent", log)) {
-                    return {
-                        asset_id: log.asset_id.value,
-                        asset_decimals: log.asset_decimals,
-                        timestamp: log.timestamp.toString()
-                    } as TMarketCreateEvent
-                }
-                // OrderChangeEvent
-                if (this.isEvent("OrderChangeEvent", log)) {
-                    return {
-                        order_id: log.order_id,
-                        trader: log.trader.value,
-                        base_token: log.base_token.value,
-                        base_size_change: (log.base_size_change.negative ? "-" : "") + log.base_size_change.value.toString(),
-                        base_price: log.base_price.toString(),
-                        timestamp: log.timestamp.toString()
-                    } as TOrderChangeEvent;
-                }
-                // TradeEvent
-                if (this.isEvent("TradeEvent", log)) {
-                    return {
-                        base_token: log.base_token.value,
-                        order_matcher: log.order_matcher.value,
-                        seller: log.seller.value,
-                        buyer: log.buyer.value,
-                        trade_size: log.trade_size.toString(),
-                        trade_price: log.trade_price.toString(),
-                        timestamp: log.timestamp.toString(),
-                    } as TTradeEvent;
-                }
-            })
-            return decodedLogs.filter(e => e !== undefined) as TDecodedEvent[]
-        } catch (e) {
-            console.error(e)
-            return []
-        }
-    }
 
 }
 
 
 const indexerSettings = {contractId: CONTRACT_ID, startBlock: +START_BLOCK, privateKey: PRIVATE_KEY}
 const indexer = new Indexer(indexerSettings)
-// indexer.runCrone('*/2 * * * *')
-sleep(5000).then(indexer.do)
-
+indexer.runCrone('*/5 * * * * *')
 
 const port = PORT ?? 5000
 

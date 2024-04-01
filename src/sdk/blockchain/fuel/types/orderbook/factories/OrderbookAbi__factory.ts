@@ -358,6 +358,16 @@ const _abi = {
           "typeArguments": null
         },
         {
+          "name": "sell_order_id",
+          "type": 2,
+          "typeArguments": null
+        },
+        {
+          "name": "buy_order_id",
+          "type": 2,
+          "typeArguments": null
+        },
+        {
           "name": "timestamp",
           "type": 20,
           "typeArguments": null
@@ -568,15 +578,15 @@ const _abi = {
       },
       "attributes": [
         {
-          "name": "payable",
-          "arguments": []
-        },
-        {
           "name": "storage",
           "arguments": [
             "read",
             "write"
           ]
+        },
+        {
+          "name": "payable",
+          "arguments": []
         }
       ]
     },
@@ -818,7 +828,7 @@ const _abi = {
         "type": 10,
         "typeArguments": []
       },
-      "offset": 73428
+      "offset": 73468
     },
     {
       "name": "QUOTE_TOKEN_DECIMALS",
@@ -827,7 +837,7 @@ const _abi = {
         "type": 19,
         "typeArguments": null
       },
-      "offset": 73364
+      "offset": 73404
     },
     {
       "name": "PRICE_DECIMALS",
@@ -836,7 +846,7 @@ const _abi = {
         "type": 19,
         "typeArguments": null
       },
-      "offset": 73348
+      "offset": 73388
     }
   ]
 };

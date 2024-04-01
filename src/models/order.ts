@@ -15,7 +15,7 @@ const Order = sequelize.define('orders', {
     base_size: {
         type: Sequelize.STRING,
     },
-    order_price: {
+    base_price: {
         type: Sequelize.STRING,
     },
     timestamp: {

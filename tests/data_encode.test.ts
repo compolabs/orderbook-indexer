@@ -5,8 +5,9 @@ import {readFileSync, writeFileSync} from "fs";
 import {FuelNetwork} from "../src/sdk/blockchain";
 import {Api} from "../src/sdk/blockchain/fuel/Api";
 import {OrderbookAbi__factory} from "../src/sdk/blockchain/fuel/types/orderbook";
-import {decodeIndexerResponse} from "../src/sdk/testItils";
 import {PRIVATE_KEY} from "../src/config";
+import fetchReceiptsFromEnvio from "../src/utils/fetchReceiptsFromEnvio";
+import {decodeReceipts} from "../src/utils/decodeReceipts";
 
 describe("Envio indexer data encode test", () => {
     let fuelNetwork: FuelNetwork;
@@ -66,7 +67,8 @@ describe("Envio indexer data encode test", () => {
             console.log("Orders matched")
             await sleep(1000)
 
-            const events = await decodeIndexerResponse(contractId, blockNumber, wallet)
+            const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, +blockNumber + 1000, contractId)
+            const events = decodeReceipts(receiptsResult?.receipts!, orderbookAbi)
             console.log(events)
         },
         60_000,
@@ -76,23 +78,18 @@ describe("Envio indexer data encode test", () => {
             const wallet = fuelNetwork.walletManager.wallet!;
             const {contractId, blockNumber} = JSON.parse(readFileSync("./tests/addresses.json").toString())
             console.log({contractId, blockNumber})
-            const events = await decodeIndexerResponse(contractId, blockNumber, wallet)
-            console.log(events)
-            // у всех ивентов разная структура это не подходит по sql. мб имеет смысл складывать это в MongoDb
-            // const save_event = async () => {
-            //     const response = await fetch(DATA_SERVICE_URL, {
-            //         method: 'POST',
-            //         body: events[0],
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //             'API-Key': DATA_SERVICE_API_KEY
-            //         }
-            //     });
-            //     if (response.status == 200) {
-            //         const response_content = await response.json(); //extract JSON from the http response
-            //         console.log("Succesfull saved with is " + response_content.id)
-            //     }
-            // }
+
+            const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, +blockNumber + 1000, contractId)
+            const orderbookAbi = OrderbookAbi__factory.connect(contractId, wallet);
+            if (receiptsResult === null) return;
+            for (let i = 0; i < receiptsResult.receipts.length; i++) {
+                const receipt = receiptsResult.receipts[i]
+                const decodedEvents = decodeReceipts([receipt], orderbookAbi!)
+                for (let eventIndex in decodedEvents) {
+                    const event = decodedEvents[eventIndex]
+                    console.log(event)
+                }
+            }
         },
         60_000,
     );
