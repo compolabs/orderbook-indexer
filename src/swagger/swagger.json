@@ -1,0 +1,323 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Indexer API",
+      "description": "API for the orderbook indexer",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:5000"
+      }
+    ],
+    "paths": {
+      "/marketCreateEvents": {
+        "get": {
+          "summary": "Get all marketCreateEvents",
+          "responses": {
+            "200": {
+              "description": "A list of marketCreateEvents",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/marketCreateEvent"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/marketCreateEvents/{id}": {
+        "get": {
+          "summary": "Get event by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The event",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/marketCreateEvent"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/orders": {
+        "get": {
+          "summary": "Get all orders",
+          "responses": {
+            "200": {
+              "description": "A list of orders",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/order"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/orders/{id}": {
+        "get": {
+          "summary": "Get order by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The order",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/order"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/orderChangeEvents": {
+        "get": {
+          "summary": "Get all orderChangeEvents",
+          "responses": {
+            "200": {
+              "description": "A list of orderChangeEvents",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/orderChangeEvent"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/orderChangeEvents/{id}": {
+        "get": {
+          "summary": "Get orderChangeEvent by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The orderChangeEvent",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/orderChangeEvent"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/tradeEvents": {
+        "get": {
+          "summary": "Get all tradeEvents",
+          "responses": {
+            "200": {
+              "description": "A list of tradeEvents",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/tradeEvent"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/tradeEvents/{id}": {
+        "get": {
+          "summary": "Get tradeEvent by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "The tradeEvent",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/tradeEvent"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "marketCreateEvent": {
+          "type": "object",
+          "properties": {
+            "assetId": {
+              "type": "string"
+            },
+            "decimal": {
+              "type": "string"
+            },
+            "blockNumber": {
+              "type": "string"
+            },
+            "blockTimestamp": {
+              "type": "string"
+            },
+            "transactionHash": {
+              "type": "string"
+            }
+          }
+        },
+        "order":{
+          "type": "object",
+          "properties": {
+            "trader": {
+              "type": "string"
+            },
+            "baseToken": {
+              "type": "string"
+            },
+            "baseSize": {
+              "type": "string"
+            },
+            "orderPrice": {
+              "type": "string"
+            },
+            "blockTimestamp": {
+              "type": "string"
+            },
+            "isActive": {
+              "type": "boolean"
+            }
+          }
+        },
+        "orderChangeEvent":{
+          "type": "object",
+          "properties": {
+            "OrderBook_id": {
+              "type": "string"
+            },
+            "trader": {
+              "type": "string"
+            },
+            "baseToken": {
+              "type": "string"
+            },
+            "baseSize": {
+              "type": "string"
+            },
+            "orderPrice": {
+              "type": "string"
+            },
+            "blockNumber": {
+              "type": "string"
+            },
+            "blockTimestamp": {
+              "type": "string"
+            },
+            "transactionHash": {
+              "type": "string"
+            }
+          }
+        },
+        "tradeEvent":{
+          "type": "object",
+          "properties": {
+            "baseToken": {
+              "type": "string"
+            },
+            "matcher": {
+              "type": "string"
+            },
+            "seller": {
+              "type": "string"
+            },
+            "buyer": {
+              "type": "string"
+            },
+            "tradeAmount": {
+              "type": "string"
+            },
+            "timestamp": {
+              "type": "string"
+            },
+            "blockNumber": {
+              "type": "string"
+            },
+            "blockTimestamp": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "securitySchemes":{
+        "ApiKeyAuth":{
+           "type":"apiKey",
+           "description":"API Key",
+           "name": "API-Key",
+           "in": "header"
+        }
+     }
+    },
+    "security":[
+       {
+          "ApiKeyAuth":[
+             
+          ]
+       }
+    ]
+  }

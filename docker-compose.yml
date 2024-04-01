@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  node_app:
+    container_name: node_app
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_NAME=indexer_db
+      - DB_USER=francesco
+      - DB_PASSWORD=%e\/fOnoM5
+      - DB_HOST=node_db
+#      - API_KEY=composability
+    depends_on:
+      - node_db
+
+  node_db:
+    container_name: node_db
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=indexer_db
+      - POSTGRES_USER=francesco
+      - POSTGRES_PASSWORD=%e\/fOnoM5
+    volumes:
+      - indexer_db_data:/var/lib/postgresql/data
+
+volumes:
+  indexer_db_data: {}
