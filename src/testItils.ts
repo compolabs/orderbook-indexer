@@ -7,12 +7,23 @@ import {ReceiptLogData} from "@fuel-ts/transactions/dist/coders/receipt";
 
 export async function decodeIndexerResponse(contractId: string, fromBlock: number, wallet: WalletUnlocked) {
     const orderbookAbi = OrderbookAbi__factory.connect(contractId, wallet);
+    // const request = {
+    //     "from_block": fromBlock,
+    //     "transactions": [{"owner": [contractId]}],
+    //     "field_selection": {"receipt": ["receipt_type", "contract_id", "ra", "rb", "ptr", "len", "digest", "pc", "is", "data"]}
+    // }
     const request = {
         "from_block": fromBlock,
-        "transactions": [{"owner": [contractId]}],
-        "field_selection": {"receipt": ["receipt_type", "contract_id", "ra", "rb", "ptr", "len", "digest", "pc", "is", "data"]}
+        "receipts": [
+            {"contract_id": [contractId], "receipt_type": [6]},
+            {"root_contract_id": [contractId], "receipt_type": [6]}
+        ],
+        "field_selection": {
+            "receipt": ["receipt_type", "contract_id", "ra", "rb", "ptr", "len", "digest", "pc", "is", "data", "root_contract_id"]
+        }
     }
-    const indexerData = await axios.post("https://fuel.hypersync.xyz/query", request).then(response => response.data);
+
+    const indexerData = await axios.post("https://fuel-next.hypersync.xyz/query", request).then(response => response.data);
     const rawReceipts = (indexerData as any).data[0].receipts.filter(({receipt_type}: any) => receipt_type == 6);
     const receipts: TransactionResultReceipt[] = rawReceipts.map((receipt: any) => ({
         type: receipt.receipt_type,
@@ -81,7 +92,7 @@ export function checkFieldsInObject(obj: any, fields: string[]): boolean {
     return typeof obj === 'object' && fields.every(field => field in obj);
 }
 
-export function decodeOrder(order: any){
+export function decodeOrder(order: any) {
     return {
         id: order.id,
         trader: order.trader.value,
