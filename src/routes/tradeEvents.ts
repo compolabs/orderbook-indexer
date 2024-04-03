@@ -2,6 +2,9 @@
 
 import express from 'express';
 import TradeEvent from '../models/tradeEvent';
+import Sequelize from "sequelize";
+import Order from "../models/order";
+
 const router = express.Router();
 
 // Create a new event
@@ -15,27 +18,42 @@ const router = express.Router();
 // });
 
 // Get all events
+// router.get('/', async (req, res) => {
+//   try {
+//     const events = await TradeEvent.findAll();
+//     res.json(events);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Failed to fetch events.' });
+//   }
+// });
+
 router.get('/', async (req, res) => {
-  try {
-    const events = await TradeEvent.findAll();
-    res.json(events);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch events.' });
-  }
+    try {
+        const {trader, limit} = req.query;
+
+        const orders = await TradeEvent.findAll({
+            where: {[Sequelize.Op.or]: [{buyer: trader}, {seller: trader}]},
+            limit: limit != null ? +limit : 40
+        });
+
+        res.json(orders);
+    } catch (error) {
+        res.status(500).json({message: 'Failed to fetch orders.'});
+    }
 });
 
 // Get event by ID
 router.get('/:id', async (req, res) => {
-  try {
-    const event = await TradeEvent.findByPk(req.params.id);
-    if (!event) {
-      res.status(404).json({ message: 'Event not found.' });
-    } else {
-      res.json(event);
+    try {
+        const event = await TradeEvent.findByPk(req.params.id);
+        if (!event) {
+            res.status(404).json({message: 'Event not found.'});
+        } else {
+            res.json(event);
+        }
+    } catch (error) {
+        res.status(500).json({message: 'Failed to fetch event.'});
     }
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch event.' });
-  }
 });
 
 // Update event by ID

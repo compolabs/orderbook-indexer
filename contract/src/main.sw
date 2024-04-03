@@ -237,22 +237,22 @@ impl OrderBook for Contract {
         let msg_sender = msg_sender_address();
 
         //todo describe Element not found in the array. error
-        // log(OrderChangeEvent {
-        //     order_id: order_sell.id,
-        //     trader: seller,
-        //     base_token: order_sell.base_token,
-        //     base_size_change: order_sell.base_size + I64::from(trade_size),
-        //     base_price: order_sell.base_price,
-        //     timestamp: timestamp(),
-        // });
-        // log(OrderChangeEvent {
-        //     order_id: order_buy.id,
-        //     trader: buyer,
-        //     base_token: order_buy.base_token,
-        //     base_size_change: order_buy.base_size+ I64::neg_from(trade_size),
-        //     base_price: order_buy.base_price,
-        //     timestamp: timestamp(),
-        // });
+        log(OrderChangeEvent {
+            order_id: order_sell.id,
+            trader: seller,
+            base_token: order_sell.base_token,
+            base_size_change: order_sell.base_size + I64::from(trade_size),
+            base_price: order_sell.base_price,
+            timestamp: timestamp(),
+        });
+        log(OrderChangeEvent {
+            order_id: order_buy.id,
+            trader: buyer,
+            base_token: order_buy.base_token,
+            base_size_change: order_buy.base_size+ I64::neg_from(trade_size),
+            base_price: order_buy.base_price,
+            timestamp: timestamp(),
+        });
 
         log(TradeEvent {
             base_token: order_sell.base_token,

@@ -578,15 +578,15 @@ const _abi = {
       },
       "attributes": [
         {
+          "name": "payable",
+          "arguments": []
+        },
+        {
           "name": "storage",
           "arguments": [
             "read",
             "write"
           ]
-        },
-        {
-          "name": "payable",
-          "arguments": []
         }
       ]
     },
@@ -750,7 +750,7 @@ const _abi = {
       "logId": 12,
       "loggedType": {
         "name": "",
-        "type": 17,
+        "type": 15,
         "typeArguments": []
       }
     },
@@ -758,7 +758,7 @@ const _abi = {
       "logId": 13,
       "loggedType": {
         "name": "",
-        "type": 6,
+        "type": 15,
         "typeArguments": []
       }
     },
@@ -766,7 +766,7 @@ const _abi = {
       "logId": 14,
       "loggedType": {
         "name": "",
-        "type": 4,
+        "type": 17,
         "typeArguments": []
       }
     },
@@ -774,7 +774,7 @@ const _abi = {
       "logId": 15,
       "loggedType": {
         "name": "",
-        "type": 4,
+        "type": 6,
         "typeArguments": []
       }
     },
@@ -814,6 +814,22 @@ const _abi = {
       "logId": 20,
       "loggedType": {
         "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 21,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 22,
+      "loggedType": {
+        "name": "",
         "type": 15,
         "typeArguments": []
       }
@@ -828,7 +844,7 @@ const _abi = {
         "type": 10,
         "typeArguments": []
       },
-      "offset": 73468
+      "offset": 74404
     },
     {
       "name": "QUOTE_TOKEN_DECIMALS",
@@ -837,7 +853,7 @@ const _abi = {
         "type": 19,
         "typeArguments": null
       },
-      "offset": 73404
+      "offset": 74340
     },
     {
       "name": "PRICE_DECIMALS",
@@ -846,7 +862,7 @@ const _abi = {
         "type": 19,
         "typeArguments": null
       },
-      "offset": 73388
+      "offset": 74324
     }
   ]
 };

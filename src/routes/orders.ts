@@ -2,40 +2,50 @@
 
 import express from 'express';
 import Order from '../models/order';
-const router = express.Router();
+import Sequelize, {DECIMAL} from "sequelize";
 
-// Create a new order
-// router.post('/', async (req, res) => {
-//   try {
-//     const order = await Order.create(req.body);
-//     res.json(order);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Failed to create order.' });
-//   }
-// });
+const router = express.Router();
 
 // Get all orders
 router.get('/', async (req, res) => {
-  try {
-    const orders = await Order.findAll();
-    res.json(orders);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch orders.' });
-  }
+    try {
+        // Извлекаем параметры фильтрации из запроса
+        const {trader, baseToken, orderType, isOpened, limit} = req.query;
+
+        const conditions = [];
+
+        if (trader) conditions.push({trader: trader});
+        if (baseToken) conditions.push({base_token: baseToken});
+        // conditions.push(Sequelize.where(Sequelize.fn('CAST', Sequelize.col('base_size') AS DECIMAL), '>', 0));
+        if (orderType === "buy") conditions.push(Sequelize.literal(`CAST(base_size AS DECIMAL) > 0`));
+        if (orderType === "sell") conditions.push(Sequelize.literal(`CAST(base_size AS DECIMAL) < 0`));
+        if (isOpened) conditions.push(Sequelize.literal(`CAST(base_size AS DECIMAL) != 0`));
+
+        // Получаем ордера, применяя условия фильтрации
+        const orders = await Order.findAll({
+            where: {[Sequelize.Op.and]: conditions},
+            limit: limit != null ? +limit : 40
+        });
+
+
+        res.json(orders);
+    } catch (error) {
+        res.status(500).json({message: 'Failed to fetch orders.'});
+    }
 });
 
 // Get order by ID
 router.get('/:id', async (req, res) => {
-  try {
-    const order = await Order.findByPk(req.params.id);
-    if (!order) {
-      res.status(404).json({ message: 'Order not found.' });
-    } else {
-      res.json(order);
+    try {
+        const order = await Order.findByPk(req.params.id);
+        if (!order) {
+            res.status(404).json({message: 'Order not found.'});
+        } else {
+            res.json(order);
+        }
+    } catch (error) {
+        res.status(500).json({message: 'Failed to fetch order.'});
     }
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch order.' });
-  }
 });
 
 // Update order by ID

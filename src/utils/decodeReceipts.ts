@@ -1,6 +1,7 @@
 import {getDecodedLogs, TransactionResultReceipt} from "fuels";
 import isEvent from "./isEvent";
 import {OrderbookAbi} from "../sdk/blockchain/fuel/types/orderbook";
+import BN from "./BN";
 type TMarketCreateEvent = {
     asset_id: string,
     asset_decimals: number,
@@ -65,7 +66,9 @@ export function decodeReceipts(receipts: TransactionResultReceipt[], abi: Orderb
                 } as TTradeEvent;
             }
         })
-        return decodedLogs.filter(e => e !== undefined) as TDecodedEvent[]
+        return decodedLogs
+            .filter(e => e !== undefined)
+            .sort((a: any, b: any) => new BN(a.timestamp).gt(b.timestamp) ? 1 : -1) as TDecodedEvent[]
     } catch (e) {
         console.error(e, receipts)
         return []

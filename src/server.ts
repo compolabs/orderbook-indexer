@@ -88,45 +88,44 @@ class Indexer {
         const fromBlock = currentBlock === 0 ? +START_BLOCK : currentBlock
         const toBlock = fromBlock + 1000
         const receiptsResult = await fetchReceiptsFromEnvio(fromBlock, toBlock, this.settings.contractId)
-        if (receiptsResult === null) return;
-        for (let i = 0; i < receiptsResult.receipts.length; i++) {
-            const receipt = receiptsResult.receipts[i]
-            const decodedEvents = decodeReceipts([receipt], this.orderbookAbi!)
-            for (let eventIndex in decodedEvents) {
-                const event = decodedEvents[eventIndex]
-                console.log(event)
-                if (this.isEvent("MarketCreateEvent", event)) {
-                    await MarketCreateEvent.create({...event});
-                }
-                if (this.isEvent("OrderChangeEvent", event)) {
-                    await OrderChangeEvent.create(event);
-                    const [order, created] = await Order.findOrCreate({
-                        where: {order_id: (event as any).order_id},
-                        defaults: {...event, base_size: (event as any).base_size_change}
-                    });
+        if (receiptsResult == null || receiptsResult.receipts.length == 0) return;
 
-                    if (!created) await order.set("base_size", (event as any).base_size_change).save()
+        const decodedEvents = decodeReceipts(receiptsResult.receipts, this.orderbookAbi!)
 
-                }
-                if (this.isEvent("TradeEvent", event)) {
-                    await TradeEvent.create(event);
-
-                    const [buyOrder, sellOrder] = await Promise.all([Order.findOne({where: {order_id: (event as any).buy_order_id}}), Order.findOne({where: {order_id: (event as any).sell_order_id}})])
-                    if (buyOrder != null) {
-                        const oldSize = buyOrder.get("base_size")
-                        const newSize = new BN(oldSize as string).minus((event as any).trade_size).toString()
-                        await buyOrder.set("base_size", newSize).save()
-                    }
-                    if (sellOrder != null) {
-                        const oldSize = sellOrder.get("base_size")
-                        const newSize = new BN(oldSize as string).plus((event as any).trade_size).toString()
-                        await sellOrder.set("base_size", newSize).save()
-                    }
-                }
+        for (let eventIndex in decodedEvents) {
+            const event = decodedEvents[eventIndex]
+            console.log(event)
+            if (this.isEvent("MarketCreateEvent", event)) {
+                await MarketCreateEvent.create({...event});
             }
-        }
+            if (this.isEvent("OrderChangeEvent", event)) {
+                await OrderChangeEvent.create(event);
+                const [order, created] = await Order.findOrCreate({
+                    where: {order_id: (event as any).order_id},
+                    defaults: {...event, base_size: (event as any).base_size_change}
+                });
 
-        await this.updateSettings(receiptsResult.nextBlock)
+                if (!created) await order.set("base_size", (event as any).base_size_change).save()
+
+            }
+            if (this.isEvent("TradeEvent", event)) {
+                await TradeEvent.create(event);
+
+                // const [buyOrder, sellOrder] = await Promise.all([Order.findOne({where: {order_id: (event as any).buy_order_id}}), Order.findOne({where: {order_id: (event as any).sell_order_id}})])
+                // if (buyOrder != null) {
+                //     const oldSize = buyOrder.get("base_size")
+                //     const newSize = new BN(oldSize as string).minus((event as any).trade_size).toString()
+                //     await buyOrder.set("base_size", newSize).save()
+                // }
+                // if (sellOrder != null) {
+                //     const oldSize = sellOrder.get("base_size")
+                //     const newSize = new BN(oldSize as string).plus((event as any).trade_size).toString()
+                //     await sellOrder.set("base_size", newSize).save()
+                // }
+            }
+
+            await this.updateSettings(receiptsResult.nextBlock)
+        }
     }
 
 
@@ -136,13 +135,20 @@ class Indexer {
 }
 
 
-const indexerSettings = {contractId: CONTRACT_ID, startBlock: +START_BLOCK, privateKey: PRIVATE_KEY}
-const indexer = new Indexer(indexerSettings)
-indexer.runCrone('*/5 * * * * *')
+const
+    indexerSettings = {contractId: CONTRACT_ID, startBlock: +START_BLOCK, privateKey: PRIVATE_KEY}
+const
+    indexer = new Indexer(indexerSettings)
+indexer
+    .runCrone(
+        '*/5 * * * * *'
+    )
 
-const port = PORT ?? 5000
+const
+    port = PORT ?? 5000
 
-const print = `
+const
+    print = `
 
  ██████╗ ██████╗ ███╗   ███╗██████╗  ██████╗ ███████╗ █████╗ ██████╗ ██╗██╗     ██╗████████╗██╗   ██╗
 ██╔════╝██╔═══██╗████╗ ████║██╔══██╗██╔═══██╗██╔════╝██╔══██╗██╔══██╗██║██║     ██║╚══██╔══╝╚██╗ ██╔╝
@@ -160,4 +166,10 @@ const print = `
                                                                                                      
 ${"🚀 Server ready at: http://localhost:" + port}       `;
 
-app.listen(port, () => console.log(print));
+app
+    .listen(port,
+
+        () =>
+            console
+                .log(print)
+    );
