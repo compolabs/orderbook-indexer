@@ -74,12 +74,35 @@ describe("Envio indexer data encode test", () => {
         60_000,
     );
 
+    it("should create order", async () => {
+            const wallet = fuelNetwork.walletManager.wallet!;
+
+            console.log("Wallet address: ", wallet.address)
+            console.log("Eth balance   : ", await wallet.getBalance(BaseAssetId).then(b => b.toString()), " ETH")
+
+            const {contractId, blockNumber} = JSON.parse(readFileSync("./tests/addresses.json").toString())
+            console.log({contractId, blockNumber})
+
+            const btc = fuelNetwork.getTokenBySymbol("BTC");
+            const usdc = fuelNetwork.getTokenBySymbol("USDC");
+
+            const api = new Api();
+
+            await fuelNetwork.mintToken(btc.assetId, 0.001 * 1e8)
+            console.log(`0.001 btc Token minted`)
+            const {orderId: sellOrderId} = await api.createSpotOrder(btc, usdc, "-100000", (69111 * 1e9).toString(), wallet, contractId);
+            console.log({sellOrderId})
+
+        },
+        60_000,
+    );
+
     it("should decode data", async () => {
             const wallet = fuelNetwork.walletManager.wallet!;
             const {contractId, blockNumber} = JSON.parse(readFileSync("./tests/addresses.json").toString())
             console.log({contractId, blockNumber})
 
-            const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, +blockNumber + 1000, contractId)
+            const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, +blockNumber + 1000000000, contractId)
             const orderbookAbi = OrderbookAbi__factory.connect(contractId, wallet);
             if (receiptsResult === null) return;
             for (let i = 0; i < receiptsResult.receipts.length; i++) {

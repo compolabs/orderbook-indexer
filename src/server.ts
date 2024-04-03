@@ -83,12 +83,20 @@ class Indexer {
 
 
     do = async () => {
+        const STEP = 10000
+
         if (this.orderbookAbi === null) return;
         const currentBlock = await this.getSettings()
         const fromBlock = currentBlock === 0 ? +START_BLOCK : currentBlock
-        const toBlock = fromBlock + 1000
+        const toBlock = fromBlock + STEP
         const receiptsResult = await fetchReceiptsFromEnvio(fromBlock, toBlock, this.settings.contractId)
-        if (receiptsResult == null || receiptsResult.receipts.length == 0) return;
+
+        // console.log({toBlock, archiveHeight: receiptsResult?.archiveHeight, nextBlock: receiptsResult?.nextBlock})
+        console.log(`♻️ Processing: ${receiptsResult?.nextBlock} / ${receiptsResult?.archiveHeight} (~${(receiptsResult?.archiveHeight! - receiptsResult?.nextBlock!) * 5 / 60 / STEP} min)`)
+        if (receiptsResult == null || receiptsResult.receipts.length == 0) {
+            await this.updateSettings(receiptsResult?.nextBlock ?? toBlock)
+            return
+        }
 
         const decodedEvents = decodeReceipts(receiptsResult.receipts, this.orderbookAbi!)
 
