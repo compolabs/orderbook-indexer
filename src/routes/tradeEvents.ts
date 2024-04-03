@@ -29,11 +29,20 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        const {trader, limit} = req.query;
+        const { trader, baseToken, limit } = req.query;
+
+        const conditions: any = {
+            [Sequelize.Op.or]: [
+                { buyer: trader },
+                { seller: trader }
+            ]
+        };
+
+        if (baseToken) conditions.base_token = baseToken;
 
         const orders = await TradeEvent.findAll({
-            where: {[Sequelize.Op.or]: [{buyer: trader}, {seller: trader}]},
-            limit: limit != null ? +limit : 40
+            where: conditions,
+            limit: limit != null ? +limit : 80
         });
 
         res.json(orders);
