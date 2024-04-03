@@ -100,19 +100,15 @@ describe("Envio indexer data encode test", () => {
     it("should decode data", async () => {
             const wallet = fuelNetwork.walletManager.wallet!;
             const {contractId, blockNumber} = JSON.parse(readFileSync("./tests/addresses.json").toString())
-            console.log({contractId, blockNumber})
+            // console.log({contractId, blockNumber})
+            //8750987 < 8755679 < 8760987
+            const from = 8755000
+            const to =   8765000
 
-            const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, +blockNumber + 1000000000, contractId)
+            const receiptsResult = await fetchReceiptsFromEnvio(from, to, contractId)
             const orderbookAbi = OrderbookAbi__factory.connect(contractId, wallet);
             if (receiptsResult === null) return;
-            for (let i = 0; i < receiptsResult.receipts.length; i++) {
-                const receipt = receiptsResult.receipts[i]
-                const decodedEvents = decodeReceipts([receipt], orderbookAbi!)
-                for (let eventIndex in decodedEvents) {
-                    const event = decodedEvents[eventIndex]
-                    console.log(event)
-                }
-            }
+            console.log(decodeReceipts(receiptsResult.receipts, orderbookAbi!))
         },
         60_000,
     );

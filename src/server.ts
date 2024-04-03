@@ -83,7 +83,7 @@ class Indexer {
 
 
     do = async () => {
-        const STEP = 10000
+        const STEP = 1000
 
         if (this.orderbookAbi === null) return;
         const currentBlock = await this.getSettings()
@@ -91,7 +91,7 @@ class Indexer {
         const toBlock = fromBlock + STEP
         const receiptsResult = await fetchReceiptsFromEnvio(fromBlock, toBlock, this.settings.contractId)
 
-        // console.log({toBlock, archiveHeight: receiptsResult?.archiveHeight, nextBlock: receiptsResult?.nextBlock})
+        // console.log({fromBlock,toBlock, archiveHeight: receiptsResult?.archiveHeight, nextBlock: receiptsResult?.nextBlock})
         console.log(`♻️ Processing: ${receiptsResult?.nextBlock} / ${receiptsResult?.archiveHeight} (~${(receiptsResult?.archiveHeight! - receiptsResult?.nextBlock!) * 5 / 60 / STEP} min)`)
         if (receiptsResult == null || receiptsResult.receipts.length == 0) {
             await this.updateSettings(receiptsResult?.nextBlock ?? toBlock)
