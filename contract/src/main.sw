@@ -241,7 +241,7 @@ impl OrderBook for Contract {
             order_id: order_sell.id,
             trader: seller,
             base_token: order_sell.base_token,
-            base_size_change: order_sell.base_size + I64::from(trade_size),
+            base_size_change: I64::from(trade_size),
             base_price: order_sell.base_price,
             timestamp: timestamp(),
         });
@@ -249,7 +249,7 @@ impl OrderBook for Contract {
             order_id: order_buy.id,
             trader: buyer,
             base_token: order_buy.base_token,
-            base_size_change: order_buy.base_size+ I64::neg_from(trade_size),
+            base_size_change: I64::neg_from(trade_size),
             base_price: order_buy.base_price,
             timestamp: timestamp(),
         });

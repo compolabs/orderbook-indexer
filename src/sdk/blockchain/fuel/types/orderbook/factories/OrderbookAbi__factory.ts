@@ -578,15 +578,15 @@ const _abi = {
       },
       "attributes": [
         {
-          "name": "payable",
-          "arguments": []
-        },
-        {
           "name": "storage",
           "arguments": [
             "read",
             "write"
           ]
+        },
+        {
+          "name": "payable",
+          "arguments": []
         }
       ]
     },
@@ -844,7 +844,7 @@ const _abi = {
         "type": 10,
         "typeArguments": []
       },
-      "offset": 74404
+      "offset": 73900
     },
     {
       "name": "QUOTE_TOKEN_DECIMALS",
@@ -853,7 +853,7 @@ const _abi = {
         "type": 19,
         "typeArguments": null
       },
-      "offset": 74340
+      "offset": 73836
     },
     {
       "name": "PRICE_DECIMALS",
@@ -862,7 +862,7 @@ const _abi = {
         "type": 19,
         "typeArguments": null
       },
-      "offset": 74324
+      "offset": 73820
     }
   ]
 };

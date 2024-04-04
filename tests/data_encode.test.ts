@@ -74,7 +74,7 @@ describe("Envio indexer data encode test", () => {
         60_000,
     );
 
-    it("should create order", async () => {
+    it("should create and cancel order", async () => {
             const wallet = fuelNetwork.walletManager.wallet!;
 
             console.log("Wallet address: ", wallet.address)
@@ -93,6 +93,7 @@ describe("Envio indexer data encode test", () => {
             const {orderId: sellOrderId} = await api.createSpotOrder(btc, usdc, "-100000", (69111 * 1e9).toString(), wallet, contractId);
             console.log({sellOrderId})
 
+            await api.cancelSpotOrder(sellOrderId, wallet, contractId)
         },
         60_000,
     );
@@ -100,12 +101,8 @@ describe("Envio indexer data encode test", () => {
     it("should decode data", async () => {
             const wallet = fuelNetwork.walletManager.wallet!;
             const {contractId, blockNumber} = JSON.parse(readFileSync("./tests/addresses.json").toString())
-            // console.log({contractId, blockNumber})
-            //8750987 < 8755679 < 8760987
-            const from = 8755000
-            const to =   8765000
 
-            const receiptsResult = await fetchReceiptsFromEnvio(from, to, contractId)
+            const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, blockNumber + 1000, contractId)
             const orderbookAbi = OrderbookAbi__factory.connect(contractId, wallet);
             if (receiptsResult === null) return;
             console.log(decodeReceipts(receiptsResult.receipts, orderbookAbi!))

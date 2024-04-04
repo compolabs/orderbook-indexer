@@ -49,12 +49,18 @@ app.use('/tradeEvents', tradeEventsRoutes);
 
 type TIndexerSettings = { contractId: string, startBlock: number, privateKey: string }
 
+enum STATUS {
+    ACTIVE,
+    CHILL
+}
 
 class Indexer {
     private fuelNetwork = new FuelNetwork();
     public initialized = false
     private orderbookAbi?: OrderbookAbi
     private readonly settings: TIndexerSettings
+
+    private status = STATUS.CHILL
 
     constructor(settings: TIndexerSettings) {
         this.settings = settings
@@ -64,7 +70,14 @@ class Indexer {
     }
 
     runCrone(cronExpression: string) {
-        cron.schedule(cronExpression, this.do)
+        cron.schedule(cronExpression, async () => {
+            if (this.status === STATUS.ACTIVE) {
+                console.log("🍃 Last process is still active, skipping")
+                return
+            }
+            this.status = STATUS.ACTIVE
+            await this.do().finally(() => this.status = STATUS.CHILL)
+        })
     }
 
     private async updateSettings(lastBlock: number) {
@@ -99,24 +112,25 @@ class Indexer {
         }
 
         const decodedEvents = decodeReceipts(receiptsResult.receipts, this.orderbookAbi!)
-
-        for (let eventIndex in decodedEvents) {
+        for (let eventIndex = 0; eventIndex < decodedEvents.length; eventIndex++) {
             const event = decodedEvents[eventIndex]
             console.log(event)
             if (this.isEvent("MarketCreateEvent", event)) {
                 await MarketCreateEvent.create({...event});
-            }
-            if (this.isEvent("OrderChangeEvent", event)) {
+            } else if (this.isEvent("OrderChangeEvent", event)) {
                 await OrderChangeEvent.create(event);
+                const defaults: any = {...event, base_size: (event as any).base_size_change}
+                delete defaults.base_size_change;
                 const [order, created] = await Order.findOrCreate({
-                    where: {order_id: (event as any).order_id},
-                    defaults: {...event, base_size: (event as any).base_size_change}
+                    where: {order_id: (event as any).order_id}, defaults
                 });
 
-                if (!created) await order.set("base_size", (event as any).base_size_change).save()
+                if (!created) {
+                    const newBaseSize = new BN((event as any).base_size_change).plus(order.get("base_size") as string)
+                    await order.set("base_size", newBaseSize.toString()).save()
+                }
 
-            }
-            if (this.isEvent("TradeEvent", event)) {
+            } else if (this.isEvent("TradeEvent", event)) {
                 await TradeEvent.create(event);
 
                 // const [buyOrder, sellOrder] = await Promise.all([Order.findOne({where: {order_id: (event as any).buy_order_id}}), Order.findOne({where: {order_id: (event as any).sell_order_id}})])
@@ -130,10 +144,11 @@ class Indexer {
                 //     const newSize = new BN(oldSize as string).plus((event as any).trade_size).toString()
                 //     await sellOrder.set("base_size", newSize).save()
                 // }
+            } else {
+                console.log("Unknown event", event)
             }
-
-            await this.updateSettings(receiptsResult.nextBlock)
         }
+        await this.updateSettings(receiptsResult.nextBlock)
     }
 
 

@@ -35,6 +35,7 @@ export default async function fetchReceiptsFromEnvio(fromBlock: number, toBlock:
         data: receipt.data
     } as ReceiptLogData & { data: string }))
 
+    console.log(`Envio request: fromBlock: ${fromBlock}, receipts amount: ${receipts.length}`)
     return {
         archiveHeight: indexerData.archive_height,
         nextBlock: indexerData.next_block,
