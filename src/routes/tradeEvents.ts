@@ -29,14 +29,11 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        const { trader, baseToken, limit } = req.query;
+        const {trader, baseToken, limit} = req.query;
 
-        const conditions: any = {
-            [Sequelize.Op.or]: [
-                { buyer: trader },
-                { seller: trader }
-            ]
-        };
+        const conditions: any = {};
+
+        if (trader != null) conditions[Sequelize.Op.or] = [{buyer: trader}, {seller: trader}]
 
         if (baseToken) conditions.base_token = baseToken;
 
@@ -47,7 +44,7 @@ router.get('/', async (req, res) => {
 
         res.json(orders);
     } catch (error) {
-        res.status(500).json({message: 'Failed to fetch orders.'});
+        res.status(500).json({message: 'Failed to fetch event.'});
     }
 });
 
