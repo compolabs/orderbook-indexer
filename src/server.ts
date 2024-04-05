@@ -20,6 +20,7 @@ import MarketCreateEvent from "./models/marketCreateEvent";
 import OrderChangeEvent from "./models/orderChangeEvent";
 import Order from "./models/order";
 import BN from "./utils/BN";
+import {log} from "util";
 
 const app = express();
 
@@ -76,7 +77,7 @@ class Indexer {
                 return
             }
             this.status = STATUS.ACTIVE
-            await this.do().finally(() => this.status = STATUS.CHILL)
+            await this.do().catch(console.error).finally(() => this.status = STATUS.CHILL)
         })
     }
 
@@ -104,7 +105,7 @@ class Indexer {
         const toBlock = fromBlock + STEP
         const receiptsResult = await fetchReceiptsFromEnvio(fromBlock, toBlock, this.settings.contractId)
 
-        // console.log({fromBlock,toBlock, archiveHeight: receiptsResult?.archiveHeight, nextBlock: receiptsResult?.nextBlock})
+        // console.log({fromBlock, toBlock, archiveHeight: receiptsResult?.archiveHeight, nextBlock: receiptsResult?.nextBlock})
         console.log(`♻️ Processing: ${receiptsResult?.nextBlock} / ${receiptsResult?.archiveHeight} (~${(receiptsResult?.archiveHeight! - receiptsResult?.nextBlock!) * 5 / 60 / STEP} min)`)
         if (receiptsResult == null || receiptsResult.receipts.length == 0) {
             await this.updateSettings(receiptsResult?.nextBlock ?? toBlock)
@@ -113,7 +114,9 @@ class Indexer {
 
         const decodedEvents = decodeReceipts(receiptsResult.receipts, this.orderbookAbi!)
         for (let eventIndex = 0; eventIndex < decodedEvents.length; eventIndex++) {
+            console.log("🗿", eventIndex)
             const event = decodedEvents[eventIndex]
+
             console.log(event)
             if (this.isEvent("MarketCreateEvent", event)) {
                 await MarketCreateEvent.create({...event});
@@ -126,29 +129,21 @@ class Indexer {
                 });
 
                 if (!created) {
-                    const newBaseSize = new BN((event as any).base_size_change).plus(order.get("base_size") as string)
-                    await order.set("base_size", newBaseSize.toString()).save()
+                    const baseSizeChange = new BN(((event as any).base_size_change))
+                    const baseSize = new BN(order.get("base_size") as string)
+                    await order.set("base_size", baseSize.plus(baseSizeChange).toString()).save()
                 }
 
             } else if (this.isEvent("TradeEvent", event)) {
                 await TradeEvent.create(event);
 
-                // const [buyOrder, sellOrder] = await Promise.all([Order.findOne({where: {order_id: (event as any).buy_order_id}}), Order.findOne({where: {order_id: (event as any).sell_order_id}})])
-                // if (buyOrder != null) {
-                //     const oldSize = buyOrder.get("base_size")
-                //     const newSize = new BN(oldSize as string).minus((event as any).trade_size).toString()
-                //     await buyOrder.set("base_size", newSize).save()
-                // }
-                // if (sellOrder != null) {
-                //     const oldSize = sellOrder.get("base_size")
-                //     const newSize = new BN(oldSize as string).plus((event as any).trade_size).toString()
-                //     await sellOrder.set("base_size", newSize).save()
-                // }
             } else {
                 console.log("Unknown event", event)
             }
         }
         await this.updateSettings(receiptsResult.nextBlock)
+
+        console.log({currentBlock: await this.getSettings()})
     }
 
 
