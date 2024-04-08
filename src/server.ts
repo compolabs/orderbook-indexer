@@ -133,7 +133,6 @@ class Indexer {
 
     const decodedEvents = decodeReceipts(receiptsResult.receipts, this.orderbookAbi!);
     for (let eventIndex = 0; eventIndex < decodedEvents.length; eventIndex++) {
-      console.log("🗿", eventIndex);
       const event = decodedEvents[eventIndex];
 
       console.log(event);
@@ -160,8 +159,6 @@ class Indexer {
       }
     }
     await this.updateSettings(receiptsResult.nextBlock);
-
-    console.log({ currentBlock: await this.getSettings() });
   };
 
   isEvent = (eventName: string, object: any) => isEvent(eventName, object, this.orderbookAbi!);
