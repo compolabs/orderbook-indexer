@@ -1,31 +1,32 @@
 version: "3.9"
 
 services:
-  node_app:
-    container_name: node_app
+  indexer_app:
+    container_name: indexer_app
     build: .
     ports:
-      - "5000:5000"
+      - "3000:3000"
     environment:
       - DB_NAME=indexer_db
       - DB_USER=francesco
       - DB_PASSWORD=%e\/fOnoM5
-      - DB_HOST=node_db
-#      - API_KEY=composability
+      - DB_HOST=indexer_database
+      - CONTRACT_ID=0x72175cdd41bbf890f8cddfe54fa55ac0f311f963c010746337f1c2ac3d79ffbb
+      - START_BLOCK=8851676
+      - PORT=3000
+      - PRIVATE_KEY=PK_PK_PK
     depends_on:
-      - node_db
+      - indexer_database
 
-  node_db:
-    container_name: node_db
+  indexer_database:
+    container_name: indexer_database
     image: postgres:16
-    ports:
-      - "5432:5432"
     environment:
       - POSTGRES_DB=indexer_db
       - POSTGRES_USER=francesco
       - POSTGRES_PASSWORD=%e\/fOnoM5
     volumes:
-      - indexer_db_data:/var/lib/postgresql/data
+      - indexer_database_data:/var/lib/postgresql/data
 
 volumes:
-  indexer_db_data: {}
+  indexer_database_data: {}
