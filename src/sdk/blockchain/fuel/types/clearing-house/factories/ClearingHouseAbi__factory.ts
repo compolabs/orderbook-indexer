@@ -44,12 +44,12 @@ const _abi = {
       "components": [
         {
           "name": "__tuple_element",
-          "type": 20,
+          "type": 39,
           "typeArguments": null
         },
         {
           "name": "__tuple_element",
-          "type": 20,
+          "type": 39,
           "typeArguments": null
         }
       ],
@@ -234,12 +234,12 @@ const _abi = {
       "components": [
         {
           "name": "buf",
-          "type": 16,
+          "type": 33,
           "typeArguments": null
         },
         {
           "name": "len",
-          "type": 20,
+          "type": 39,
           "typeArguments": null
         }
       ],
@@ -251,7 +251,7 @@ const _abi = {
       "components": [
         {
           "name": "value",
-          "type": 20,
+          "type": 39,
           "typeArguments": null
         },
         {
@@ -273,7 +273,7 @@ const _abi = {
         },
         {
           "name": "decimal",
-          "type": 19,
+          "type": 38,
           "typeArguments": null
         },
         {
@@ -283,12 +283,12 @@ const _abi = {
         },
         {
           "name": "im_ratio",
-          "type": 20,
+          "type": 39,
           "typeArguments": null
         },
         {
           "name": "mm_ratio",
-          "type": 20,
+          "type": 39,
           "typeArguments": null
         },
         {
@@ -302,7 +302,7 @@ const _abi = {
           "typeArguments": [
             {
               "name": "",
-              "type": 20,
+              "type": 39,
               "typeArguments": null
             }
           ]
@@ -313,7 +313,7 @@ const _abi = {
           "typeArguments": [
             {
               "name": "",
-              "type": 20,
+              "type": 39,
               "typeArguments": null
             }
           ]
@@ -324,7 +324,7 @@ const _abi = {
           "typeArguments": [
             {
               "name": "",
-              "type": 20,
+              "type": 39,
               "typeArguments": null
             }
           ]
@@ -334,6 +334,442 @@ const _abi = {
     },
     {
       "typeId": 16,
+      "type": "struct MarketCloseEvent",
+      "components": [
+        {
+          "name": "base_token",
+          "type": 12,
+          "typeArguments": null
+        },
+        {
+          "name": "close_price",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "sender",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 17,
+      "type": "struct MarketCreateEvent",
+      "components": [
+        {
+          "name": "base_token",
+          "type": 12,
+          "typeArguments": null
+        },
+        {
+          "name": "decimal",
+          "type": 38,
+          "typeArguments": null
+        },
+        {
+          "name": "price_feed",
+          "type": 3,
+          "typeArguments": null
+        },
+        {
+          "name": "im_ratio",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "mm_ratio",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "initial_price",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "sender",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 18,
+      "type": "struct MarketPauseEvent",
+      "components": [
+        {
+          "name": "base_token",
+          "type": 12,
+          "typeArguments": null
+        },
+        {
+          "name": "market_price",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "sender",
+          "type": 11,
+          "typeArguments": null
+        },
+        {
+          "name": "paused",
+          "type": 4,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 19,
+      "type": "struct OrderFulfillEvent",
+      "components": [
+        {
+          "name": "order_id",
+          "type": 3,
+          "typeArguments": null
+        },
+        {
+          "name": "trader_sell",
+          "type": 11,
+          "typeArguments": null
+        },
+        {
+          "name": "trader_buy",
+          "type": 11,
+          "typeArguments": null
+        },
+        {
+          "name": "base_token",
+          "type": 12,
+          "typeArguments": null
+        },
+        {
+          "name": "trade_amount",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "trade_value",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "fee_seller",
+          "type": 14,
+          "typeArguments": null
+        },
+        {
+          "name": "fee_buyer",
+          "type": 14,
+          "typeArguments": null
+        },
+        {
+          "name": "matcher",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 20,
+      "type": "struct OrderMatchEvent",
+      "components": [
+        {
+          "name": "order_sell_id",
+          "type": 3,
+          "typeArguments": null
+        },
+        {
+          "name": "order_buy_id",
+          "type": 3,
+          "typeArguments": null
+        },
+        {
+          "name": "trader_sell",
+          "type": 11,
+          "typeArguments": null
+        },
+        {
+          "name": "trader_buy",
+          "type": 11,
+          "typeArguments": null
+        },
+        {
+          "name": "base_token",
+          "type": 12,
+          "typeArguments": null
+        },
+        {
+          "name": "trade_amount",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "trade_value",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "fee_seller",
+          "type": 14,
+          "typeArguments": null
+        },
+        {
+          "name": "fee_buyer",
+          "type": 14,
+          "typeArguments": null
+        },
+        {
+          "name": "matcher",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 21,
+      "type": "struct OrderOpenEvent",
+      "components": [
+        {
+          "name": "base_token",
+          "type": 12,
+          "typeArguments": null
+        },
+        {
+          "name": "base_size",
+          "type": 14,
+          "typeArguments": null
+        },
+        {
+          "name": "order_price",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "market_price",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "sender",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 22,
+      "type": "struct OrderRemoveAllEvent",
+      "components": [
+        {
+          "name": "trader",
+          "type": 11,
+          "typeArguments": null
+        },
+        {
+          "name": "orders",
+          "type": 37,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 3,
+              "typeArguments": null
+            }
+          ]
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 23,
+      "type": "struct OrderRemoveEvent",
+      "components": [
+        {
+          "name": "trader",
+          "type": 11,
+          "typeArguments": null
+        },
+        {
+          "name": "order",
+          "type": 3,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 24,
+      "type": "struct OrderRemoveUncollaterizedEvent",
+      "components": [
+        {
+          "name": "trader",
+          "type": 11,
+          "typeArguments": null
+        },
+        {
+          "name": "orders",
+          "type": 37,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 3,
+              "typeArguments": null
+            }
+          ]
+        },
+        {
+          "name": "sender",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 25,
+      "type": "struct OwnerAddAdminEvent",
+      "components": [
+        {
+          "name": "admin",
+          "type": 11,
+          "typeArguments": null
+        },
+        {
+          "name": "sender",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 26,
+      "type": "struct OwnerRemoveAdminEvent",
+      "components": [
+        {
+          "name": "admin",
+          "type": 11,
+          "typeArguments": null
+        },
+        {
+          "name": "sender",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 27,
+      "type": "struct OwnerUpdateInsuranceFundFeeShareEvent",
+      "components": [
+        {
+          "name": "insurance_fund_fee_share",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "sender",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 28,
+      "type": "struct OwnerUpdateLiquidationPenaltyRatioEvent",
+      "components": [
+        {
+          "name": "liquidation_penalty_ratio",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "sender",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 29,
+      "type": "struct OwnerUpdateMatcherFeeRateEvent",
+      "components": [
+        {
+          "name": "fee_rate",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "sender",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 30,
+      "type": "struct OwnerUpdateMaxFundingRateEvent",
+      "components": [
+        {
+          "name": "max_funding_rate",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "sender",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 31,
+      "type": "struct OwnerUpdateProtocolFeeRateEvent",
+      "components": [
+        {
+          "name": "protocol_fee_rate",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "sender",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 32,
+      "type": "struct OwnerUpdateTakerFeeRateEvent",
+      "components": [
+        {
+          "name": "fee_rate",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "sender",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 33,
       "type": "struct RawBytes",
       "components": [
         {
@@ -343,14 +779,14 @@ const _abi = {
         },
         {
           "name": "cap",
-          "type": 20,
+          "type": 39,
           "typeArguments": null
         }
       ],
       "typeParameters": null
     },
     {
-      "typeId": 17,
+      "typeId": 34,
       "type": "struct RawVec",
       "components": [
         {
@@ -360,7 +796,7 @@ const _abi = {
         },
         {
           "name": "cap",
-          "type": 20,
+          "type": 39,
           "typeArguments": null
         }
       ],
@@ -369,12 +805,71 @@ const _abi = {
       ]
     },
     {
-      "typeId": 18,
+      "typeId": 35,
+      "type": "struct TraderPositionLiquidateEvent",
+      "components": [
+        {
+          "name": "trader",
+          "type": 11,
+          "typeArguments": null
+        },
+        {
+          "name": "base_token",
+          "type": 12,
+          "typeArguments": null
+        },
+        {
+          "name": "position_size_to_be_liquidated",
+          "type": 14,
+          "typeArguments": null
+        },
+        {
+          "name": "liquidated_position_size",
+          "type": 14,
+          "typeArguments": null
+        },
+        {
+          "name": "liquidation_penalty",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "liquidation_fee_to_liquidator",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "liquidator",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 36,
+      "type": "struct TraderSettleAllFunding",
+      "components": [
+        {
+          "name": "trader",
+          "type": 11,
+          "typeArguments": null
+        },
+        {
+          "name": "sender",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 37,
       "type": "struct Vec",
       "components": [
         {
           "name": "buf",
-          "type": 17,
+          "type": 34,
           "typeArguments": [
             {
               "name": "",
@@ -385,7 +880,7 @@ const _abi = {
         },
         {
           "name": "len",
-          "type": 20,
+          "type": 39,
           "typeArguments": null
         }
       ],
@@ -394,13 +889,13 @@ const _abi = {
       ]
     },
     {
-      "typeId": 19,
+      "typeId": 38,
       "type": "u32",
       "components": null,
       "typeParameters": null
     },
     {
-      "typeId": 20,
+      "typeId": 39,
       "type": "u64",
       "components": null,
       "typeParameters": null
@@ -410,7 +905,7 @@ const _abi = {
     {
       "inputs": [
         {
-          "name": "address",
+          "name": "admin",
           "type": 11,
           "typeArguments": null
         }
@@ -436,33 +931,10 @@ const _abi = {
           "name": "base_token",
           "type": 12,
           "typeArguments": null
-        }
-      ],
-      "name": "check_market_open",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "base_token",
-          "type": 12,
-          "typeArguments": null
         },
         {
-          "name": "closed_price",
-          "type": 20,
+          "name": "close_price",
+          "type": 39,
           "typeArguments": null
         }
       ],
@@ -485,13 +957,13 @@ const _abi = {
     {
       "inputs": [
         {
-          "name": "asset_id",
+          "name": "base_token",
           "type": 12,
           "typeArguments": null
         },
         {
           "name": "decimal",
-          "type": 19,
+          "type": 38,
           "typeArguments": null
         },
         {
@@ -501,17 +973,17 @@ const _abi = {
         },
         {
           "name": "im_ratio",
-          "type": 20,
+          "type": 39,
           "typeArguments": null
         },
         {
           "name": "mm_ratio",
-          "type": 20,
+          "type": 39,
           "typeArguments": null
         },
         {
           "name": "initial_price",
-          "type": 20,
+          "type": 39,
           "typeArguments": null
         }
       ],
@@ -545,7 +1017,7 @@ const _abi = {
         },
         {
           "name": "price_update_data",
-          "type": 18,
+          "type": 37,
           "typeArguments": [
             {
               "name": "",
@@ -571,6 +1043,485 @@ const _abi = {
           "arguments": [
             "read",
             "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "trader",
+          "type": 11,
+          "typeArguments": null
+        },
+        {
+          "name": "base_token",
+          "type": 12,
+          "typeArguments": null
+        },
+        {
+          "name": "position_size_to_be_liquidated",
+          "type": 14,
+          "typeArguments": null
+        },
+        {
+          "name": "price_update_data",
+          "type": 37,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 13,
+              "typeArguments": null
+            }
+          ]
+        }
+      ],
+      "name": "liquidate",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        },
+        {
+          "name": "payable",
+          "arguments": []
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "order1_id",
+          "type": 3,
+          "typeArguments": null
+        },
+        {
+          "name": "order2_id",
+          "type": 3,
+          "typeArguments": null
+        },
+        {
+          "name": "price_update_data",
+          "type": 37,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 13,
+              "typeArguments": null
+            }
+          ]
+        }
+      ],
+      "name": "match_orders",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        },
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "base_token",
+          "type": 12,
+          "typeArguments": null
+        },
+        {
+          "name": "base_size",
+          "type": 14,
+          "typeArguments": null
+        },
+        {
+          "name": "order_price",
+          "type": 39,
+          "typeArguments": null
+        },
+        {
+          "name": "price_update_data",
+          "type": 37,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 13,
+              "typeArguments": null
+            }
+          ]
+        }
+      ],
+      "name": "open_order",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        },
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "base_token",
+          "type": 12,
+          "typeArguments": null
+        },
+        {
+          "name": "update_data",
+          "type": 37,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 13,
+              "typeArguments": null
+            }
+          ]
+        }
+      ],
+      "name": "pause_market",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        },
+        {
+          "name": "payable",
+          "arguments": []
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "admin",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "name": "remove_admin",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [],
+      "name": "remove_all_orders",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "order",
+          "type": 3,
+          "typeArguments": null
+        }
+      ],
+      "name": "remove_order",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "trader",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "name": "remove_uncollaterized_orders",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "trader",
+          "type": 11,
+          "typeArguments": null
+        }
+      ],
+      "name": "settle_all_funding",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "base_token",
+          "type": 12,
+          "typeArguments": null
+        }
+      ],
+      "name": "unpause_market",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "insurance_fund_fee_share",
+          "type": 39,
+          "typeArguments": null
+        }
+      ],
+      "name": "update_insurance_fund_fee_share",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "liquidation_penalty_ratio",
+          "type": 39,
+          "typeArguments": null
+        }
+      ],
+      "name": "update_liquidation_penalty_ratio",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "fee_rate",
+          "type": 39,
+          "typeArguments": null
+        }
+      ],
+      "name": "update_matcher_fee_rate",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "max_funding_rate",
+          "type": 39,
+          "typeArguments": null
+        }
+      ],
+      "name": "update_max_funding_rate",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "protocol_fee_rate",
+          "type": 39,
+          "typeArguments": null
+        }
+      ],
+      "name": "update_protocol_fee_rate",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "fee_rate",
+          "type": 39,
+          "typeArguments": null
+        }
+      ],
+      "name": "update_taker_fee_rate",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "base_token",
+          "type": 12,
+          "typeArguments": null
+        }
+      ],
+      "name": "check_market_open",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
           ]
         }
       ]
@@ -647,7 +1598,7 @@ const _abi = {
       "name": "get_margin_requirement_for_liquidation",
       "output": {
         "name": "",
-        "type": 20,
+        "type": 39,
         "typeArguments": null
       },
       "attributes": [
@@ -692,6 +1643,11 @@ const _abi = {
         {
           "name": "base_asset",
           "type": 12,
+          "typeArguments": null
+        },
+        {
+          "name": "trade_price",
+          "type": 39,
           "typeArguments": null
         }
       ],
@@ -809,276 +1765,6 @@ const _abi = {
           "name": "trader",
           "type": 11,
           "typeArguments": null
-        },
-        {
-          "name": "base_token",
-          "type": 12,
-          "typeArguments": null
-        },
-        {
-          "name": "position_size",
-          "type": 14,
-          "typeArguments": null
-        },
-        {
-          "name": "price_update_data",
-          "type": 18,
-          "typeArguments": [
-            {
-              "name": "",
-              "type": 13,
-              "typeArguments": null
-            }
-          ]
-        }
-      ],
-      "name": "liquidate",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
-        },
-        {
-          "name": "payable",
-          "arguments": []
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "order_sell_id",
-          "type": 3,
-          "typeArguments": null
-        },
-        {
-          "name": "order_buy_id",
-          "type": 3,
-          "typeArguments": null
-        },
-        {
-          "name": "price_update_data",
-          "type": 18,
-          "typeArguments": [
-            {
-              "name": "",
-              "type": 13,
-              "typeArguments": null
-            }
-          ]
-        }
-      ],
-      "name": "match_orders",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "payable",
-          "arguments": []
-        },
-        {
-          "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "base_token",
-          "type": 12,
-          "typeArguments": null
-        },
-        {
-          "name": "base_size",
-          "type": 14,
-          "typeArguments": null
-        },
-        {
-          "name": "order_price",
-          "type": 20,
-          "typeArguments": null
-        },
-        {
-          "name": "price_update_data",
-          "type": 18,
-          "typeArguments": [
-            {
-              "name": "",
-              "type": 13,
-              "typeArguments": null
-            }
-          ]
-        }
-      ],
-      "name": "open_order",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
-        },
-        {
-          "name": "payable",
-          "arguments": []
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "base_token",
-          "type": 12,
-          "typeArguments": null
-        },
-        {
-          "name": "update_data",
-          "type": 18,
-          "typeArguments": [
-            {
-              "name": "",
-              "type": 13,
-              "typeArguments": null
-            }
-          ]
-        }
-      ],
-      "name": "pause_market",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
-        },
-        {
-          "name": "payable",
-          "arguments": []
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "address",
-          "type": 11,
-          "typeArguments": null
-        }
-      ],
-      "name": "remove_admin",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "write"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [],
-      "name": "remove_all_orders",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "order_id",
-          "type": 3,
-          "typeArguments": null
-        }
-      ],
-      "name": "remove_order",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "trader",
-          "type": 11,
-          "typeArguments": null
-        }
-      ],
-      "name": "remove_uncollaterised_orders",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "trader",
-          "type": 11,
-          "typeArguments": null
         }
       ],
       "name": "require_enough_free_collateral",
@@ -1092,192 +1778,6 @@ const _abi = {
           "name": "storage",
           "arguments": [
             "read"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "trader",
-          "type": 11,
-          "typeArguments": null
-        }
-      ],
-      "name": "settle_all_funding",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "base_token",
-          "type": 12,
-          "typeArguments": null
-        }
-      ],
-      "name": "unpause_market",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "insurance_fund_fee_share",
-          "type": 20,
-          "typeArguments": null
-        }
-      ],
-      "name": "update_insurance_fund_fee_share",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "write"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "liquidation_penalty_ratio",
-          "type": 20,
-          "typeArguments": null
-        }
-      ],
-      "name": "update_liquidation_penalty_ratio",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "write"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "fee_rate",
-          "type": 20,
-          "typeArguments": null
-        }
-      ],
-      "name": "update_matcher_fee_rate",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "write"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "max_funding_rate",
-          "type": 20,
-          "typeArguments": null
-        }
-      ],
-      "name": "update_max_funding_rate",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "write"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "protocol_fee_rate",
-          "type": 20,
-          "typeArguments": null
-        }
-      ],
-      "name": "update_protocol_fee_rate",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "write"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "fee_rate",
-          "type": 20,
-          "typeArguments": null
-        }
-      ],
-      "name": "update_taker_fee_rate",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "write"
           ]
         }
       ]
@@ -1296,7 +1796,7 @@ const _abi = {
       "logId": 1,
       "loggedType": {
         "name": "",
-        "type": 5,
+        "type": 25,
         "typeArguments": []
       }
     },
@@ -1320,7 +1820,7 @@ const _abi = {
       "logId": 4,
       "loggedType": {
         "name": "",
-        "type": 5,
+        "type": 16,
         "typeArguments": []
       }
     },
@@ -1344,7 +1844,7 @@ const _abi = {
       "logId": 7,
       "loggedType": {
         "name": "",
-        "type": 5,
+        "type": 17,
         "typeArguments": []
       }
     },
@@ -1368,7 +1868,7 @@ const _abi = {
       "logId": 10,
       "loggedType": {
         "name": "",
-        "type": 8,
+        "type": 19,
         "typeArguments": []
       }
     },
@@ -1376,7 +1876,7 @@ const _abi = {
       "logId": 11,
       "loggedType": {
         "name": "",
-        "type": 5,
+        "type": 8,
         "typeArguments": []
       }
     },
@@ -1448,7 +1948,7 @@ const _abi = {
       "logId": 20,
       "loggedType": {
         "name": "",
-        "type": 5,
+        "type": 35,
         "typeArguments": []
       }
     },
@@ -1472,7 +1972,7 @@ const _abi = {
       "logId": 23,
       "loggedType": {
         "name": "",
-        "type": 8,
+        "type": 20,
         "typeArguments": []
       }
     },
@@ -1496,7 +1996,7 @@ const _abi = {
       "logId": 26,
       "loggedType": {
         "name": "",
-        "type": 5,
+        "type": 8,
         "typeArguments": []
       }
     },
@@ -1512,7 +2012,7 @@ const _abi = {
       "logId": 28,
       "loggedType": {
         "name": "",
-        "type": 5,
+        "type": 21,
         "typeArguments": []
       }
     },
@@ -1544,7 +2044,7 @@ const _abi = {
       "logId": 32,
       "loggedType": {
         "name": "",
-        "type": 5,
+        "type": 18,
         "typeArguments": []
       }
     },
@@ -1560,7 +2060,7 @@ const _abi = {
       "logId": 34,
       "loggedType": {
         "name": "",
-        "type": 5,
+        "type": 26,
         "typeArguments": []
       }
     },
@@ -1568,7 +2068,7 @@ const _abi = {
       "logId": 35,
       "loggedType": {
         "name": "",
-        "type": 5,
+        "type": 22,
         "typeArguments": []
       }
     },
@@ -1576,7 +2076,7 @@ const _abi = {
       "logId": 36,
       "loggedType": {
         "name": "",
-        "type": 5,
+        "type": 23,
         "typeArguments": []
       }
     },
@@ -1592,7 +2092,7 @@ const _abi = {
       "logId": 38,
       "loggedType": {
         "name": "",
-        "type": 5,
+        "type": 24,
         "typeArguments": []
       }
     },
@@ -1606,6 +2106,158 @@ const _abi = {
     },
     {
       "logId": 40,
+      "loggedType": {
+        "name": "",
+        "type": 36,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 41,
+      "loggedType": {
+        "name": "",
+        "type": 5,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 42,
+      "loggedType": {
+        "name": "",
+        "type": 5,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 43,
+      "loggedType": {
+        "name": "",
+        "type": 18,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 44,
+      "loggedType": {
+        "name": "",
+        "type": 5,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 45,
+      "loggedType": {
+        "name": "",
+        "type": 27,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 46,
+      "loggedType": {
+        "name": "",
+        "type": 5,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 47,
+      "loggedType": {
+        "name": "",
+        "type": 28,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 48,
+      "loggedType": {
+        "name": "",
+        "type": 5,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 49,
+      "loggedType": {
+        "name": "",
+        "type": 29,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 50,
+      "loggedType": {
+        "name": "",
+        "type": 5,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 51,
+      "loggedType": {
+        "name": "",
+        "type": 30,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 52,
+      "loggedType": {
+        "name": "",
+        "type": 5,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 53,
+      "loggedType": {
+        "name": "",
+        "type": 31,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 54,
+      "loggedType": {
+        "name": "",
+        "type": 5,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 55,
+      "loggedType": {
+        "name": "",
+        "type": 32,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 56,
+      "loggedType": {
+        "name": "",
+        "type": 5,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 57,
+      "loggedType": {
+        "name": "",
+        "type": 5,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 58,
+      "loggedType": {
+        "name": "",
+        "type": 5,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 59,
       "loggedType": {
         "name": "",
         "type": 5,
@@ -1622,7 +2274,7 @@ const _abi = {
         "type": 11,
         "typeArguments": []
       },
-      "offset": 61792
+      "offset": 95300
     },
     {
       "name": "PROXY_ADDRESS",
@@ -1631,7 +2283,7 @@ const _abi = {
         "type": 11,
         "typeArguments": []
       },
-      "offset": 61984
+      "offset": 95476
     }
   ]
 };

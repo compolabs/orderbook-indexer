@@ -7,7 +7,7 @@ import {Api} from "../src/sdk/blockchain/fuel/Api";
 import {OrderbookAbi__factory} from "../src/sdk/blockchain/fuel/types/orderbook";
 import {PRIVATE_KEY} from "../src/config";
 import fetchReceiptsFromEnvio from "../src/utils/fetchReceiptsFromEnvio";
-import {decodeReceipts} from "../src/utils/decodeReceipts";
+import {decodeOrderbookReceipts} from "../src/utils/decodeReceipts";
 
 describe("Envio indexer data encode test", () => {
     let fuelNetwork: FuelNetwork;
@@ -42,7 +42,7 @@ describe("Envio indexer data encode test", () => {
             const contractId = contract.id.toHexString()
             console.log({contractId, blockNumber})
 
-            writeFileSync("./tests/addresses.json", JSON.stringify({contractId, blockNumber}))
+            writeFileSync("./tests/orderbookAddresses.json", JSON.stringify({contractId, blockNumber}))
 
             const api = new Api();
 
@@ -67,8 +67,8 @@ describe("Envio indexer data encode test", () => {
             console.log("Orders matched")
             await sleep(1000)
 
-            const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, +blockNumber + 1000, contractId)
-            const events = decodeReceipts(receiptsResult?.receipts!, orderbookAbi)
+            const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, +blockNumber + 1000, [contractId])
+            const events = decodeOrderbookReceipts(receiptsResult?.receipts!, orderbookAbi)
             console.log(events)
         },
         60_000,
@@ -80,7 +80,7 @@ describe("Envio indexer data encode test", () => {
             console.log("Wallet address: ", wallet.address)
             console.log("Eth balance   : ", await wallet.getBalance(BaseAssetId).then(b => b.toString()), " ETH")
 
-            const {contractId, blockNumber} = JSON.parse(readFileSync("./tests/addresses.json").toString())
+            const {contractId, blockNumber} = JSON.parse(readFileSync("./tests/orderbookAddresses.json").toString())
             console.log({contractId, blockNumber})
 
             const btc = fuelNetwork.getTokenBySymbol("BTC");
@@ -100,12 +100,12 @@ describe("Envio indexer data encode test", () => {
 
     it("should decode data", async () => {
             const wallet = fuelNetwork.walletManager.wallet!;
-            const {contractId, blockNumber} = JSON.parse(readFileSync("./tests/addresses.json").toString())
+            const {contractId, blockNumber} = JSON.parse(readFileSync("./tests/orderbookAddresses.json").toString())
 
-            const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, blockNumber + 1000, contractId)
+            const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, blockNumber + 1000, [contractId])
             const orderbookAbi = OrderbookAbi__factory.connect(contractId, wallet);
             if (receiptsResult === null) return;
-            console.log(decodeReceipts(receiptsResult.receipts, orderbookAbi!))
+            console.log(decodeOrderbookReceipts(receiptsResult.receipts, orderbookAbi!))
         },
         60_000,
     );

@@ -16,17 +16,22 @@ services:
       - PORT=${PORT}
       - PRIVATE_KEY=${PRIVATE_KEY}
     depends_on:
-      - orderbook_indexer_database
+      - indexer_database
 
-  orderbook_indexer_database:
-    container_name: orderbook_indexer_database
+  indexer_database:
+    container_name: indexer_database
     image: postgres:16
+    ports:
+      - "5432:5432"
     environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+#      - POSTGRES_DB=${DB_NAME}
+#      - POSTGRES_USER=${DB_USER}
+#      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=indexer_db
+      - POSTGRES_USER=francesco
+      - POSTGRES_PASSWORD=%e\/fOnoM5
     volumes:
-      - orderbook_indexer_database_data:/var/lib/postgresql/data
+      - indexer_database_data:/var/lib/postgresql/data
 
 volumes:
-  orderbook_indexer_database_data: {}
+  indexer_database_data: {}
