@@ -21,15 +21,10 @@ services:
   indexer_database:
     container_name: indexer_database
     image: postgres:16
-    ports:
-      - "5432:5432"
     environment:
-#      - POSTGRES_DB=${DB_NAME}
-#      - POSTGRES_USER=${DB_USER}
-#      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=indexer_db
-      - POSTGRES_USER=francesco
-      - POSTGRES_PASSWORD=%e\/fOnoM5
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
       - indexer_database_data:/var/lib/postgresql/data
 
