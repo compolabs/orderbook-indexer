@@ -208,7 +208,7 @@ export class Api {
         };
 
         await vaultFactory.functions
-            .deposit_collateral(assetIdInput)
+            .deposit_collateral()
             .callParams({forward})
             .txParams({gasPrice: 1, gasLimit: GAS_LIMIT})
             .call();

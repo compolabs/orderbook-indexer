@@ -45,6 +45,16 @@ export type PerpMarketAbiConfigurables = {
 interface PerpMarketAbiInterface extends Interface {
   functions: {
     fulfill_order: FunctionFragment;
+    match_orders: FunctionFragment;
+    open_order: FunctionFragment;
+    remove_all_orders: FunctionFragment;
+    remove_order: FunctionFragment;
+    remove_uncollaterized_orders: FunctionFragment;
+    setup_twap: FunctionFragment;
+    update_maker_fee_rate: FunctionFragment;
+    update_mark_span: FunctionFragment;
+    update_market_span: FunctionFragment;
+    get_latest_twap: FunctionFragment;
     get_mark_price: FunctionFragment;
     get_market_price: FunctionFragment;
     get_total_trader_order_base: FunctionFragment;
@@ -52,18 +62,19 @@ interface PerpMarketAbiInterface extends Interface {
     get_twaps: FunctionFragment;
     has_active_orders: FunctionFragment;
     has_active_orders_by_token: FunctionFragment;
-    match_orders: FunctionFragment;
-    open_order: FunctionFragment;
-    remove_all_orders: FunctionFragment;
-    remove_order: FunctionFragment;
-    remove_uncollaterised_orders: FunctionFragment;
-    setup_twap: FunctionFragment;
-    update_maker_fee_rate: FunctionFragment;
-    update_mark_span: FunctionFragment;
-    update_market_span: FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: 'fulfill_order', values: [I64Input, string]): Uint8Array;
+  encodeFunctionData(functionFragment: 'match_orders', values: [string, string]): Uint8Array;
+  encodeFunctionData(functionFragment: 'open_order', values: [AddressInput, AssetIdInput, I64Input, BigNumberish]): Uint8Array;
+  encodeFunctionData(functionFragment: 'remove_all_orders', values: [AddressInput]): Uint8Array;
+  encodeFunctionData(functionFragment: 'remove_order', values: [AddressInput, string]): Uint8Array;
+  encodeFunctionData(functionFragment: 'remove_uncollaterized_orders', values: [AddressInput]): Uint8Array;
+  encodeFunctionData(functionFragment: 'setup_twap', values: [AssetIdInput, BigNumberish]): Uint8Array;
+  encodeFunctionData(functionFragment: 'update_maker_fee_rate', values: [BigNumberish]): Uint8Array;
+  encodeFunctionData(functionFragment: 'update_mark_span', values: [BigNumberish]): Uint8Array;
+  encodeFunctionData(functionFragment: 'update_market_span', values: [BigNumberish]): Uint8Array;
+  encodeFunctionData(functionFragment: 'get_latest_twap', values: [AssetIdInput]): Uint8Array;
   encodeFunctionData(functionFragment: 'get_mark_price', values: [AssetIdInput]): Uint8Array;
   encodeFunctionData(functionFragment: 'get_market_price', values: [AssetIdInput]): Uint8Array;
   encodeFunctionData(functionFragment: 'get_total_trader_order_base', values: [AddressInput, AssetIdInput]): Uint8Array;
@@ -71,17 +82,18 @@ interface PerpMarketAbiInterface extends Interface {
   encodeFunctionData(functionFragment: 'get_twaps', values: [AssetIdInput]): Uint8Array;
   encodeFunctionData(functionFragment: 'has_active_orders', values: [AddressInput]): Uint8Array;
   encodeFunctionData(functionFragment: 'has_active_orders_by_token', values: [AddressInput, AssetIdInput]): Uint8Array;
-  encodeFunctionData(functionFragment: 'match_orders', values: [string, string]): Uint8Array;
-  encodeFunctionData(functionFragment: 'open_order', values: [AddressInput, AssetIdInput, I64Input, BigNumberish]): Uint8Array;
-  encodeFunctionData(functionFragment: 'remove_all_orders', values: []): Uint8Array;
-  encodeFunctionData(functionFragment: 'remove_order', values: [AddressInput, string]): Uint8Array;
-  encodeFunctionData(functionFragment: 'remove_uncollaterised_orders', values: [AddressInput]): Uint8Array;
-  encodeFunctionData(functionFragment: 'setup_twap', values: [AssetIdInput, BigNumberish]): Uint8Array;
-  encodeFunctionData(functionFragment: 'update_maker_fee_rate', values: [BigNumberish]): Uint8Array;
-  encodeFunctionData(functionFragment: 'update_mark_span', values: [BigNumberish]): Uint8Array;
-  encodeFunctionData(functionFragment: 'update_market_span', values: [BigNumberish]): Uint8Array;
 
   decodeFunctionData(functionFragment: 'fulfill_order', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'match_orders', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'open_order', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'remove_all_orders', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'remove_order', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'remove_uncollaterized_orders', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'setup_twap', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'update_maker_fee_rate', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'update_mark_span', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'update_market_span', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'get_latest_twap', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'get_mark_price', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'get_market_price', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'get_total_trader_order_base', data: BytesLike): DecodedValue;
@@ -89,21 +101,22 @@ interface PerpMarketAbiInterface extends Interface {
   decodeFunctionData(functionFragment: 'get_twaps', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'has_active_orders', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'has_active_orders_by_token', data: BytesLike): DecodedValue;
-  decodeFunctionData(functionFragment: 'match_orders', data: BytesLike): DecodedValue;
-  decodeFunctionData(functionFragment: 'open_order', data: BytesLike): DecodedValue;
-  decodeFunctionData(functionFragment: 'remove_all_orders', data: BytesLike): DecodedValue;
-  decodeFunctionData(functionFragment: 'remove_order', data: BytesLike): DecodedValue;
-  decodeFunctionData(functionFragment: 'remove_uncollaterised_orders', data: BytesLike): DecodedValue;
-  decodeFunctionData(functionFragment: 'setup_twap', data: BytesLike): DecodedValue;
-  decodeFunctionData(functionFragment: 'update_maker_fee_rate', data: BytesLike): DecodedValue;
-  decodeFunctionData(functionFragment: 'update_mark_span', data: BytesLike): DecodedValue;
-  decodeFunctionData(functionFragment: 'update_market_span', data: BytesLike): DecodedValue;
 }
 
 export class PerpMarketAbi extends Contract {
   interface: PerpMarketAbiInterface;
   functions: {
     fulfill_order: InvokeFunction<[base_size: I64Input, order_id: string], [AddressOutput, AssetIdOutput, BN, BN]>;
+    match_orders: InvokeFunction<[order1_id: string, order2_id: string], [string, string, AddressOutput, AddressOutput, AssetIdOutput, BN, BN]>;
+    open_order: InvokeFunction<[trader: AddressInput, base_token: AssetIdInput, base_size: I64Input, order_price: BigNumberish], string>;
+    remove_all_orders: InvokeFunction<[trader: AddressInput], Vec<string>>;
+    remove_order: InvokeFunction<[trader: AddressInput, order_id: string], void>;
+    remove_uncollaterized_orders: InvokeFunction<[trader: AddressInput], Vec<string>>;
+    setup_twap: InvokeFunction<[base_token: AssetIdInput, current_twap: BigNumberish], void>;
+    update_maker_fee_rate: InvokeFunction<[fee_rate: BigNumberish], void>;
+    update_mark_span: InvokeFunction<[mark_span: BigNumberish], void>;
+    update_market_span: InvokeFunction<[market_span: BigNumberish], void>;
+    get_latest_twap: InvokeFunction<[base_token: AssetIdInput], [BN, BN]>;
     get_mark_price: InvokeFunction<[token: AssetIdInput], BN>;
     get_market_price: InvokeFunction<[token: AssetIdInput], BN>;
     get_total_trader_order_base: InvokeFunction<[trader: AddressInput, base_token: AssetIdInput], I64Output>;
@@ -111,14 +124,5 @@ export class PerpMarketAbi extends Contract {
     get_twaps: InvokeFunction<[base_token: AssetIdInput], [Option<TwapOutput>, Option<TwapOutput>]>;
     has_active_orders: InvokeFunction<[trader: AddressInput], boolean>;
     has_active_orders_by_token: InvokeFunction<[trader: AddressInput, base_token: AssetIdInput], boolean>;
-    match_orders: InvokeFunction<[order1_id: string, order2_id: string], [AddressOutput, AddressOutput, AssetIdOutput, BN, BN]>;
-    open_order: InvokeFunction<[trader: AddressInput, base_token: AssetIdInput, base_size: I64Input, order_price: BigNumberish], void>;
-    remove_all_orders: InvokeFunction<[], void>;
-    remove_order: InvokeFunction<[trader: AddressInput, order_id: string], void>;
-    remove_uncollaterised_orders: InvokeFunction<[trader: AddressInput], void>;
-    setup_twap: InvokeFunction<[base_token: AssetIdInput, current_twap: BigNumberish], void>;
-    update_maker_fee_rate: InvokeFunction<[fee_rate: BigNumberish], void>;
-    update_mark_span: InvokeFunction<[mark_span: BigNumberish], void>;
-    update_market_span: InvokeFunction<[market_span: BigNumberish], void>;
   };
 }

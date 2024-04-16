@@ -29,7 +29,7 @@ export class FuelNetwork extends BlockchainNetwork {
 
     private providerPromise: Promise<Provider>;
 
-     walletManager = new WalletManager();
+    walletManager = new WalletManager();
     private api = new Api();
 
     public network = NETWORKS[0];
