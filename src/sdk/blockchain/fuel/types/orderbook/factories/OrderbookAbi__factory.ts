@@ -746,7 +746,7 @@ const _abi = {
       "logId": 9,
       "loggedType": {
         "name": "",
-        "type": 13,
+        "type": 4,
         "typeArguments": []
       }
     },
@@ -754,7 +754,7 @@ const _abi = {
       "logId": 10,
       "loggedType": {
         "name": "",
-        "type": 6,
+        "type": 4,
         "typeArguments": []
       }
     },
@@ -762,7 +762,7 @@ const _abi = {
       "logId": 11,
       "loggedType": {
         "name": "",
-        "type": 4,
+        "type": 13,
         "typeArguments": []
       }
     },
@@ -770,7 +770,7 @@ const _abi = {
       "logId": 12,
       "loggedType": {
         "name": "",
-        "type": 4,
+        "type": 6,
         "typeArguments": []
       }
     },
@@ -826,7 +826,7 @@ const _abi = {
       "logId": 19,
       "loggedType": {
         "name": "",
-        "type": 15,
+        "type": 4,
         "typeArguments": []
       }
     },
@@ -834,7 +834,7 @@ const _abi = {
       "logId": 20,
       "loggedType": {
         "name": "",
-        "type": 15,
+        "type": 4,
         "typeArguments": []
       }
     },
@@ -842,7 +842,7 @@ const _abi = {
       "logId": 21,
       "loggedType": {
         "name": "",
-        "type": 17,
+        "type": 4,
         "typeArguments": []
       }
     },
@@ -850,7 +850,7 @@ const _abi = {
       "logId": 22,
       "loggedType": {
         "name": "",
-        "type": 6,
+        "type": 4,
         "typeArguments": []
       }
     },
@@ -874,7 +874,7 @@ const _abi = {
       "logId": 25,
       "loggedType": {
         "name": "",
-        "type": 4,
+        "type": 15,
         "typeArguments": []
       }
     },
@@ -882,7 +882,7 @@ const _abi = {
       "logId": 26,
       "loggedType": {
         "name": "",
-        "type": 4,
+        "type": 15,
         "typeArguments": []
       }
     },
@@ -890,7 +890,7 @@ const _abi = {
       "logId": 27,
       "loggedType": {
         "name": "",
-        "type": 4,
+        "type": 17,
         "typeArguments": []
       }
     },
@@ -898,7 +898,7 @@ const _abi = {
       "logId": 28,
       "loggedType": {
         "name": "",
-        "type": 4,
+        "type": 6,
         "typeArguments": []
       }
     },
@@ -954,6 +954,86 @@ const _abi = {
       "logId": 35,
       "loggedType": {
         "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 36,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 37,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 38,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 39,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 40,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 41,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 42,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 43,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 44,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 45,
+      "loggedType": {
+        "name": "",
         "type": 15,
         "typeArguments": []
       }
@@ -968,7 +1048,7 @@ const _abi = {
         "type": 10,
         "typeArguments": []
       },
-      "offset": 55308
+      "offset": 99744
     },
     {
       "name": "QUOTE_TOKEN_DECIMALS",
@@ -977,7 +1057,7 @@ const _abi = {
         "type": 19,
         "typeArguments": null
       },
-      "offset": 55244
+      "offset": 99680
     },
     {
       "name": "PRICE_DECIMALS",
@@ -986,7 +1066,7 @@ const _abi = {
         "type": 19,
         "typeArguments": null
       },
-      "offset": 55228
+      "offset": 99664
     }
   ]
 };
