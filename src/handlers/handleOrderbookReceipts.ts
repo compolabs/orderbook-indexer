@@ -10,24 +10,28 @@ import {Contract, TransactionResultReceipt} from "fuels";
 export async function handleOrderbookReceipts(receipts: TransactionResultReceipt[], abi: Contract) {
     const decodedEvents = decodeOrderbookReceipts(receipts, abi);
     for (let eventIndex = 0; eventIndex < decodedEvents.length; eventIndex++) {
-        const event = decodedEvents[eventIndex];
+        const event: any = decodedEvents[eventIndex];
 
         console.log(event);
         if (isEvent("MarketCreateEvent", event, abi)) {
             await MarketCreateEvent.create({...event});
         } else if (isEvent("OrderChangeEvent", event, abi)) {
-            await OrderChangeEvent.create(event);
-            const defaults: any = {...event, base_size: (event as any).base_size_change};
-            delete defaults.base_size_change;
+            // await OrderChangeEvent.create(event); //todo
+            const defaultOrder: any = event.order === null? null:{
+                order_id: event.order_id,
+                trader: event.order.trader,
+                base_token: event.order.base_token,
+                base_size: event.order.base_size,
+                base_price: event.order.base_price,
+                timestamp: event.timestamp
+            }
             const [order, created] = await Order.findOrCreate({
                 where: {order_id: (event as any).order_id},
-                defaults,
+                defaults: defaultOrder,
             });
 
             if (!created) {
-                const baseSizeChange = new BN((event as any).base_size_change);
-                const baseSize = new BN(order.get("base_size") as string);
-                await order.set("base_size", baseSize.plus(baseSizeChange).toString()).save();
+                await order.set("base_size", defaultOrder == null ? "0" : defaultOrder.base_size).save();
             }
         } else if (isEvent("TradeEvent", event, abi)) {
             await TradeEvent.create(event);

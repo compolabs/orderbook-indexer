@@ -33,7 +33,7 @@ export type TDecodedOrderbookEvent = TMarketCreateEvent
 
 export function decodeOrderbookReceipts(receipts: TransactionResultReceipt[], abi: Contract): TDecodedOrderbookEvent[] {
     try {
-        const logs = getDecodedLogs(receipts  , abi.interface)
+        const logs = getDecodedLogs(receipts, abi.interface)
         const decodedLogs = logs.map((log: any) => {
             // MarketCreateEvent
             if (isEvent("MarketCreateEvent", log, abi)) {
@@ -47,12 +47,15 @@ export function decodeOrderbookReceipts(receipts: TransactionResultReceipt[], ab
             if (isEvent("OrderChangeEvent", log, abi)) {
                 return {
                     order_id: log.order_id,
-                    trader: log.trader.value,
-                    base_token: log.base_token.value,
-                    base_size_change: (log.base_size_change.negative ? "-" : "") + log.base_size_change.value.toString(),
-                    base_price: log.base_price.toString(),
-                    timestamp: log.timestamp.toString()
-                } as TOrderChangeEvent;
+                    timestamp: log.timestamp.toString(),
+                    order: log.order != null ? {
+                        id: log.order.id,
+                        trader: log.order.trader.value,
+                        base_token: log.order.base_token.value,
+                        base_size: (log.order.base_size.negative ? "-" : "") + log.order.base_size.value.toString(),
+                        base_price: log.order.base_price.toString(),
+                    } : null,
+                } as any;
             }
             // TradeEvent
             if (isEvent("TradeEvent", log, abi)) {
