@@ -173,7 +173,6 @@ class Indexer {
         await this.updateSettings(receiptsResult.nextBlock);
     };
 
-    isEvent = (eventName: string, object: any) => isEvent(eventName, object, this.orderbookAbi!);
 }
 
 const indexerSettings = {
@@ -217,3 +216,36 @@ function shutDown() {
         process.exit(0);
     });
 }
+
+/*
+{
+{
+  order_id: '0xe52d4e7b06e5528f4e93f21602ff546ea4c7876a29e96cc51ad479e84cb8511e',
+  trader: '0x8e3bcc4316900e48929b4826cca9af280292f72f8665351ecfaa9ffdadb7b637',
+  base_token: '0x593b117a05f5ea64b39ba1f9bc3fb7e7a791c9be130e28376ad552eacdb3b746',
+  base_size_change: '45855',
+  base_price: '60771748762320',
+  timestamp: '4611686020140759195'
+}
+
+  order_id: '0xe52d4e7b06e5528f4e93f21602ff546ea4c7876a29e96cc51ad479e84cb8511e',
+  trader: '0x8e3bcc4316900e48929b4826cca9af280292f72f8665351ecfaa9ffdadb7b637',
+  base_token: '0x593b117a05f5ea64b39ba1f9bc3fb7e7a791c9be130e28376ad552eacdb3b746',
+  base_size_change: '-46181',
+  base_price: '60771748762320',
+  timestamp: '4611686020140759993'
+}
+{
+  base_token: '0x593b117a05f5ea64b39ba1f9bc3fb7e7a791c9be130e28376ad552eacdb3b746',
+  order_matcher: '0x194c4d5d321ea3bc2e87109f4a86520ad60f924998f67007d487d3cc0acc45d2',
+  seller: '0xf107d61bcedecf2c6087c33810a0ea10574b9dbee33f37da5c7d3aa70f818cbb',
+  buyer: '0x8e3bcc4316900e48929b4826cca9af280292f72f8665351ecfaa9ffdadb7b637',
+  trade_size: '46181',
+  trade_price: '60342633306130',
+  sell_order_id: '0xae43cf87490b9c4ae8329e1b50a990a4652f35c0cf66c80c5d6ec1ee661164ea',
+  buy_order_id: '0xe52d4e7b06e5528f4e93f21602ff546ea4c7876a29e96cc51ad479e84cb8511e',
+  timestamp: '4611686020140759993'
+}
+
+
+* */
