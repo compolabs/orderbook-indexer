@@ -8,7 +8,11 @@ import isEvent from "../utils/isEvent";
 import {Contract, TransactionResultReceipt} from "fuels";
 
 export async function handleOrderbookReceipts(receipts: TransactionResultReceipt[], abi: Contract) {
-    const decodedEvents = decodeOrderbookReceipts(receipts, abi);
+    const decodedEvents = decodeOrderbookReceipts(receipts, abi).sort((a, b) => {
+        if (+a.timestamp < +b.timestamp) return -1;
+        if (+a.timestamp > +b.timestamp) return 1;
+        return 0;
+    });
     for (let eventIndex = 0; eventIndex < decodedEvents.length; eventIndex++) {
         const event: any = decodedEvents[eventIndex];
 

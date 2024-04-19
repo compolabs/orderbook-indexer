@@ -162,15 +162,16 @@ class Indexer {
             receipt.contract_id === ORDERBOOK_ID &&
                 await handleOrderbookReceipts([receipt], this.orderbookAbi!)
 
-            receipt.contract_id === ACCOUNT_BALANCE_ID &&
-                await handleAccountBalanceReceipts([receipt], this.accountBalanceAbi!)
-
-            receipt.contract_id === CLEARING_HOUSE_ID &&
-                await handleClearingHouseReceipts([receipt], this.clearingHouseAbi!)
+            // receipt.contract_id === ACCOUNT_BALANCE_ID &&
+            //     await handleAccountBalanceReceipts([receipt], this.accountBalanceAbi!)
+            //
+            // receipt.contract_id === CLEARING_HOUSE_ID &&
+            //     await handleClearingHouseReceipts([receipt], this.clearingHouseAbi!)
 
         }
 
         await this.updateSettings(receiptsResult.nextBlock);
+        await sleep(100);
     };
 
 }
