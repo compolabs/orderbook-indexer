@@ -1,5 +1,6 @@
 {
-  "clearingHouse":"0xc24aae7080170b368f18b87eabd65a651ebd56ff490abf3fb61fd7e0be65e1bd",
-  "accountBalance": "0x87ea42c1f2177f418347c4ef42887650078451ea9dfd4bdce18a5dca42a8c1dd",
-  "blockNumber":9792927
+  "clearingHouse":"0xf729e130d52007ef706d1122cce17da96f1af5021ee755f044b83ee5ff660dfa",
+  "accountBalance": "0x8b623c6f21d8c190230fb525835f0085fbab819dafd45e5d6ad535ae34b09653",
+  "perpMarket": "0xf68a9cc46e7aeea2217c79319320d4164aacbea3dc141d75ce3b356ee7312161",
+  "blockNumber":10067370
 }

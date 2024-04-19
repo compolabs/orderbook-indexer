@@ -27,12 +27,12 @@ const _abi = {
       "components": [
         {
           "name": "__tuple_element",
-          "type": 19,
+          "type": 24,
           "typeArguments": null
         },
         {
           "name": "__tuple_element",
-          "type": 19,
+          "type": 24,
           "typeArguments": null
         }
       ],
@@ -44,22 +44,22 @@ const _abi = {
       "components": [
         {
           "name": "__tuple_element",
-          "type": 8,
+          "type": 9,
           "typeArguments": [
             {
               "name": "",
-              "type": 17,
+              "type": 22,
               "typeArguments": null
             }
           ]
         },
         {
           "name": "__tuple_element",
-          "type": 8,
+          "type": 9,
           "typeArguments": [
             {
               "name": "",
-              "type": 17,
+              "type": 22,
               "typeArguments": null
             }
           ]
@@ -73,22 +73,22 @@ const _abi = {
       "components": [
         {
           "name": "__tuple_element",
-          "type": 12,
+          "type": 14,
           "typeArguments": null
         },
         {
           "name": "__tuple_element",
-          "type": 13,
+          "type": 15,
           "typeArguments": null
         },
         {
           "name": "__tuple_element",
-          "type": 19,
+          "type": 24,
           "typeArguments": null
         },
         {
           "name": "__tuple_element",
-          "type": 19,
+          "type": 24,
           "typeArguments": null
         }
       ],
@@ -110,27 +110,27 @@ const _abi = {
         },
         {
           "name": "__tuple_element",
-          "type": 12,
+          "type": 14,
           "typeArguments": null
         },
         {
           "name": "__tuple_element",
-          "type": 12,
+          "type": 14,
           "typeArguments": null
         },
         {
           "name": "__tuple_element",
-          "type": 13,
+          "type": 15,
           "typeArguments": null
         },
         {
           "name": "__tuple_element",
-          "type": 19,
+          "type": 24,
           "typeArguments": null
         },
         {
           "name": "__tuple_element",
-          "type": 19,
+          "type": 24,
           "typeArguments": null
         }
       ],
@@ -192,6 +192,23 @@ const _abi = {
     },
     {
       "typeId": 8,
+      "type": "enum Identity",
+      "components": [
+        {
+          "name": "Address",
+          "type": 14,
+          "typeArguments": null
+        },
+        {
+          "name": "ContractId",
+          "type": 16,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 9,
       "type": "enum Option",
       "components": [
         {
@@ -201,34 +218,71 @@ const _abi = {
         },
         {
           "name": "Some",
-          "type": 9,
+          "type": 11,
           "typeArguments": null
         }
       ],
       "typeParameters": [
-        9
+        11
       ]
     },
     {
-      "typeId": 9,
+      "typeId": 10,
+      "type": "enum OrderEventIdentifier",
+      "components": [
+        {
+          "name": "OrderOpenEvent",
+          "type": 0,
+          "typeArguments": null
+        },
+        {
+          "name": "OrderRemoveUncollaterizedEvent",
+          "type": 0,
+          "typeArguments": null
+        },
+        {
+          "name": "OrderRemoveEvent",
+          "type": 0,
+          "typeArguments": null
+        },
+        {
+          "name": "OrderRemoveAllEvent",
+          "type": 0,
+          "typeArguments": null
+        },
+        {
+          "name": "OrderMatchEvent",
+          "type": 0,
+          "typeArguments": null
+        },
+        {
+          "name": "OrderFulfillEvent",
+          "type": 0,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 11,
       "type": "generic T",
       "components": null,
       "typeParameters": null
     },
     {
-      "typeId": 10,
+      "typeId": 12,
       "type": "raw untyped ptr",
       "components": null,
       "typeParameters": null
     },
     {
-      "typeId": 11,
+      "typeId": 13,
       "type": "str",
       "components": null,
       "typeParameters": null
     },
     {
-      "typeId": 12,
+      "typeId": 14,
       "type": "struct Address",
       "components": [
         {
@@ -240,7 +294,7 @@ const _abi = {
       "typeParameters": null
     },
     {
-      "typeId": 13,
+      "typeId": 15,
       "type": "struct AssetId",
       "components": [
         {
@@ -252,12 +306,24 @@ const _abi = {
       "typeParameters": null
     },
     {
-      "typeId": 14,
+      "typeId": 16,
+      "type": "struct ContractId",
+      "components": [
+        {
+          "name": "value",
+          "type": 5,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 17,
       "type": "struct I64",
       "components": [
         {
           "name": "value",
-          "type": 19,
+          "type": 24,
           "typeArguments": null
         },
         {
@@ -269,7 +335,7 @@ const _abi = {
       "typeParameters": null
     },
     {
-      "typeId": 15,
+      "typeId": 18,
       "type": "struct Order",
       "components": [
         {
@@ -279,100 +345,185 @@ const _abi = {
         },
         {
           "name": "trader",
-          "type": 12,
-          "typeArguments": null
-        },
-        {
-          "name": "base_token",
-          "type": 13,
-          "typeArguments": null
-        },
-        {
-          "name": "base_size",
           "type": 14,
           "typeArguments": null
         },
         {
+          "name": "base_token",
+          "type": 15,
+          "typeArguments": null
+        },
+        {
+          "name": "base_size",
+          "type": 17,
+          "typeArguments": null
+        },
+        {
           "name": "order_price",
-          "type": 19,
+          "type": 24,
           "typeArguments": null
         }
       ],
       "typeParameters": null
     },
     {
-      "typeId": 16,
+      "typeId": 19,
+      "type": "struct OrderEvent",
+      "components": [
+        {
+          "name": "order_id",
+          "type": 5,
+          "typeArguments": null
+        },
+        {
+          "name": "order",
+          "type": 9,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 18,
+              "typeArguments": null
+            }
+          ]
+        },
+        {
+          "name": "sender",
+          "type": 8,
+          "typeArguments": null
+        },
+        {
+          "name": "timestamp",
+          "type": 24,
+          "typeArguments": null
+        },
+        {
+          "name": "identifier",
+          "type": 10,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 20,
       "type": "struct RawVec",
       "components": [
         {
           "name": "ptr",
-          "type": 10,
+          "type": 12,
           "typeArguments": null
         },
         {
           "name": "cap",
-          "type": 19,
+          "type": 24,
           "typeArguments": null
         }
       ],
       "typeParameters": [
-        9
+        11
       ]
     },
     {
-      "typeId": 17,
-      "type": "struct Twap",
+      "typeId": 21,
+      "type": "struct TradeEvent",
       "components": [
         {
           "name": "base_token",
-          "type": 13,
+          "type": 15,
           "typeArguments": null
         },
         {
-          "name": "span",
-          "type": 19,
+          "name": "seller",
+          "type": 14,
           "typeArguments": null
         },
         {
-          "name": "current_twap",
-          "type": 19,
+          "name": "buyer",
+          "type": 14,
           "typeArguments": null
         },
         {
-          "name": "last_update",
-          "type": 19,
+          "name": "trade_size",
+          "type": 24,
+          "typeArguments": null
+        },
+        {
+          "name": "trade_price",
+          "type": 24,
+          "typeArguments": null
+        },
+        {
+          "name": "sell_order_id",
+          "type": 5,
+          "typeArguments": null
+        },
+        {
+          "name": "buy_order_id",
+          "type": 5,
+          "typeArguments": null
+        },
+        {
+          "name": "timestamp",
+          "type": 24,
           "typeArguments": null
         }
       ],
       "typeParameters": null
     },
     {
-      "typeId": 18,
+      "typeId": 22,
+      "type": "struct Twap",
+      "components": [
+        {
+          "name": "base_token",
+          "type": 15,
+          "typeArguments": null
+        },
+        {
+          "name": "span",
+          "type": 24,
+          "typeArguments": null
+        },
+        {
+          "name": "current_twap",
+          "type": 24,
+          "typeArguments": null
+        },
+        {
+          "name": "last_update",
+          "type": 24,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 23,
       "type": "struct Vec",
       "components": [
         {
           "name": "buf",
-          "type": 16,
+          "type": 20,
           "typeArguments": [
             {
               "name": "",
-              "type": 9,
+              "type": 11,
               "typeArguments": null
             }
           ]
         },
         {
           "name": "len",
-          "type": 19,
+          "type": 24,
           "typeArguments": null
         }
       ],
       "typeParameters": [
-        9
+        11
       ]
     },
     {
-      "typeId": 19,
+      "typeId": 24,
       "type": "u64",
       "components": null,
       "typeParameters": null
@@ -383,7 +534,7 @@ const _abi = {
       "inputs": [
         {
           "name": "base_size",
-          "type": 14,
+          "type": 17,
           "typeArguments": null
         },
         {
@@ -400,15 +551,15 @@ const _abi = {
       },
       "attributes": [
         {
+          "name": "payable",
+          "arguments": []
+        },
+        {
           "name": "storage",
           "arguments": [
             "read",
             "write"
           ]
-        },
-        {
-          "name": "payable",
-          "arguments": []
         }
       ]
     },
@@ -449,22 +600,22 @@ const _abi = {
       "inputs": [
         {
           "name": "trader",
-          "type": 12,
-          "typeArguments": null
-        },
-        {
-          "name": "base_token",
-          "type": 13,
-          "typeArguments": null
-        },
-        {
-          "name": "base_size",
           "type": 14,
           "typeArguments": null
         },
         {
+          "name": "base_token",
+          "type": 15,
+          "typeArguments": null
+        },
+        {
+          "name": "base_size",
+          "type": 17,
+          "typeArguments": null
+        },
+        {
           "name": "order_price",
-          "type": 19,
+          "type": 24,
           "typeArguments": null
         }
       ],
@@ -488,14 +639,14 @@ const _abi = {
       "inputs": [
         {
           "name": "trader",
-          "type": 12,
+          "type": 14,
           "typeArguments": null
         }
       ],
       "name": "remove_all_orders",
       "output": {
         "name": "",
-        "type": 18,
+        "type": 23,
         "typeArguments": [
           {
             "name": "",
@@ -518,7 +669,7 @@ const _abi = {
       "inputs": [
         {
           "name": "trader",
-          "type": 12,
+          "type": 14,
           "typeArguments": null
         },
         {
@@ -547,14 +698,14 @@ const _abi = {
       "inputs": [
         {
           "name": "trader",
-          "type": 12,
+          "type": 14,
           "typeArguments": null
         }
       ],
       "name": "remove_uncollaterized_orders",
       "output": {
         "name": "",
-        "type": 18,
+        "type": 23,
         "typeArguments": [
           {
             "name": "",
@@ -577,12 +728,12 @@ const _abi = {
       "inputs": [
         {
           "name": "base_token",
-          "type": 13,
+          "type": 15,
           "typeArguments": null
         },
         {
           "name": "current_twap",
-          "type": 19,
+          "type": 24,
           "typeArguments": null
         }
       ],
@@ -606,7 +757,7 @@ const _abi = {
       "inputs": [
         {
           "name": "fee_rate",
-          "type": 19,
+          "type": 24,
           "typeArguments": null
         }
       ],
@@ -629,7 +780,7 @@ const _abi = {
       "inputs": [
         {
           "name": "mark_span",
-          "type": 19,
+          "type": 24,
           "typeArguments": null
         }
       ],
@@ -652,7 +803,7 @@ const _abi = {
       "inputs": [
         {
           "name": "market_span",
-          "type": 19,
+          "type": 24,
           "typeArguments": null
         }
       ],
@@ -675,7 +826,7 @@ const _abi = {
       "inputs": [
         {
           "name": "base_token",
-          "type": 13,
+          "type": 15,
           "typeArguments": null
         }
       ],
@@ -698,14 +849,14 @@ const _abi = {
       "inputs": [
         {
           "name": "token",
-          "type": 13,
+          "type": 15,
           "typeArguments": null
         }
       ],
       "name": "get_mark_price",
       "output": {
         "name": "",
-        "type": 19,
+        "type": 24,
         "typeArguments": null
       },
       "attributes": [
@@ -721,14 +872,14 @@ const _abi = {
       "inputs": [
         {
           "name": "token",
-          "type": 13,
+          "type": 15,
           "typeArguments": null
         }
       ],
       "name": "get_market_price",
       "output": {
         "name": "",
-        "type": 19,
+        "type": 24,
         "typeArguments": null
       },
       "attributes": [
@@ -744,19 +895,19 @@ const _abi = {
       "inputs": [
         {
           "name": "trader",
-          "type": 12,
+          "type": 14,
           "typeArguments": null
         },
         {
           "name": "base_token",
-          "type": 13,
+          "type": 15,
           "typeArguments": null
         }
       ],
       "name": "get_total_trader_order_base",
       "output": {
         "name": "",
-        "type": 14,
+        "type": 17,
         "typeArguments": null
       },
       "attributes": [
@@ -772,23 +923,23 @@ const _abi = {
       "inputs": [
         {
           "name": "trader",
-          "type": 12,
+          "type": 14,
           "typeArguments": null
         },
         {
           "name": "base_token",
-          "type": 13,
+          "type": 15,
           "typeArguments": null
         }
       ],
       "name": "get_trader_orders",
       "output": {
         "name": "",
-        "type": 18,
+        "type": 23,
         "typeArguments": [
           {
             "name": "",
-            "type": 15,
+            "type": 18,
             "typeArguments": null
           }
         ]
@@ -806,7 +957,7 @@ const _abi = {
       "inputs": [
         {
           "name": "base_token",
-          "type": 13,
+          "type": 15,
           "typeArguments": null
         }
       ],
@@ -829,7 +980,7 @@ const _abi = {
       "inputs": [
         {
           "name": "trader",
-          "type": 12,
+          "type": 14,
           "typeArguments": null
         }
       ],
@@ -852,12 +1003,12 @@ const _abi = {
       "inputs": [
         {
           "name": "trader",
-          "type": 12,
+          "type": 14,
           "typeArguments": null
         },
         {
           "name": "base_token",
-          "type": 13,
+          "type": 15,
           "typeArguments": null
         }
       ],
@@ -898,7 +1049,7 @@ const _abi = {
       "logId": 2,
       "loggedType": {
         "name": "",
-        "type": 11,
+        "type": 13,
         "typeArguments": null
       }
     },
@@ -906,7 +1057,7 @@ const _abi = {
       "logId": 3,
       "loggedType": {
         "name": "",
-        "type": 7,
+        "type": 19,
         "typeArguments": []
       }
     },
@@ -914,7 +1065,7 @@ const _abi = {
       "logId": 4,
       "loggedType": {
         "name": "",
-        "type": 7,
+        "type": 21,
         "typeArguments": []
       }
     },
@@ -946,7 +1097,7 @@ const _abi = {
       "logId": 8,
       "loggedType": {
         "name": "",
-        "type": 7,
+        "type": 19,
         "typeArguments": []
       }
     },
@@ -954,7 +1105,7 @@ const _abi = {
       "logId": 9,
       "loggedType": {
         "name": "",
-        "type": 7,
+        "type": 19,
         "typeArguments": []
       }
     },
@@ -962,7 +1113,7 @@ const _abi = {
       "logId": 10,
       "loggedType": {
         "name": "",
-        "type": 7,
+        "type": 21,
         "typeArguments": []
       }
     },
@@ -978,7 +1129,7 @@ const _abi = {
       "logId": 12,
       "loggedType": {
         "name": "",
-        "type": 7,
+        "type": 19,
         "typeArguments": []
       }
     },
@@ -986,15 +1137,15 @@ const _abi = {
       "logId": 13,
       "loggedType": {
         "name": "",
-        "type": 11,
-        "typeArguments": null
+        "type": 7,
+        "typeArguments": []
       }
     },
     {
       "logId": 14,
       "loggedType": {
         "name": "",
-        "type": 7,
+        "type": 19,
         "typeArguments": []
       }
     },
@@ -1018,6 +1169,78 @@ const _abi = {
       "logId": 17,
       "loggedType": {
         "name": "",
+        "type": 19,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 18,
+      "loggedType": {
+        "name": "",
+        "type": 7,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 19,
+      "loggedType": {
+        "name": "",
+        "type": 7,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 20,
+      "loggedType": {
+        "name": "",
+        "type": 19,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 21,
+      "loggedType": {
+        "name": "",
+        "type": 7,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 22,
+      "loggedType": {
+        "name": "",
+        "type": 13,
+        "typeArguments": null
+      }
+    },
+    {
+      "logId": 23,
+      "loggedType": {
+        "name": "",
+        "type": 7,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 24,
+      "loggedType": {
+        "name": "",
+        "type": 7,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 25,
+      "loggedType": {
+        "name": "",
+        "type": 7,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 26,
+      "loggedType": {
+        "name": "",
         "type": 7,
         "typeArguments": []
       }
@@ -1029,28 +1252,28 @@ const _abi = {
       "name": "OWNER",
       "configurableType": {
         "name": "",
-        "type": 12,
+        "type": 14,
         "typeArguments": []
       },
-      "offset": 127280
+      "offset": 140696
     },
     {
       "name": "PROXY_ADDRESS",
       "configurableType": {
         "name": "",
-        "type": 12,
+        "type": 14,
         "typeArguments": []
       },
-      "offset": 126912
+      "offset": 140264
     },
     {
       "name": "DUST",
       "configurableType": {
         "name": "",
-        "type": 19,
+        "type": 24,
         "typeArguments": null
       },
-      "offset": 127128
+      "offset": 140480
     }
   ]
 };

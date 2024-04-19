@@ -6,18 +6,18 @@ const OrderChangeEvent = sequelize.define('orderChangeEvents', {
     order_id: {
         type: Sequelize.STRING,
     },
-    trader: {
+    // trader: {
+    //     type: Sequelize.STRING,
+    // },
+    // base_token: {
+    //     type: Sequelize.STRING,
+    // },
+    new_base_size: {
         type: Sequelize.STRING,
     },
-    base_token: {
-        type: Sequelize.STRING,
-    },
-    base_size_change: {
-        type: Sequelize.STRING,
-    },
-    base_price: {
-        type: Sequelize.STRING,
-    },
+    // base_price: {
+    //     type: Sequelize.STRING,
+    // },
     timestamp: {
         type: Sequelize.STRING,
     },
