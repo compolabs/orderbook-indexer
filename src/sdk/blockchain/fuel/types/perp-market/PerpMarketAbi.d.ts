@@ -24,15 +24,25 @@ import type { Option, Enum, Vec } from "./common";
 
 export enum ErrorInput { AccessDenied = 'AccessDenied', FreeCollateralMoreThanZero = 'FreeCollateralMoreThanZero', NoOrdersFound = 'NoOrdersFound', NoMarketFound = 'NoMarketFound', OrdersCantBeMatched = 'OrdersCantBeMatched', NoMarketPriceForMarket = 'NoMarketPriceForMarket', FirstArgumentShouldBeOrderSellSecondOrderBuy = 'FirstArgumentShouldBeOrderSellSecondOrderBuy' };
 export enum ErrorOutput { AccessDenied = 'AccessDenied', FreeCollateralMoreThanZero = 'FreeCollateralMoreThanZero', NoOrdersFound = 'NoOrdersFound', NoMarketFound = 'NoMarketFound', OrdersCantBeMatched = 'OrdersCantBeMatched', NoMarketPriceForMarket = 'NoMarketPriceForMarket', FirstArgumentShouldBeOrderSellSecondOrderBuy = 'FirstArgumentShouldBeOrderSellSecondOrderBuy' };
+export type IdentityInput = Enum<{ Address: AddressInput, ContractId: ContractIdInput }>;
+export type IdentityOutput = Enum<{ Address: AddressOutput, ContractId: ContractIdOutput }>;
+export enum OrderEventIdentifierInput { OrderOpenEvent = 'OrderOpenEvent', OrderRemoveUncollaterizedEvent = 'OrderRemoveUncollaterizedEvent', OrderRemoveEvent = 'OrderRemoveEvent', OrderRemoveAllEvent = 'OrderRemoveAllEvent', OrderMatchEvent = 'OrderMatchEvent', OrderFulfillEvent = 'OrderFulfillEvent' };
+export enum OrderEventIdentifierOutput { OrderOpenEvent = 'OrderOpenEvent', OrderRemoveUncollaterizedEvent = 'OrderRemoveUncollaterizedEvent', OrderRemoveEvent = 'OrderRemoveEvent', OrderRemoveAllEvent = 'OrderRemoveAllEvent', OrderMatchEvent = 'OrderMatchEvent', OrderFulfillEvent = 'OrderFulfillEvent' };
 
 export type AddressInput = { value: string };
 export type AddressOutput = AddressInput;
 export type AssetIdInput = { value: string };
 export type AssetIdOutput = AssetIdInput;
+export type ContractIdInput = { value: string };
+export type ContractIdOutput = ContractIdInput;
 export type I64Input = { value: BigNumberish, negative: boolean };
 export type I64Output = { value: BN, negative: boolean };
 export type OrderInput = { id: string, trader: AddressInput, base_token: AssetIdInput, base_size: I64Input, order_price: BigNumberish };
 export type OrderOutput = { id: string, trader: AddressOutput, base_token: AssetIdOutput, base_size: I64Output, order_price: BN };
+export type OrderEventInput = { order_id: string, order: Option<OrderInput>, sender: IdentityInput, timestamp: BigNumberish, identifier: OrderEventIdentifierInput };
+export type OrderEventOutput = { order_id: string, order: Option<OrderOutput>, sender: IdentityOutput, timestamp: BN, identifier: OrderEventIdentifierOutput };
+export type TradeEventInput = { base_token: AssetIdInput, seller: AddressInput, buyer: AddressInput, trade_size: BigNumberish, trade_price: BigNumberish, sell_order_id: string, buy_order_id: string, timestamp: BigNumberish };
+export type TradeEventOutput = { base_token: AssetIdOutput, seller: AddressOutput, buyer: AddressOutput, trade_size: BN, trade_price: BN, sell_order_id: string, buy_order_id: string, timestamp: BN };
 export type TwapInput = { base_token: AssetIdInput, span: BigNumberish, current_twap: BigNumberish, last_update: BigNumberish };
 export type TwapOutput = { base_token: AssetIdOutput, span: BN, current_twap: BN, last_update: BN };
 

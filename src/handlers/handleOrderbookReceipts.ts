@@ -16,8 +16,11 @@ export async function handleOrderbookReceipts(receipts: TransactionResultReceipt
         if (isEvent("MarketCreateEvent", event, abi)) {
             await MarketCreateEvent.create({...event});
         } else if (isEvent("OrderChangeEvent", event, abi)) {
-            // await OrderChangeEvent.create(event); //todo
-            const defaultOrder: any = event.order === null? null:{
+            await OrderChangeEvent.create({
+                order_id: event.order_id,
+                new_base_size: event.order?.base_size ?? "0", timestamp: event.timestamp
+            });
+            const defaultOrder: any = event.order === null ? null : {
                 order_id: event.order_id,
                 trader: event.order.trader,
                 base_token: event.order.base_token,

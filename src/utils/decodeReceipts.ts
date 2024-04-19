@@ -1,4 +1,3 @@
-import {OrderbookAbi} from "../sdk/blockchain/fuel/types/orderbook";
 import {ClearingHouseAbi} from "../sdk/blockchain/fuel/types/clearing-house";
 import {AccountBalanceAbi} from "../sdk/blockchain/fuel/types/account-balance";
 import BN from "./BN";
@@ -82,162 +81,176 @@ export function decodeOrderbookReceipts(receipts: TransactionResultReceipt[], ab
 }
 
 
-const decodeMarketCreateEvent = (log: any, abi: ClearingHouseAbi) => {
-    if (isEvent("MarketCreateEvent", log, abi)) {
+// const decodeMarketCreateEvent = (log: any, abi: ClearingHouseAbi) => {
+//     if (isEvent("MarketCreateEvent", log, abi)) {
+//         return {
+//             eventName: "MarketCreateEvent",
+//
+//             base_token: log.base_token.value,
+//             decimal: log.decimal.toString(),
+//             price_feed: log.price_feed,
+//             im_ratio: log.im_ratio.toString(),
+//             mm_ratio: log.mm_ratio.toString(),
+//             initial_price: log.initial_price.toString(),
+//             sender: log.sender.value,
+//         }
+//     }
+// }
+// const decodeMarketCloseEvent = (log: any, abi: ClearingHouseAbi) => {
+//     if (isEvent("MarketCloseEvent", log, abi)) {
+//         return {
+//             eventName: "MarketCloseEvent",
+//
+//             base_token: log.base_token.value,
+//             close_price: log.close_price.toString(),
+//             sender: log.sender.value,
+//         }
+//     }
+// }
+// const decodeMarketPauseEvent = (log: any, abi: ClearingHouseAbi) => {
+//     if (isEvent("MarketPauseEvent", log, abi)) {
+//         return {
+//             eventName: "MarketPauseEvent",
+//
+//             base_token: log.base_token.value,
+//             market_price: log.market_price.toString(),
+//             sender: log.sender.value,
+//             paused: log.paused
+//         }
+//     }
+// }
+//
+// const decodeOrderOpenEvent = (log: any, abi: ClearingHouseAbi) => {
+//     if (isEvent("OrderOpenEvent", log, abi)) {
+//         return {
+//             eventName: "OrderOpenEvent",
+//
+//             base_token: log.base_token.value,
+//             base_size: (log.base_size.negative ? "-" : "") + log.base_size.value.toString(),
+//             order_price: log.order_price.toString(),
+//             market_price: log.market_price.toString(),
+//             sender: log.sender.value,
+//         }
+//     }
+// }
+// const decodeOrderRemoveUncollaterizedEvent = (log: any, abi: ClearingHouseAbi) => {
+//     if (isEvent("OrderRemoveUncollaterizedEvent", log, abi)) {
+//         return {
+//             eventName: "OrderRemoveUncollaterizedEvent",
+//
+//             trader: log.trader.value,
+//             orders: log.orders,
+//             sender: log.sender.value,
+//         }
+//     }
+// }
+// const decodeOrderRemoveEvent = (log: any, abi: ClearingHouseAbi) => {
+//     if (isEvent("OrderRemoveEvent", log, abi)) {
+//         return {
+//             eventName: "OrderRemoveEvent",
+//
+//             trader: log.trader.value,
+//             order: log.order,
+//         }
+//     }
+// }
+// const decodeOrderRemoveAllEvent = (log: any, abi: ClearingHouseAbi) => {
+//     if (isEvent("OrderRemoveAllEvent", log, abi)) {
+//         return {
+//             eventName: "OrderRemoveAllEvent",
+//             trader: log.trader.value,
+//             orders: log.orders,
+//         }
+//     }
+// }
+// const decodeOrderMatchEvent = (log: any, abi: ClearingHouseAbi) => {
+//     if (isEvent("OrderMatchEvent", log, abi)) {
+//         return {
+//             eventName: "OrderMatchEvent",
+//
+//
+//             order_sell_id: log.order_sell_id,
+//             order_buy_id: log.order_buy_id,
+//             trader_sell: log.trader_sell.value,
+//             trader_buy: log.trader_buy.value,
+//             base_token: log.base_token.value,
+//             trade_amount: log.trade_amount.toString(),
+//             trade_value: log.trade_value.toString(),
+//             fee_seller: (log.fee_seller.negative ? "-" : "") + log.fee_seller.value.toString(),
+//             fee_buyer: (log.fee_buyer.negative ? "-" : "") + log.fee_buyer.value.toString(),
+//             matcher: log.matcher.value
+//         }
+//     }
+// }
+// const decodeOrderFulfillEvent = (log: any, abi: ClearingHouseAbi) => {
+//     if (isEvent("OrderFulfillEvent", log, abi)) {
+//         return {
+//             eventName: "OrderFulfillEvent",
+//             order_id: log.order_id,
+//             trader_sell: log.trader_sell.value,
+//             trader_buy: log.trader_buy.value,
+//             base_token: log.base_token.value,
+//             trade_amount: log.trade_amount.toString(),
+//             trade_value: log.trade_value.toString(),
+//             fee_seller: (log.fee_seller.negative ? "-" : "") + log.fee_seller.value.toString(),
+//             fee_buyer: (log.fee_buyer.negative ? "-" : "") + log.fee_buyer.value.toString(),
+//             matcher: log.matcher.value,
+//
+//
+//         }
+//     }
+// }
+// const decodeTraderSettleAllFunding = (log: any, abi: ClearingHouseAbi) => {
+//     if (isEvent("TraderSettleAllFunding", log, abi)) {
+//         return {
+//             eventName: "TraderSettleAllFunding",
+//             trader: log.trader.value,
+//             sender: log.sender.value,
+//         }
+//     }
+// }
+// const decodeTraderPositionLiquidateEvent = (log: any, abi: ClearingHouseAbi) => {
+//     if (isEvent("TraderPositionLiquidateEvent", log, abi)) {
+//         return {
+//             eventName: "TraderPositionLiquidateEvent",
+//
+//             trader: log.trader.value,
+//             base_token: log.base_token.value,
+//             position_size_to_be_liquidated: (log.position_size_to_be_liquidated.negative ? "-" : "") + log.position_size_to_be_liquidated.value.toString(),
+//             liquidated_position_size: (log.liquidated_position_size.negative ? "-" : "") + log.liquidated_position_size.value.toString(),
+//             liquidation_penalty: log.liquidation_penalty.toString(),
+//             liquidation_fee_to_liquidator: log.liquidation_fee_to_liquidator.toString(),
+//             liquidator: log.liquidator.value,
+//         }
+//     }
+// }
+
+const decodeMarketEvent = (log: any, abi: ClearingHouseAbi) => {
+    if (isEvent("MarketEvent", log, abi)) {
         return {
-            eventName: "MarketCreateEvent",
+            eventName: "MarketEvent",
 
-            base_token: log.base_token.value,
-            decimal: log.decimal.toString(),
-            price_feed: log.price_feed,
-            im_ratio: log.im_ratio.toString(),
-            mm_ratio: log.mm_ratio.toString(),
-            initial_price: log.initial_price.toString(),
-            sender: log.sender.value,
-        }
-    }
-}
-const decodeMarketCloseEvent = (log: any, abi: ClearingHouseAbi) => {
-    if (isEvent("MarketCloseEvent", log, abi)) {
-        return {
-            eventName: "MarketCloseEvent",
+            sender: log.sender.Address.value,
+            timestamp: log.timestamp.toString(),
+            identifier: log.identifier,
+            market: {
+                asset_id: log.market.asset_id.value, //AssetId,
+                decimal: log.market.decimal.toString(), //u32,
+                price_feed: log.market.price_feed, //b256,
+                im_ratio: log.market.im_ratio.toString(), //u64,
+                mm_ratio: log.market.mm_ratio.toString(), //u64,
+                status: log.market.status.toString(), //MarketStatus,
+                paused_index_price: log.market.paused_index_price?.toString(), //Option<u64>,
+                paused_timestamp: log.market.paused_timestamp?.toString(), //Option<u64>,
+                closed_price: log.market.closed_price?.toString(), //Option<u64>,
 
-            base_token: log.base_token.value,
-            close_price: log.close_price.toString(),
-            sender: log.sender.value,
-        }
-    }
-}
-const decodeMarketPauseEvent = (log: any, abi: ClearingHouseAbi) => {
-    if (isEvent("MarketPauseEvent", log, abi)) {
-        return {
-            eventName: "MarketPauseEvent",
-
-            base_token: log.base_token.value,
-            market_price: log.market_price.toString(),
-            sender: log.sender.value,
-            paused: log.paused
-        }
-    }
-}
-
-const decodeOrderOpenEvent = (log: any, abi: ClearingHouseAbi) => {
-    if (isEvent("OrderOpenEvent", log, abi)) {
-        return {
-            eventName: "OrderOpenEvent",
-
-            base_token: log.base_token.value,
-            base_size: (log.base_size.negative ? "-" : "") + log.base_size.value.toString(),
-            order_price: log.order_price.toString(),
-            market_price: log.market_price.toString(),
-            sender: log.sender.value,
-        }
-    }
-}
-const decodeOrderRemoveUncollaterizedEvent = (log: any, abi: ClearingHouseAbi) => {
-    if (isEvent("OrderRemoveUncollaterizedEvent", log, abi)) {
-        return {
-            eventName: "OrderRemoveUncollaterizedEvent",
-
-            trader: log.trader.value,
-            orders: log.orders,
-            sender: log.sender.value,
-        }
-    }
-}
-const decodeOrderRemoveEvent = (log: any, abi: ClearingHouseAbi) => {
-    if (isEvent("OrderRemoveEvent", log, abi)) {
-        return {
-            eventName: "OrderRemoveEvent",
-
-            trader: log.trader.value,
-            order: log.order,
-        }
-    }
-}
-const decodeOrderRemoveAllEvent = (log: any, abi: ClearingHouseAbi) => {
-    if (isEvent("OrderRemoveAllEvent", log, abi)) {
-        return {
-            eventName: "OrderRemoveAllEvent",
-            trader: log.trader.value,
-            orders: log.orders,
-        }
-    }
-}
-const decodeOrderMatchEvent = (log: any, abi: ClearingHouseAbi) => {
-    if (isEvent("OrderMatchEvent", log, abi)) {
-        return {
-            eventName: "OrderMatchEvent",
-
-
-            order_sell_id: log.order_sell_id,
-            order_buy_id: log.order_buy_id,
-            trader_sell: log.trader_sell.value,
-            trader_buy: log.trader_buy.value,
-            base_token: log.base_token.value,
-            trade_amount: log.trade_amount.toString(),
-            trade_value: log.trade_value.toString(),
-            fee_seller: (log.fee_seller.negative ? "-" : "") + log.fee_seller.value.toString(),
-            fee_buyer: (log.fee_buyer.negative ? "-" : "") + log.fee_buyer.value.toString(),
-            matcher: log.matcher.value
-        }
-    }
-}
-const decodeOrderFulfillEvent = (log: any, abi: ClearingHouseAbi) => {
-    if (isEvent("OrderFulfillEvent", log, abi)) {
-        return {
-            eventName: "OrderFulfillEvent",
-            order_id: log.order_id,
-            trader_sell: log.trader_sell.value,
-            trader_buy: log.trader_buy.value,
-            base_token: log.base_token.value,
-            trade_amount: log.trade_amount.toString(),
-            trade_value: log.trade_value.toString(),
-            fee_seller: (log.fee_seller.negative ? "-" : "") + log.fee_seller.value.toString(),
-            fee_buyer: (log.fee_buyer.negative ? "-" : "") + log.fee_buyer.value.toString(),
-            matcher: log.matcher.value,
-
-
-        }
-    }
-}
-const decodeTraderSettleAllFunding = (log: any, abi: ClearingHouseAbi) => {
-    if (isEvent("TraderSettleAllFunding", log, abi)) {
-        return {
-            eventName: "TraderSettleAllFunding",
-            trader: log.trader.value,
-            sender: log.sender.value,
-        }
-    }
-}
-const decodeTraderPositionLiquidateEvent = (log: any, abi: ClearingHouseAbi) => {
-    if (isEvent("TraderPositionLiquidateEvent", log, abi)) {
-        return {
-            eventName: "TraderPositionLiquidateEvent",
-
-            trader: log.trader.value,
-            base_token: log.base_token.value,
-            position_size_to_be_liquidated: (log.position_size_to_be_liquidated.negative ? "-" : "") + log.position_size_to_be_liquidated.value.toString(),
-            liquidated_position_size: (log.liquidated_position_size.negative ? "-" : "") + log.liquidated_position_size.value.toString(),
-            liquidation_penalty: log.liquidation_penalty.toString(),
-            liquidation_fee_to_liquidator: log.liquidation_fee_to_liquidator.toString(),
-            liquidator: log.liquidator.value,
+            },
         }
     }
 }
 
 const clearingHouseDecoders = [
-    decodeMarketCreateEvent,
-    decodeMarketCloseEvent,
-    decodeMarketPauseEvent,
-    decodeOrderOpenEvent,
-    decodeOrderRemoveUncollaterizedEvent,
-    decodeOrderRemoveEvent,
-    decodeOrderRemoveAllEvent,
-    decodeOrderMatchEvent,
-    decodeOrderFulfillEvent,
-    decodeTraderSettleAllFunding,
-    decodeTraderPositionLiquidateEvent,
+    decodeMarketEvent,
 ]
 
 const decodeAccountBalanceChangeEvent = (log: any, abi: AccountBalanceAbi) => {
