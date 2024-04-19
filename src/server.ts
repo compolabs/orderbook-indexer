@@ -157,18 +157,19 @@ class Indexer {
             return;
         }
 
-        for (let i = 0; i < receiptsResult.receipts.length; i++) {
-            const receipt: any = receiptsResult.receipts[i];
-            receipt.contract_id === ORDERBOOK_ID &&
-                await handleOrderbookReceipts([receipt], this.orderbookAbi!)
-
-            // receipt.contract_id === ACCOUNT_BALANCE_ID &&
-            //     await handleAccountBalanceReceipts([receipt], this.accountBalanceAbi!)
-            //
-            // receipt.contract_id === CLEARING_HOUSE_ID &&
-            //     await handleClearingHouseReceipts([receipt], this.clearingHouseAbi!)
-
-        }
+        await handleOrderbookReceipts(receiptsResult.receipts.filter(({contract_id}: any) => contract_id == ORDERBOOK_ID), this.orderbookAbi!)
+        // for (let i = 0; i < receiptsResult.receipts.length; i++) {
+        //     const receipt: any = receiptsResult.receipts[i];
+        //     receipt.contract_id === ORDERBOOK_ID &&
+        //         await handleOrderbookReceipts([receipt], this.orderbookAbi!)
+        //
+        //     // receipt.contract_id === ACCOUNT_BALANCE_ID &&
+        //     //     await handleAccountBalanceReceipts([receipt], this.accountBalanceAbi!)
+        //     //
+        //     // receipt.contract_id === CLEARING_HOUSE_ID &&
+        //     //     await handleClearingHouseReceipts([receipt], this.clearingHouseAbi!)
+        //
+        // }
 
         await this.updateSettings(receiptsResult.nextBlock);
         await sleep(100);
