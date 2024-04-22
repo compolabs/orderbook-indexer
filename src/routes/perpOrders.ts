@@ -1,6 +1,6 @@
 import express from "express";
-import PerpOrder from "../models/PerpOrder";
 import Sequelize from "sequelize";
+import PerpOrderModel from "../models/perpOrder";
 
 const router = express.Router();
 
@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
         if (isOpened) conditions.push(Sequelize.literal(`CAST(base_size AS DECIMAL) != 0`));
 
         // Получаем ордера, применяя условия фильтрации
-        const orders = await PerpOrder.findAll({
+        const orders = await PerpOrderModel.findAll({
             where: {[Sequelize.Op.and]: conditions},
             order: sortOrder,
             limit: limit != null ? +limit : 40

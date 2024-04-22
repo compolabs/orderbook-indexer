@@ -2,7 +2,7 @@ import {Contract, TransactionResultReceipt} from "fuels";
 import {decodePerpMarketReceipts} from "../decoders/decodePerpMarketReceipts";
 import isEvent from "../utils/isEvent";
 import TradeEvent from "../models/perpTradeEvent";
-import PerpOrder from "../models/PerpOrder";
+import PerpOrderModel from "../models/perpOrder";
 
 export async function handlePerpMarketReceipts(receipts: TransactionResultReceipt[], abi: Contract) {
     const decodedEvents = decodePerpMarketReceipts(receipts, abi);
@@ -19,7 +19,7 @@ export async function handlePerpMarketReceipts(receipts: TransactionResultReceip
                 base_price: event.order.base_price,
                 timestamp: event.timestamp
             }
-            const [order, created] = await PerpOrder.findOrCreate({
+            const [order, created] = await PerpOrderModel.findOrCreate({
                 where: {order_id: (event as any).order_id},
                 defaults: defaultOrder,
             });

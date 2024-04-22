@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize';
 import sequelize from '../db';
 
-const PerpOrder = sequelize.define('perpOrders', {
+const PerpOrderModel = sequelize.define('perpOrders', {
     order_id: {type: Sequelize.STRING,},
     trader: {type: Sequelize.STRING,},
     base_token: {type: Sequelize.STRING,},
@@ -10,4 +10,4 @@ const PerpOrder = sequelize.define('perpOrders', {
     timestamp: {type: Sequelize.STRING,}
 });
 
-export default PerpOrder;
+export default PerpOrderModel;
