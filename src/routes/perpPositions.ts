@@ -1,5 +1,5 @@
 import express from "express";
-import PerpPosition from "../models/PerpPosition";
+import PerpPosition from "../models/perpPosition";
 import Sequelize from "sequelize";
 
 const router = express.Router();

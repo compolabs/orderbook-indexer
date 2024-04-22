@@ -1,5 +1,5 @@
 import express from "express";
-import PerpMarketEvent from "../models/PerpMarketEvent";
+import PerpMarketEvent from "../models/perpMarketEvent";
 
 const router = express.Router();
 

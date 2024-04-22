@@ -1,5 +1,5 @@
 import express from "express";
-import PerpOrderEvent from "../models/PerpOrderEvent";
+import PerpOrderEvent from "../models/perpOrderEvent";
 
 const router = express.Router();
 
