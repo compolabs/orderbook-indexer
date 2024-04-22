@@ -2,7 +2,7 @@ import {Contract, TransactionResultReceipt} from "fuels";
 import {decodePerpMarketReceipts} from "../decoders/decodePerpMarketReceipts";
 import isEvent from "../utils/isEvent";
 import TradeEvent from "../models/perpTradeEvent";
-import PerpOrder from "../models/perpOrder";
+import PerpOrder from "../models/PerpOrder";
 
 export async function handlePerpMarketReceipts(receipts: TransactionResultReceipt[], abi: Contract) {
     const decodedEvents = decodePerpMarketReceipts(receipts, abi);
