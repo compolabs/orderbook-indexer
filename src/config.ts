@@ -13,4 +13,5 @@ export const PRIVATE_KEY = loadVar("PRIVATE_KEY");
 export const ORDERBOOK_ID = loadVar("ORDERBOOK_ID");
 export const CLEARING_HOUSE_ID = loadVar("CLEARING_HOUSE_ID");
 export const ACCOUNT_BALANCE_ID = loadVar("ACCOUNT_BALANCE_ID");
+export const PERP_MARKET_ID = loadVar("PERP_MARKET_ID");
 export const START_BLOCK = loadVar("START_BLOCK");

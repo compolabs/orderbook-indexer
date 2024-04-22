@@ -7,21 +7,29 @@ import marketCreateEventsRoutes from "./routes/marketCreateEvents";
 import ordersRoutes from "./routes/orders";
 import orderChangeEventsRoutes from "./routes/orderChangeEvents";
 import tradeEventsRoutes from "./routes/tradeEvents";
-import {ACCOUNT_BALANCE_ID, CLEARING_HOUSE_ID, ORDERBOOK_ID, PORT, PRIVATE_KEY, START_BLOCK} from "./config";
+import {
+    ACCOUNT_BALANCE_ID,
+    CLEARING_HOUSE_ID,
+    ORDERBOOK_ID,
+    PERP_MARKET_ID,
+    PORT,
+    PRIVATE_KEY,
+    START_BLOCK
+} from "./config";
 import {FuelNetwork} from "./sdk/blockchain";
 import {OrderbookAbi, OrderbookAbi__factory} from "./sdk/blockchain/fuel/types/orderbook";
 import SystemSettings from "./models/settings";
 import fetchReceiptsFromEnvio from "./utils/fetchReceiptsFromEnvio";
-import isEvent from "./utils/isEvent";
 import formatCountdown from "./utils/formatCountDown";
-import {sleep, Wallet} from "fuels";
+import {sleep} from "fuels";
 import sequelize from "./db";
 import {AccountBalanceAbi, AccountBalanceAbi__factory} from "./sdk/blockchain/fuel/types/account-balance";
 import {ClearingHouseAbi, ClearingHouseAbi__factory} from "./sdk/blockchain/fuel/types/clearing-house";
 import {handleOrderbookReceipts} from "./handlers/handleOrderbookReceipts";
 import {handleAccountBalanceReceipts} from "./handlers/handleAccountBalanceReceipts";
 import {handleClearingHouseReceipts} from "./handlers/handleClearingHouseReceipts";
-import {ReceiptLogData} from "@fuel-ts/transactions";
+import {PerpMarketAbi, PerpMarketAbi__factory} from "./sdk/blockchain/fuel/types/perp-market";
+import {handlePerpMarketReceipts} from "./handlers/handlePerpMarketReceipts";
 
 const app = express();
 
@@ -65,6 +73,7 @@ class Indexer {
     private orderbookAbi?: OrderbookAbi;
     private accountBalanceAbi?: AccountBalanceAbi;
     private clearingHouseAbi?: ClearingHouseAbi;
+    private perpMarketAbi?:  PerpMarketAbi;
     private readonly settings: TIndexerSettings;
 
     private status = STATUS.CHILL;
@@ -81,6 +90,7 @@ class Indexer {
                 this.orderbookAbi = OrderbookAbi__factory.connect(ORDERBOOK_ID, wallet)
                 this.clearingHouseAbi = ClearingHouseAbi__factory.connect(CLEARING_HOUSE_ID, wallet)
                 this.accountBalanceAbi = AccountBalanceAbi__factory.connect(ACCOUNT_BALANCE_ID, wallet)
+                this.perpMarketAbi = PerpMarketAbi__factory.connect(PERP_MARKET_ID, wallet)
             })
             .then(() => (this.initialized = true))
             .then(() => "ok").catch(e => {
@@ -158,6 +168,10 @@ class Indexer {
         }
 
         await handleOrderbookReceipts(receiptsResult.receipts.filter(({contract_id}: any) => contract_id == ORDERBOOK_ID), this.orderbookAbi!)
+        await handleClearingHouseReceipts(receiptsResult.receipts.filter(({contract_id}: any) => contract_id == CLEARING_HOUSE_ID), this.clearingHouseAbi!)
+        await handleAccountBalanceReceipts(receiptsResult.receipts.filter(({contract_id}: any) => contract_id == ACCOUNT_BALANCE_ID), this.accountBalanceAbi!)
+        await handlePerpMarketReceipts(receiptsResult.receipts.filter(({contract_id}: any) => contract_id == PERP_MARKET_ID), this.perpMarketAbi!)
+
         // for (let i = 0; i < receiptsResult.receipts.length; i++) {
         //     const receipt: any = receiptsResult.receipts[i];
         //     receipt.contract_id === ORDERBOOK_ID &&
