@@ -1,26 +1,25 @@
-// src/models/order.js
 import Sequelize from 'sequelize';
 import sequelize from '../db';
 
-const Order = sequelize.define('orders', {
-    order_id: {
-        type: Sequelize.STRING,
-    },
+const PerpAccountBalanceChangeEvent = sequelize.define('perpAccountBalanceChangeEvents', {
     trader: {
         type: Sequelize.STRING,
     },
     base_token: {
         type: Sequelize.STRING,
     },
-    base_size: {
-        type: Sequelize.STRING,
-    },
-    base_price: {
-        type: Sequelize.STRING,
-    },
     timestamp: {
         type: Sequelize.STRING,
-    }
+    },
+    taker_position_size: {
+        type: Sequelize.STRING,
+    },
+    taker_open_notional: {
+        type: Sequelize.STRING,
+    },
+    last_tw_premium_growth_global: {
+        type: Sequelize.STRING,
+    },
 });
 
-export default Order;
+export default PerpAccountBalanceChangeEvent;

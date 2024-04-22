@@ -1,5 +1,8 @@
-import {decodeClearingHouseReceipts} from "../utils/decodeReceipts";
 import {Contract, TransactionResultReceipt} from "fuels";
+import {decodeClearingHouseReceipts} from "../decoders/decodeClearingHouseReceipts";
+import isEvent from "../utils/isEvent";
+import PerpMarketEvent from "../models/perpMarketEvent";
+import PerpMarket from "../models/perpMarket";
 
 export async function handleClearingHouseReceipts(receipts: TransactionResultReceipt[], abi: Contract) {
     const decodedEvents = decodeClearingHouseReceipts(receipts, abi);
@@ -7,6 +10,8 @@ export async function handleClearingHouseReceipts(receipts: TransactionResultRec
         const event = decodedEvents[eventIndex];
 
         console.log(event);
-        //todo
+        if (isEvent("MarketEvent", event, abi)) {
+            await PerpMarket.create({...event.market});
+        }
     }
 }

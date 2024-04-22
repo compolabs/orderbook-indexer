@@ -191,6 +191,11 @@ const _abi = {
           "name": "account_balance",
           "type": 11,
           "typeArguments": null
+        },
+        {
+          "name": "timestamp",
+          "type": 19,
+          "typeArguments": null
         }
       ],
       "typeParameters": null
@@ -1558,7 +1563,7 @@ const _abi = {
         "type": 19,
         "typeArguments": null
       },
-      "offset": 260000
+      "offset": 260136
     },
     {
       "name": "PROXY_ADDRESS",
@@ -1567,7 +1572,7 @@ const _abi = {
         "type": 13,
         "typeArguments": []
       },
-      "offset": 259864
+      "offset": 260000
     },
     {
       "name": "FULLY_CLOSED_RATIO",
@@ -1576,7 +1581,7 @@ const _abi = {
         "type": 19,
         "typeArguments": null
       },
-      "offset": 260128
+      "offset": 260264
     },
     {
       "name": "SETTLEMENT_TOKEN",
@@ -1585,7 +1590,7 @@ const _abi = {
         "type": 14,
         "typeArguments": []
       },
-      "offset": 260216
+      "offset": 260352
     }
   ]
 };

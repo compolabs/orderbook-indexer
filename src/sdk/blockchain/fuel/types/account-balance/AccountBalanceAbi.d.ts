@@ -27,8 +27,8 @@ export enum ErrorOutput { AccessDenied = 'AccessDenied', NotEnoughFreeCollateral
 
 export type AccountBalanceInput = { taker_position_size: I64Input, taker_open_notional: I64Input, last_tw_premium_growth_global: I64Input };
 export type AccountBalanceOutput = { taker_position_size: I64Output, taker_open_notional: I64Output, last_tw_premium_growth_global: I64Output };
-export type AccountBalanceChangeEventInput = { trader: AddressInput, base_token: AssetIdInput, account_balance: AccountBalanceInput };
-export type AccountBalanceChangeEventOutput = { trader: AddressOutput, base_token: AssetIdOutput, account_balance: AccountBalanceOutput };
+export type AccountBalanceChangeEventInput = { trader: AddressInput, base_token: AssetIdInput, account_balance: AccountBalanceInput, timestamp: BigNumberish };
+export type AccountBalanceChangeEventOutput = { trader: AddressOutput, base_token: AssetIdOutput, account_balance: AccountBalanceOutput, timestamp: BN };
 export type AddressInput = { value: string };
 export type AddressOutput = AddressInput;
 export type AssetIdInput = { value: string };

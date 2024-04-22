@@ -3,10 +3,14 @@ import swaggerDocument from "./swagger/swagger.json";
 
 import express from "express";
 
-import marketCreateEventsRoutes from "./routes/marketCreateEvents";
-import ordersRoutes from "./routes/orders";
-import orderChangeEventsRoutes from "./routes/orderChangeEvents";
-import tradeEventsRoutes from "./routes/tradeEvents";
+import spotMarketCreateEvents from "./routes/spotMarketCreateEvents";
+import spotOrders from "./routes/spotOrders";
+import spotOrderChangeEvents from "./routes/spotOrderChangeEvents";
+import spotTradeEvents from "./routes/spotTradeEvents";
+import perpMarkets from "./routes/perpMarkets";
+import perpPositions from "./routes/perpPositions";
+import perpOrders from "./routes/perpOrders";
+import perpTradeEvents from "./routes/perpTradeEvents";
 import {
     ACCOUNT_BALANCE_ID,
     CLEARING_HOUSE_ID,
@@ -46,19 +50,21 @@ app.use(function (_: any, res: any, next: any) {
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// PROTECT ALL ROUTES THAT FOLLOW
-// app.use((req: Request, res: Response, next: NextFunction) => {
-//     const apiKey = req.get('API-Key')
-//     if (!apiKey || apiKey !== process.env.API_KEY) {
-//         res.status(401).json({error: 'unauthorised'})
-//     } else {
-//         next()
-//     }
-// })
-app.use("/marketCreateEvents", marketCreateEventsRoutes);
-app.use("/orders", ordersRoutes);
-app.use("/orderChangeEvents", orderChangeEventsRoutes);
-app.use("/tradeEvents", tradeEventsRoutes);
+app.use("/spot/marketCreateEvents", spotMarketCreateEvents);
+app.use("/spot/orders", spotOrders);
+app.use("/spot/orderChangeEvents", spotOrderChangeEvents);
+app.use("/spot/tradeEvents", spotTradeEvents);
+
+app.use("/perp/markets", perpMarkets);
+app.use("/perp/positions", perpPositions);
+app.use("/perp/tradeEvents", () => perpTradeEvents);
+app.use("/perp/orders", perpOrders);
+//todo
+// app.use("/perp/marketEvents", () => perpMarketEvents);
+// app.use("/perp/accountBalanceChangeEvents", () => perpAccountBalanceChangeEvents);
+// app.use("/perp/orderEvents", () => perpOrderEvents);
+
+
 
 type TIndexerSettings = { startBlock: number; };
 
@@ -73,7 +79,7 @@ class Indexer {
     private orderbookAbi?: OrderbookAbi;
     private accountBalanceAbi?: AccountBalanceAbi;
     private clearingHouseAbi?: ClearingHouseAbi;
-    private perpMarketAbi?:  PerpMarketAbi;
+    private perpMarketAbi?: PerpMarketAbi;
     private readonly settings: TIndexerSettings;
 
     private status = STATUS.CHILL;
@@ -93,9 +99,7 @@ class Indexer {
                 this.perpMarketAbi = PerpMarketAbi__factory.connect(PERP_MARKET_ID, wallet)
             })
             .then(() => (this.initialized = true))
-            .then(() => "ok").catch(e => {
-            console.log(e)
-        });
+            .catch(e => console.error(e));
     }
 
     run() {
@@ -167,23 +171,17 @@ class Indexer {
             return;
         }
 
+        //MarketCreateEvent
+        // OrderChangeEvent
+        // TradeEvent
         await handleOrderbookReceipts(receiptsResult.receipts.filter(({contract_id}: any) => contract_id == ORDERBOOK_ID), this.orderbookAbi!)
+        //MarketEvent
         await handleClearingHouseReceipts(receiptsResult.receipts.filter(({contract_id}: any) => contract_id == CLEARING_HOUSE_ID), this.clearingHouseAbi!)
+        //AccountBalanceChangeEvent
         await handleAccountBalanceReceipts(receiptsResult.receipts.filter(({contract_id}: any) => contract_id == ACCOUNT_BALANCE_ID), this.accountBalanceAbi!)
+        //TradeEvent
+        // OrderEvent
         await handlePerpMarketReceipts(receiptsResult.receipts.filter(({contract_id}: any) => contract_id == PERP_MARKET_ID), this.perpMarketAbi!)
-
-        // for (let i = 0; i < receiptsResult.receipts.length; i++) {
-        //     const receipt: any = receiptsResult.receipts[i];
-        //     receipt.contract_id === ORDERBOOK_ID &&
-        //         await handleOrderbookReceipts([receipt], this.orderbookAbi!)
-        //
-        //     // receipt.contract_id === ACCOUNT_BALANCE_ID &&
-        //     //     await handleAccountBalanceReceipts([receipt], this.accountBalanceAbi!)
-        //     //
-        //     // receipt.contract_id === CLEARING_HOUSE_ID &&
-        //     //     await handleClearingHouseReceipts([receipt], this.clearingHouseAbi!)
-        //
-        // }
 
         await this.updateSettings(receiptsResult.nextBlock);
         await sleep(100);
@@ -232,36 +230,3 @@ function shutDown() {
         process.exit(0);
     });
 }
-
-/*
-{
-{
-  order_id: '0xe52d4e7b06e5528f4e93f21602ff546ea4c7876a29e96cc51ad479e84cb8511e',
-  trader: '0x8e3bcc4316900e48929b4826cca9af280292f72f8665351ecfaa9ffdadb7b637',
-  base_token: '0x593b117a05f5ea64b39ba1f9bc3fb7e7a791c9be130e28376ad552eacdb3b746',
-  base_size_change: '45855',
-  base_price: '60771748762320',
-  timestamp: '4611686020140759195'
-}
-
-  order_id: '0xe52d4e7b06e5528f4e93f21602ff546ea4c7876a29e96cc51ad479e84cb8511e',
-  trader: '0x8e3bcc4316900e48929b4826cca9af280292f72f8665351ecfaa9ffdadb7b637',
-  base_token: '0x593b117a05f5ea64b39ba1f9bc3fb7e7a791c9be130e28376ad552eacdb3b746',
-  base_size_change: '-46181',
-  base_price: '60771748762320',
-  timestamp: '4611686020140759993'
-}
-{
-  base_token: '0x593b117a05f5ea64b39ba1f9bc3fb7e7a791c9be130e28376ad552eacdb3b746',
-  order_matcher: '0x194c4d5d321ea3bc2e87109f4a86520ad60f924998f67007d487d3cc0acc45d2',
-  seller: '0xf107d61bcedecf2c6087c33810a0ea10574b9dbee33f37da5c7d3aa70f818cbb',
-  buyer: '0x8e3bcc4316900e48929b4826cca9af280292f72f8665351ecfaa9ffdadb7b637',
-  trade_size: '46181',
-  trade_price: '60342633306130',
-  sell_order_id: '0xae43cf87490b9c4ae8329e1b50a990a4652f35c0cf66c80c5d6ec1ee661164ea',
-  buy_order_id: '0xe52d4e7b06e5528f4e93f21602ff546ea4c7876a29e96cc51ad479e84cb8511e',
-  timestamp: '4611686020140759993'
-}
-
-
-* */

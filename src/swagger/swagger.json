@@ -1,197 +1,29 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "Indexer API",
-      "description": "API for the orderbook indexer",
-      "version": "1.0.0"
-    },
-    "servers": [
-      {
-        "url": "http://localhost:5000"
-      }
-    ],
-    "paths": {
-      "/marketCreateEvents": {
-        "get": {
-          "summary": "Get all marketCreateEvents",
-          "responses": {
-            "200": {
-              "description": "A list of marketCreateEvents",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/marketCreateEvent"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/marketCreateEvents/{id}": {
-        "get": {
-          "summary": "Get event by ID",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "The event",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/marketCreateEvent"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/orders": {
-        "get": {
-          "summary": "Get all orders",
-          "responses": {
-            "200": {
-              "description": "A list of orders",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/order"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/orders/{id}": {
-        "get": {
-          "summary": "Get order by ID",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "The order",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/order"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/orderChangeEvents": {
-        "get": {
-          "summary": "Get all orderChangeEvents",
-          "responses": {
-            "200": {
-              "description": "A list of orderChangeEvents",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/orderChangeEvent"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/orderChangeEvents/{id}": {
-        "get": {
-          "summary": "Get orderChangeEvent by ID",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "The orderChangeEvent",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/orderChangeEvent"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/tradeEvents": {
-        "get": {
-          "summary": "Get all tradeEvents",
-          "responses": {
-            "200": {
-              "description": "A list of tradeEvents",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/tradeEvent"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/tradeEvents/{id}": {
-        "get": {
-          "summary": "Get tradeEvent by ID",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "integer"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "The tradeEvent",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/tradeEvent"
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Spark Indexer API",
+    "description": "API for the spark indexer",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/spot/marketCreateEvents": {
+      "get": {
+        "summary": "Retrieve all spot market creation events",
+        "tags": ["Spot"],
+        "responses": {
+          "200": {
+            "description": "List of spot market creation events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpotMarketCreateEvent"
                   }
                 }
               }
@@ -200,124 +32,555 @@
         }
       }
     },
-    "components": {
-      "schemas": {
-        "marketCreateEvent": {
-          "type": "object",
-          "properties": {
-            "assetId": {
-              "type": "string"
-            },
-            "decimal": {
-              "type": "string"
-            },
-            "blockNumber": {
-              "type": "string"
-            },
-            "blockTimestamp": {
-              "type": "string"
-            },
-            "transactionHash": {
+    "/spot/orders": {
+      "get": {
+        "tags": ["Spot"],
+        "summary": "Retrieve all spot orders with optional filters",
+        "operationId": "getSpotOrders",
+        "parameters": [
+          {
+            "name": "trader",
+            "in": "query",
+            "description": "Filter orders by trader identifier",
+            "required": false,
+            "schema": {
               "type": "string"
             }
-          }
-        },
-        "order":{
-          "type": "object",
-          "properties": {
-            "trader": {
+          },
+          {
+            "name": "baseToken",
+            "in": "query",
+            "description": "Filter orders by base token",
+            "required": false,
+            "schema": {
               "type": "string"
-            },
-            "baseToken": {
-              "type": "string"
-            },
-            "baseSize": {
-              "type": "string"
-            },
-            "orderPrice": {
-              "type": "string"
-            },
-            "blockTimestamp": {
-              "type": "string"
-            },
-            "isActive": {
+            }
+          },
+          {
+            "name": "orderType",
+            "in": "query",
+            "description": "Filter orders by type ('buy' or 'sell')",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["buy", "sell"]
+            }
+          },
+          {
+            "name": "isOpened",
+            "in": "query",
+            "description": "Filter orders based on whether they are opened",
+            "required": false,
+            "schema": {
               "type": "boolean"
             }
-          }
-        },
-        "orderChangeEvent":{
-          "type": "object",
-          "properties": {
-            "OrderBook_id": {
-              "type": "string"
-            },
-            "trader": {
-              "type": "string"
-            },
-            "baseToken": {
-              "type": "string"
-            },
-            "baseSize": {
-              "type": "string"
-            },
-            "orderPrice": {
-              "type": "string"
-            },
-            "blockNumber": {
-              "type": "string"
-            },
-            "blockTimestamp": {
-              "type": "string"
-            },
-            "transactionHash": {
-              "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit the number of results returned",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 40
             }
           }
-        },
-        "tradeEvent":{
-          "type": "object",
-          "properties": {
-            "baseToken": {
-              "type": "string"
-            },
-            "matcher": {
-              "type": "string"
-            },
-            "seller": {
-              "type": "string"
-            },
-            "buyer": {
-              "type": "string"
-            },
-            "tradeAmount": {
-              "type": "string"
-            },
-            "timestamp": {
-              "type": "string"
-            },
-            "blockNumber": {
-              "type": "string"
-            },
-            "blockTimestamp": {
+        ],
+        "responses": {
+          "200": {
+            "description": "List of spot orders",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpotOrder"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error if failed to fetch orders"
+          }
+        }
+      }
+    },
+    "/spot/orderChangeEvents": {
+      "get": {
+        "tags": ["Spot"],
+        "summary": "Retrieve all spot order change events",
+        "responses": {
+          "200": {
+            "description": "List of spot order change events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpotOrderChangeEvent"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spot/tradeEvents": {
+      "get": {
+        "tags": ["Spot"],
+        "summary": "Retrieve all spot trade events with optional filters",
+        "parameters": [
+          {
+            "name": "trader",
+            "in": "query",
+            "description": "Filter by trader involved as buyer or seller",
+            "required": false,
+            "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "baseToken",
+            "in": "query",
+            "description": "Filter by the base token involved in the trade",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit the number of results returned",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 80
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of spot trade events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpotTradeEvent"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error fetching the events"
+          }
+        }
+      }
+    },
+    "/perp/markets": {
+      "get": {
+        "tags": ["Perp"],
+        "summary": "Retrieve all perpetual markets",
+        "responses": {
+          "200": {
+            "description": "List of perpetual markets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PerpMarket"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/perp/orders": {
+      "get": {
+        "summary": "Retrieve all perpetual orders with optional filters",
+        "operationId": "getPerpOrders",
+        "tags": ["Perp"],
+        "parameters": [
+          {
+            "name": "trader",
+            "in": "query",
+            "description": "Filter orders by trader identifier",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "baseToken",
+            "in": "query",
+            "description": "Filter orders by base token",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderType",
+            "in": "query",
+            "description": "Filter orders by type ('buy' or 'sell')",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["buy", "sell"]
+            }
+          },
+          {
+            "name": "isOpened",
+            "in": "query",
+            "description": "Filter orders by their open status",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit the number of results returned",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 40
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of filtered perpetual orders",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PerpOrder"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/perp/tradeEvents": {
+      "get": {
+        "tags": ["Perp"],
+        "summary": "Retrieve all perpetual trade events with optional filters",
+        "operationId": "getPerpTradeEvents",
+        "parameters": [
+          {
+            "name": "trader",
+            "in": "query",
+            "description": "Filter events by trader involved as either buyer or seller",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "baseToken",
+            "in": "query",
+            "description": "Filter events by base token involved in the trade",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit the number of results returned",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 80
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of perpetual trade events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PerpTradeEvent"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error if failed to fetch events"
+          }
+        }
+      }
+    },
+    "/perp/positions": {
+      "get": {
+        "tags": ["Perp"],
+        "summary": "Retrieve all perpetual positions with optional filters",
+        "operationId": "getPerpPositions",
+        "parameters": [
+          {
+            "name": "trader",
+            "in": "query",
+            "description": "Filter positions by trader identifier",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "baseToken",
+            "in": "query",
+            "description": "Filter positions by base token",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit the number of results returned",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 40
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of perpetual positions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PerpPosition"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error if failed to fetch positions"
+          }
+        }
+      }
+    }
+
+
+  },
+  "components": {
+    "schemas": {
+      "SpotMarketCreateEvent": {
+        "type": "object",
+        "properties": {
+          "asset_id": {
+            "type": "string"
+          },
+          "asset_decimals": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
           }
         }
       },
-      "securitySchemes":{
-        "ApiKeyAuth":{
-           "type":"apiKey",
-           "description":"API Key",
-           "name": "API-Key",
-           "in": "header"
+      "SpotOrder": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string"
+          },
+          "trader": {
+            "type": "string"
+          },
+          "base_token": {
+            "type": "string"
+          },
+          "base_size": {
+            "type": "string"
+          },
+          "base_price": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
         }
-     }
-    },
-    "security":[
-       {
-          "ApiKeyAuth":[
-             
-          ]
-       }
-    ]
+      },
+      "SpotOrderChangeEvent": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string"
+          },
+          "new_base_size": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "SpotTradeEvent": {
+        "type": "object",
+        "properties": {
+          "base_token": {
+            "type": "string"
+          },
+          "order_matcher": {
+            "type": "string"
+          },
+          "seller": {
+            "type": "string"
+          },
+          "buyer": {
+            "type": "string"
+          },
+          "trade_size": {
+            "type": "string"
+          },
+          "trade_price": {
+            "type": "string"
+          },
+          "sell_order_id": {
+            "type": "string"
+          },
+          "buy_order_id": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "PerpMarket": {
+        "type": "object",
+        "properties": {
+          "asset_id": {
+            "type": "string"
+          },
+          "decimal": {
+            "type": "string"
+          },
+          "price_feed": {
+            "type": "string"
+          },
+          "im_ratio": {
+            "type": "string"
+          },
+          "mm_ratio": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "paused_index_price": {
+            "type": "string",
+            "nullable": true
+          },
+          "paused_timestamp": {
+            "type": "string",
+            "nullable": true
+          },
+          "closed_price": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PerpPosition": {
+        "type": "object",
+        "properties": {
+          "trader": {
+            "type": "string"
+          },
+          "base_token": {
+            "type": "string"
+          },
+          "taker_position_size": {
+            "type": "string"
+          },
+          "taker_open_notional": {
+            "type": "string"
+          },
+          "last_tw_premium_growth_global": {
+            "type": "string"
+          }
+        }
+      },
+      "PerpTradeEvent": {
+        "type": "object",
+        "properties": {
+          "base_token": {
+            "type": "string"
+          },
+          "seller": {
+            "type": "string"
+          },
+          "buyer": {
+            "type": "string"
+          },
+          "trade_size": {
+            "type": "string"
+          },
+          "trade_price": {
+            "type": "string"
+          },
+          "sell_order_id": {
+            "type": "string"
+          },
+          "buy_order_id": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "PerpOrder": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "string"
+          },
+          "trader": {
+            "type": "string"
+          },
+          "base_token": {
+            "type": "string"
+          },
+          "base_size": {
+            "type": "string"
+          },
+          "base_price": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      }
+    }
   }
+}
