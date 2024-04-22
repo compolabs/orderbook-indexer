@@ -1,5 +1,5 @@
 import express from "express";
-import PerpOrder from "../models/perpOrder";
+import PerpOrder from "../models/PerpOrder";
 import Sequelize from "sequelize";
 
 const router = express.Router();
