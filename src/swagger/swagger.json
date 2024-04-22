@@ -6,9 +6,8 @@
     "version": "1.0.0"
   },
   "servers": [
-    {
-      "url": "http://localhost:3000"
-    }
+    {"url": "https://indexer.spark-defi.com/api-docs"},
+    {"url": "http://localhost:3000"}
   ],
   "paths": {
     "/spot/marketCreateEvents": {
