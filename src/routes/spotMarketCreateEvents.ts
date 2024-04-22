@@ -1,6 +1,6 @@
 
-import express from 'express';
-import SpotMarketCreateEvent from '../models/spotMarketCreateEvent';
+import express from "express";
+import SpotMarketCreateEvent from "../models/spotMarketCreateEvent";
 
 const router = express.Router();
 

@@ -1,7 +1,5 @@
-// src/routes/event.js
-
-import express from 'express';
-import TradeEvent from '../models/spotTradeEvent';
+import express from "express";
+import TradeEvent from "../models/spotTradeEvent";
 import Sequelize from "sequelize";
 
 const router = express.Router();

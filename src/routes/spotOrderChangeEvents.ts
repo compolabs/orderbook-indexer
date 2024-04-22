@@ -1,7 +1,5 @@
-// src/routes/event.js
-
-import express from 'express';
-import SpotOrderChangeEvent from '../models/spotOrderChangeEvent';
+import express from "express";
+import SpotOrderChangeEvent from "../models/spotOrderChangeEvent";
 const router = express.Router();
 
 // Get all events

@@ -1,7 +1,7 @@
 
-import express from 'express';
-import SpotOrder from '../models/spotOrder';
-import Sequelize, {DECIMAL} from "sequelize";
+import express from "express";
+import SpotOrder from "../models/spotOrder";
+import Sequelize from "sequelize";
 
 const router = express.Router();
 
