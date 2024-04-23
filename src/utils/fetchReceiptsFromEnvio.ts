@@ -18,12 +18,13 @@ export default async function fetchReceiptsFromEnvio(fromBlock: number, toBlock:
             {"contract_id": contracts, "receipt_type": [6]},
             {"root_contract_id": contracts, "receipt_type": [6]}
         ],
-        "field_selection": {"receipt": ["receipt_type", "contract_id", "ra", "rb", "ptr", "len", "digest", "pc", "is", "data", "root_contract_id"]}
+        "field_selection": {"receipt": ["tx_id","receipt_type", "contract_id", "ra", "rb", "ptr", "len", "digest", "pc", "is", "data", "root_contract_id"]}
     }
     const indexerData = await axios.post("https://fuel-15.hypersync.xyz/query", request).then(response => response.data);
     const rawReceipts = (indexerData as any).data.flatMap(({receipts}: any) => receipts.filter(({receipt_type}: any) => receipt_type == 6))
     const receipts: TransactionResultReceipt[] = rawReceipts.map((receipt: any) => ({
         type: receipt.receipt_type,
+        tx_id: receipt.tx_id,
         id: receipt.contract_id,
         val0: new BN(receipt.ra),
         val1: new BN(receipt.rb),

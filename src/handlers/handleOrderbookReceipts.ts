@@ -15,7 +15,7 @@ export async function handleOrderbookReceipts(receipts: TransactionResultReceipt
     for (let eventIndex = 0; eventIndex < decodedEvents.length; eventIndex++) {
         const event: any = decodedEvents[eventIndex];
 
-        // console.log(event);
+        console.log(event);
         if (isEvent("MarketCreateEvent", event, abi)) {
             await MarketCreateEvent.create({...event});
         } else if (isEvent("OrderChangeEvent", event, abi)) {

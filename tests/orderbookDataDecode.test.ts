@@ -7,8 +7,8 @@ import {Api} from "../src/sdk/blockchain/fuel/Api";
 import {OrderbookAbi__factory} from "../src/sdk/blockchain/fuel/types/orderbook";
 import {PRIVATE_KEY} from "../src/config";
 import fetchReceiptsFromEnvio from "../src/utils/fetchReceiptsFromEnvio";
-import {decodeOrderbookReceipts} from "../src/utils/decodeReceipts";
 import BN from "../src/utils/BN";
+import {decodeOrderbookReceipts} from "../src/decoders/decodeOrderbookReceipts";
 
 describe("Envio indexer data encode test", () => {
     let fuelNetwork: FuelNetwork;
@@ -127,7 +127,7 @@ describe("Envio indexer data encode test", () => {
             const wallet = fuelNetwork.walletManager.wallet!;
             const {contractId, blockNumber} = JSON.parse(readFileSync("./tests/orderbookAddresses.json").toString())
 
-            const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, blockNumber + 1000, [contractId])
+            const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, blockNumber + 5000, [contractId])
             const orderbookAbi = OrderbookAbi__factory.connect(contractId, wallet);
             if (receiptsResult === null) return;
             console.log(decodeOrderbookReceipts(receiptsResult.receipts, orderbookAbi!))

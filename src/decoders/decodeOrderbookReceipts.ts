@@ -37,7 +37,8 @@ export function decodeOrderbookReceipts(receipts: TransactionResultReceipt[], ab
                 return {
                     asset_id: log.asset_id.value,
                     asset_decimals: log.asset_decimals,
-                    timestamp: log.timestamp.toString()
+                    timestamp: log.timestamp.toString(),
+                    tx_id: log.tx_id
                 } as TMarketCreateEvent
             }
             // OrderChangeEvent
@@ -45,6 +46,9 @@ export function decodeOrderbookReceipts(receipts: TransactionResultReceipt[], ab
                 return {
                     order_id: log.order_id,
                     timestamp: log.timestamp.toString(),
+                    tx_id: log.tx_id,
+                    identifier: log.identifier,
+                    sender: log.sender.Address.value,
                     order: log.order != null ? {
                         id: log.order.id,
                         trader: log.order.trader.value,
@@ -57,6 +61,7 @@ export function decodeOrderbookReceipts(receipts: TransactionResultReceipt[], ab
             // TradeEvent
             if (isEvent("TradeEvent", log, abi)) {
                 return {
+                    tx_id: log.tx_id,
                     base_token: log.base_token.value,
                     order_matcher: log.order_matcher.value,
                     seller: log.seller.value,
