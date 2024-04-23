@@ -6,7 +6,7 @@
     "version": "1.0.0"
   },
   "servers": [
-    {"url": "https://indexer.spark-defi.com/api-docs"},
+    {"url": "https://indexer.spark-defi.com"},
     {"url": "http://localhost:3000"}
   ],
   "paths": {
