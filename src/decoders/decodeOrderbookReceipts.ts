@@ -1,6 +1,7 @@
 import {Contract, getDecodedLogs, TransactionResultReceipt} from "fuels";
 import isEvent from "../utils/isEvent";
 import BN from "../utils/BN";
+import tai64ToDate from "../utils/tai64ToDate";
 
 type TMarketCreateEvent = {
     asset_id: string,
@@ -37,15 +38,15 @@ export function decodeOrderbookReceipts(receipts: TransactionResultReceipt[], ab
                 return {
                     asset_id: log.asset_id.value,
                     asset_decimals: log.asset_decimals,
-                    timestamp: log.timestamp.toString(),
+                    timestamp: tai64ToDate(log.timestamp.toString()),
                     tx_id: log.tx_id
-                } as TMarketCreateEvent
+                } as any
             }
             // OrderChangeEvent
             if (isEvent("OrderChangeEvent", log, abi)) {
                 return {
                     order_id: log.order_id,
-                    timestamp: log.timestamp.toString(),
+                    timestamp: tai64ToDate(log.timestamp.toString()),
                     tx_id: log.tx_id,
                     identifier: log.identifier,
                     sender: log.sender.Address.value,
@@ -70,8 +71,8 @@ export function decodeOrderbookReceipts(receipts: TransactionResultReceipt[], ab
                     trade_price: log.trade_price.toString(),
                     sell_order_id: log.sell_order_id,
                     buy_order_id: log.buy_order_id,
-                    timestamp: log.timestamp.toString(),
-                } as TTradeEvent;
+                    timestamp: tai64ToDate(log.timestamp.toString()),
+                } as any;
             }
         })
         return decodedLogs

@@ -2,6 +2,7 @@ import {Contract, TransactionResultReceipt} from "fuels";
 import {decodeReceipts} from "../utils/decodeReceipts";
 import {ClearingHouseAbi} from "../sdk/blockchain/fuel/types/clearing-house";
 import isEvent from "../utils/isEvent";
+import tai64ToDate from "../utils/tai64ToDate";
 
 export function decodeClearingHouseReceipts(receipts: TransactionResultReceipt[], abi: Contract): any[] {
     const clearingHouseDecoders = [decodeMarketEvent]
@@ -14,7 +15,7 @@ const decodeMarketEvent = (log: any, abi: ClearingHouseAbi) => {
             eventName: "MarketEvent",
 
             sender: log.sender.Address.value,
-            timestamp: log.timestamp.toString(),
+            timestamp: tai64ToDate(log.timestamp.toString()),
             identifier: log.identifier,
             market: {
                 asset_id: log.market.asset_id.value, //AssetId,

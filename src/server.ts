@@ -34,6 +34,7 @@ import {handleAccountBalanceReceipts} from "./handlers/handleAccountBalanceRecei
 import {handleClearingHouseReceipts} from "./handlers/handleClearingHouseReceipts";
 import {PerpMarketAbi, PerpMarketAbi__factory} from "./sdk/blockchain/fuel/types/perp-market";
 import {handlePerpMarketReceipts} from "./handlers/handlePerpMarketReceipts";
+import spotStatistics from "./routes/spotStatistics";
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use(function (_: any, res: any, next: any) {
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+app.use("/spot/statistics", spotStatistics);
 app.use("/spot/marketCreateEvents", spotMarketCreateEvents);
 app.use("/spot/orders", spotOrders);
 app.use("/spot/orderChangeEvents", spotOrderChangeEvents);

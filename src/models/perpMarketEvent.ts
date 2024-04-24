@@ -3,9 +3,7 @@ import sequelize from '../db';
 
 //todo
 const PerpMarketEvent = sequelize.define('perpMarketEvents', {
-    timestamp: {
-        type: Sequelize.STRING,
-    },
+    timestamp: { type: Sequelize.DATE },
 });
 
 

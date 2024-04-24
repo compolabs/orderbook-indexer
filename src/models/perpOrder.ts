@@ -7,7 +7,7 @@ const PerpOrderModel = sequelize.define('perpOrders', {
     base_token: {type: Sequelize.STRING,},
     base_size: {type: Sequelize.STRING,},
     base_price: {type: Sequelize.STRING,},
-    timestamp: {type: Sequelize.STRING,}
+    timestamp: { type: Sequelize.DATE },
 });
 
 export default PerpOrderModel;

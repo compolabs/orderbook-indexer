@@ -10,7 +10,7 @@ const PerpTradeEvent = sequelize.define('perpTradeEvents', {
     trade_price: {type: Sequelize.STRING},
     sell_order_id: {type: Sequelize.STRING},
     buy_order_id: {type: Sequelize.STRING},
-    timestamp: {type: Sequelize.STRING},
+    timestamp: { type: Sequelize.DATE },
 });
 
 export default PerpTradeEvent;

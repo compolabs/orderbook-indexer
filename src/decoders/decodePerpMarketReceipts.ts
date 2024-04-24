@@ -2,6 +2,7 @@ import {Contract, TransactionResultReceipt} from "fuels";
 import {decodeReceipts} from "../utils/decodeReceipts";
 import {PerpMarketAbi} from "../sdk/blockchain/fuel/types/perp-market";
 import isEvent from "../utils/isEvent";
+import tai64ToDate from "../utils/tai64ToDate";
 export function decodePerpMarketReceipts(receipts: TransactionResultReceipt[], abi: Contract): any[] {
     const perpMarketDecoders = [decodeTradeEvent,decodeOrderEvent]
     return decodeReceipts(receipts, abi, perpMarketDecoders)
@@ -19,7 +20,7 @@ const decodeTradeEvent = (log: any, abi: PerpMarketAbi) => {
             trade_price: log.trade_price.toString(),
             sell_order_id: log.sell_order_id,
             buy_order_id: log.buy_order_id,
-            timestamp: log.timestamp.toString(),
+            timestamp: tai64ToDate(log.timestamp.toString()),
 
         }
     }
@@ -32,7 +33,7 @@ const decodeOrderEvent = (log: any, abi: PerpMarketAbi) => {
 
             order_id: log.order_id,
             sender: log.sender?.Address?.value ?? log.sender?.ContractId?.value ,
-            timestamp: log.timestamp.toString(),
+            timestamp: tai64ToDate(log.timestamp.toString()),
             identifier: log.identifier,
             order: log.order != null ? {
                 id: log.order.id,
