@@ -6,14 +6,58 @@
     "version": "1.0.0"
   },
   "servers": [
-    {"url": "https://indexer.spark-defi.com"},
-    {"url": "http://localhost:3000"}
+    {
+      "url": "https://indexer.spark-defi.com"
+    },
+    {
+      "url": "http://localhost:3000"
+    }
   ],
   "paths": {
+    "/spot/statistics": {
+      "get": {
+        "summary": "Retrieve aggregated statistics for trades over the past 24 hours",
+        "tags": [
+          "Spot"
+        ],
+        "description": "This endpoint returns the total trading volume, and the highest and lowest trade prices for the past 24 hours.",
+        "responses": {
+          "200": {
+            "description": "Aggregated trade statistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "volume24h": {
+                      "type": "number",
+                      "description": "Total trading volume in the last 24 hours"
+                    },
+                    "high24h": {
+                      "type": "number",
+                      "description": "Highest trade price in the last 24 hours"
+                    },
+                    "low24h": {
+                      "type": "number",
+                      "description": "Lowest trade price in the last 24 hours"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error if the query fails"
+          }
+        }
+      }
+    },
     "/spot/marketCreateEvents": {
       "get": {
         "summary": "Retrieve all spot market creation events",
-        "tags": ["Spot"],
+        "tags": [
+          "Spot"
+        ],
         "responses": {
           "200": {
             "description": "List of spot market creation events",
@@ -33,7 +77,9 @@
     },
     "/spot/orders": {
       "get": {
-        "tags": ["Spot"],
+        "tags": [
+          "Spot"
+        ],
         "summary": "Retrieve all spot orders with optional filters",
         "operationId": "getSpotOrders",
         "parameters": [
@@ -62,7 +108,10 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["buy", "sell"]
+              "enum": [
+                "buy",
+                "sell"
+              ]
             }
           },
           {
@@ -107,7 +156,9 @@
     },
     "/spot/orderChangeEvents": {
       "get": {
-        "tags": ["Spot"],
+        "tags": [
+          "Spot"
+        ],
         "summary": "Retrieve all spot order change events",
         "responses": {
           "200": {
@@ -128,7 +179,9 @@
     },
     "/spot/tradeEvents": {
       "get": {
-        "tags": ["Spot"],
+        "tags": [
+          "Spot"
+        ],
         "summary": "Retrieve all spot trade events with optional filters",
         "parameters": [
           {
@@ -182,7 +235,9 @@
     },
     "/perp/markets": {
       "get": {
-        "tags": ["Perp"],
+        "tags": [
+          "Perp"
+        ],
         "summary": "Retrieve all perpetual markets",
         "responses": {
           "200": {
@@ -205,7 +260,9 @@
       "get": {
         "summary": "Retrieve all perpetual orders with optional filters",
         "operationId": "getPerpOrders",
-        "tags": ["Perp"],
+        "tags": [
+          "Perp"
+        ],
         "parameters": [
           {
             "name": "trader",
@@ -232,7 +289,10 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["buy", "sell"]
+              "enum": [
+                "buy",
+                "sell"
+              ]
             }
           },
           {
@@ -277,7 +337,9 @@
     },
     "/perp/tradeEvents": {
       "get": {
-        "tags": ["Perp"],
+        "tags": [
+          "Perp"
+        ],
         "summary": "Retrieve all perpetual trade events with optional filters",
         "operationId": "getPerpTradeEvents",
         "parameters": [
@@ -332,7 +394,9 @@
     },
     "/perp/positions": {
       "get": {
-        "tags": ["Perp"],
+        "tags": [
+          "Perp"
+        ],
         "summary": "Retrieve all perpetual positions with optional filters",
         "operationId": "getPerpPositions",
         "parameters": [
@@ -385,8 +449,6 @@
         }
       }
     }
-
-
   },
   "components": {
     "schemas": {
