@@ -8,7 +8,6 @@ const router = express.Router();
 // Get all orders
 router.get('/', async (req, res) => {
     try {
-        // Извлекаем параметры фильтрации из запроса
         const {trader, baseToken, orderType, isOpened, limit} = req.query;
 
         const conditions = [];

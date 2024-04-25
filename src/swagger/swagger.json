@@ -21,6 +21,17 @@
           "Spot"
         ],
         "description": "This endpoint returns the total trading volume, and the highest and lowest trade prices for the past 24 hours.",
+        "parameters": [
+          {
+            "name": "baseToken",
+            "in": "query",
+            "description": "Filter orders by base token",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Aggregated trade statistics",
