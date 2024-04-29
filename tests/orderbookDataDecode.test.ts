@@ -7,7 +7,8 @@ import {Api} from "../src/sdk/blockchain/fuel/Api";
 import {OrderbookAbi__factory} from "../src/sdk/blockchain/fuel/types/orderbook";
 import {PRIVATE_KEY} from "../src/config";
 import fetchReceiptsFromEnvio from "../src/utils/fetchReceiptsFromEnvio";
-import {decodeReceipts} from "../src/utils/decodeReceipts";
+import BN from "../src/utils/BN";
+import {decodeOrderbookReceipts} from "../src/decoders/decodeOrderbookReceipts";
 
 describe("Envio indexer data encode test", () => {
     let fuelNetwork: FuelNetwork;
@@ -19,6 +20,11 @@ describe("Envio indexer data encode test", () => {
 
     it("should emit and decode data", async () => {
             const wallet = fuelNetwork.walletManager.wallet!;
+
+            const sellSize = 4414
+            const sellPrice = 62329750000000
+            const buySize = 18812
+            const buyPrice = 63649539999990
 
             console.log("Wallet address: ", wallet.address)
             console.log("Eth balance   : ", await wallet.getBalance(BaseAssetId).then(b => b.toString()), " ETH")
@@ -42,20 +48,21 @@ describe("Envio indexer data encode test", () => {
             const contractId = contract.id.toHexString()
             console.log({contractId, blockNumber})
 
-            writeFileSync("./tests/addresses.json", JSON.stringify({contractId, blockNumber}))
+            writeFileSync("./tests/orderbookAddresses.json", JSON.stringify({contractId, blockNumber}))
 
             const api = new Api();
 
             await api.createSpotMarket(btc, 8, wallet, contractId);
             console.log("Market created: ", btc.assetId)
-            await fuelNetwork.mintToken(btc.assetId, 0.001 * 1e8)
-            console.log(`0.001 btc Token minted`)
-            const {orderId: sellOrderId} = await api.createSpotOrder(btc, usdc, "-100000", (69000 * 1e9).toString(), wallet, contractId);
+            await fuelNetwork.mintToken(btc.assetId, sellSize)
+            console.log(`${sellSize / 1e8} btc Token minted`)
+            const {orderId: sellOrderId} = await api.createSpotOrder(btc, usdc, "-" + sellSize.toString(), sellPrice.toString(), wallet, contractId);
             console.log({sellOrderId})
 
-            await fuelNetwork.mintToken(usdc.assetId, 70 * 1e6)
-            console.log(`70 USDC Token minted`)
-            const {orderId: buyOrderId} = await api.createSpotOrder(btc, usdc, "100000", (70000 * 1e9).toString(), wallet, contractId);
+            const usdcAmount = Math.ceil(new BN(buySize).times(buySize).div(1e8).div(1e8).times(1e6).toNumber());
+            await fuelNetwork.mintToken(usdc.assetId, usdcAmount)
+            console.log(`${usdcAmount / 1e6} USDC Token minted`)
+            const {orderId: buyOrderId} = await api.createSpotOrder(btc, usdc, buySize.toString(), buyPrice.toString(), wallet, contractId);
 
             await sleep(1000)
             const orderbookAbi = OrderbookAbi__factory.connect(contractId, wallet);
@@ -67,9 +74,27 @@ describe("Envio indexer data encode test", () => {
             console.log("Orders matched")
             await sleep(1000)
 
-            const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, +blockNumber + 1000, contractId)
-            const events = decodeReceipts(receiptsResult?.receipts!, orderbookAbi)
+            const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, +blockNumber + 1000, [contractId])
+            const events = decodeOrderbookReceipts(receiptsResult?.receipts!, orderbookAbi)
             console.log(events)
+        },
+        60_000,
+    );
+    it("match orders", async () => {
+            const wallet = fuelNetwork.walletManager.wallet!;
+
+            const api = new Api();
+            const contractId = "0x72175cdd41bbf890f8cddfe54fa55ac0f311f963c010746337f1c2ac3d79ffbb"
+            const orderbookAbi = OrderbookAbi__factory.connect(contractId, wallet);
+            const sellOrderId = "0x4d8e67903374b36c22fcf0fb07bd9a9060a9fbae37fd2c2a8f478335c9363ed8"
+            const buyOrderId = "0x4285de56c7b84da6417f5bae151087b0dc8aa9b2746feed34d968d2d09fca62a"
+            const sellOrder = await orderbookAbi.functions.order_by_id(sellOrderId).simulate().then(res => res.value)
+            const buyOrder = await orderbookAbi.functions.order_by_id(buyOrderId).simulate().then(res => res.value)
+            console.log({sellOrder: decodeOrder(sellOrder), buyOrder: decodeOrder(buyOrder)})
+
+            await api.matchSpotOrders(sellOrderId, buyOrderId, wallet, contractId)
+                .then(() => console.log("Orders matched"))
+                .catch(e => console.error(e));
         },
         60_000,
     );
@@ -80,7 +105,7 @@ describe("Envio indexer data encode test", () => {
             console.log("Wallet address: ", wallet.address)
             console.log("Eth balance   : ", await wallet.getBalance(BaseAssetId).then(b => b.toString()), " ETH")
 
-            const {contractId, blockNumber} = JSON.parse(readFileSync("./tests/addresses.json").toString())
+            const {contractId, blockNumber} = JSON.parse(readFileSync("./tests/orderbookAddresses.json").toString())
             console.log({contractId, blockNumber})
 
             const btc = fuelNetwork.getTokenBySymbol("BTC");
@@ -100,12 +125,12 @@ describe("Envio indexer data encode test", () => {
 
     it("should decode data", async () => {
             const wallet = fuelNetwork.walletManager.wallet!;
-            const {contractId, blockNumber} = JSON.parse(readFileSync("./tests/addresses.json").toString())
+            const {contractId, blockNumber} = JSON.parse(readFileSync("./tests/orderbookAddresses.json").toString())
 
-            const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, blockNumber + 1000, contractId)
+            const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, blockNumber + 5000, [contractId])
             const orderbookAbi = OrderbookAbi__factory.connect(contractId, wallet);
             if (receiptsResult === null) return;
-            console.log(decodeReceipts(receiptsResult.receipts, orderbookAbi!))
+            console.log(decodeOrderbookReceipts(receiptsResult.receipts, orderbookAbi!))
         },
         60_000,
     );

@@ -1,4 +1,4 @@
-import Sequelize, {DataTypes, Model} from 'sequelize';
+import Sequelize, {Model} from 'sequelize';
 import sequelize from '../db';
 
 class SystemSettings extends Model {}

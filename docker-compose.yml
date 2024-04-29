@@ -11,22 +11,25 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=${DB_HOST}
-      - CONTRACT_ID=${CONTRACT_ID}
       - START_BLOCK=${START_BLOCK}
       - PORT=${PORT}
       - PRIVATE_KEY=${PRIVATE_KEY}
+      - ORDERBOOK_ID=${ORDERBOOK_ID}
+      - PERP_MARKET_ID=${PERP_MARKET_ID}
+      - CLEARING_HOUSE_ID=${CLEARING_HOUSE_ID}
+      - ACCOUNT_BALANCE_ID=${ACCOUNT_BALANCE_ID}
     depends_on:
-      - orderbook_indexer_database
+      - indexer_database
 
-  orderbook_indexer_database:
-    container_name: orderbook_indexer_database
+  indexer_database:
+    container_name: indexer_database
     image: postgres:16
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
-      - orderbook_indexer_database_data:/var/lib/postgresql/data
+      - indexer_database_data:/var/lib/postgresql/data
 
 volumes:
-  orderbook_indexer_database_data: {}
+  indexer_database_data: {}

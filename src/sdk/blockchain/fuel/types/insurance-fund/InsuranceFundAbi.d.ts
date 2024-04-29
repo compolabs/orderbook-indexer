@@ -45,33 +45,33 @@ export type InsuranceFundAbiConfigurables = {
 
 interface InsuranceFundAbiInterface extends Interface {
   functions: {
+    set_distribution_threshold: FunctionFragment;
+    set_surplus_beneficiary: FunctionFragment;
     distribute_fee: FunctionFragment;
     get_insurance_fund_capacity: FunctionFragment;
     repay: FunctionFragment;
-    set_distribution_threshold: FunctionFragment;
-    set_surplus_beneficiary: FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: 'set_distribution_threshold', values: [BigNumberish]): Uint8Array;
+  encodeFunctionData(functionFragment: 'set_surplus_beneficiary', values: [AddressInput]): Uint8Array;
   encodeFunctionData(functionFragment: 'distribute_fee', values: [Vec<Bytes>]): Uint8Array;
   encodeFunctionData(functionFragment: 'get_insurance_fund_capacity', values: []): Uint8Array;
   encodeFunctionData(functionFragment: 'repay', values: []): Uint8Array;
-  encodeFunctionData(functionFragment: 'set_distribution_threshold', values: [BigNumberish]): Uint8Array;
-  encodeFunctionData(functionFragment: 'set_surplus_beneficiary', values: [AddressInput]): Uint8Array;
 
+  decodeFunctionData(functionFragment: 'set_distribution_threshold', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'set_surplus_beneficiary', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'distribute_fee', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'get_insurance_fund_capacity', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'repay', data: BytesLike): DecodedValue;
-  decodeFunctionData(functionFragment: 'set_distribution_threshold', data: BytesLike): DecodedValue;
-  decodeFunctionData(functionFragment: 'set_surplus_beneficiary', data: BytesLike): DecodedValue;
 }
 
 export class InsuranceFundAbi extends Contract {
   interface: InsuranceFundAbiInterface;
   functions: {
+    set_distribution_threshold: InvokeFunction<[distribution_threshold: BigNumberish], void>;
+    set_surplus_beneficiary: InvokeFunction<[surplus_beneficiary: AddressInput], void>;
     distribute_fee: InvokeFunction<[price_update_data: Vec<Bytes>], BN>;
     get_insurance_fund_capacity: InvokeFunction<[], I64Output>;
     repay: InvokeFunction<[], void>;
-    set_distribution_threshold: InvokeFunction<[distribution_threshold: BigNumberish], void>;
-    set_surplus_beneficiary: InvokeFunction<[surplus_beneficiary: AddressInput], void>;
   };
 }

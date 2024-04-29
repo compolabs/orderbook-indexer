@@ -3,3 +3,4 @@ dist
 coverage
 .env
 .idea
+local-docker-compose.yml
