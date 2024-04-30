@@ -1,6 +1,6 @@
 import path from "path";
 import { config } from "dotenv";
-import {loadVar} from "./utils/loadVar";
+import { loadVar } from "./utils/loadVar";
 
 config({ path: path.join(__dirname, "../.env") });
 

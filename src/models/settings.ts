@@ -1,17 +1,20 @@
-import Sequelize, {Model} from 'sequelize';
-import sequelize from '../db';
+import Sequelize, { Model } from "sequelize";
+import sequelize from "../db";
 
 class SystemSettings extends Model {}
 
-SystemSettings.init({
+SystemSettings.init(
+  {
     lastBlock: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        defaultValue: "0"
-    }
-}, {
+      type: Sequelize.STRING,
+      allowNull: false,
+      defaultValue: "0",
+    },
+  },
+  {
     sequelize,
-    modelName: 'SystemSettings'
-});
+    modelName: "SystemSettings",
+  }
+);
 
-export default SystemSettings
+export default SystemSettings;
