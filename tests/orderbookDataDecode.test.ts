@@ -1,106 +1,110 @@
 import { beforeEach, describe, it } from "@jest/globals";
-import { BaseAssetId, ContractFactory, sleep } from "fuels";
+import { BaseAssetId, ContractFactory, Provider, Wallet, WalletUnlocked, sleep } from "fuels";
 
-import { readFileSync, writeFileSync } from "fs";
-import { FuelNetwork } from "../src/sdk/blockchain";
-import { Api } from "../src/sdk/blockchain/fuel/Api";
-import { OrderbookAbi__factory } from "../src/sdk/blockchain/fuel/types/orderbook";
+import { readFileSync } from "fs";
 import { PRIVATE_KEY } from "../src/config";
 import fetchReceiptsFromEnvio from "../src/utils/fetchReceiptsFromEnvio";
-import BN from "../src/utils/BN";
 import { decodeOrderbookReceipts } from "../src/decoders/decodeOrderbookReceipts";
+import Spark, {
+  BETA_NETWORK,
+  BETA_CONTRACT_ADDRESSES,
+  BETA_INDEXER_URL,
+  OrderbookAbi__factory,
+  BN,
+} from "@compolabs/spark-ts-sdk";
+import { TOKENS_BY_SYMBOL } from "../src/constants";
+import { AssetIdInput } from "@compolabs/spark-ts-sdk/dist/types/orderbook/OrderbookAbi";
 
 describe("Envio indexer data encode test", () => {
-  let fuelNetwork: FuelNetwork;
+  let wallet: WalletUnlocked;
+  let spark: Spark;
+
+  let blockNumber: number;
+  let contractId: string;
 
   beforeEach(async () => {
-    fuelNetwork = new FuelNetwork();
-    await fuelNetwork.connectWalletByPrivateKey(PRIVATE_KEY);
+    const provider = await Provider.create(BETA_NETWORK.url);
+    wallet = Wallet.fromPrivateKey(PRIVATE_KEY, provider);
+
+    spark = new Spark({
+      networkUrl: BETA_NETWORK.url,
+      contractAddresses: BETA_CONTRACT_ADDRESSES,
+      indexerApiUrl: BETA_INDEXER_URL,
+      wallet,
+    });
   });
 
   it("should emit and decode data", async () => {
-    const wallet = fuelNetwork.walletManager.wallet!;
-
     const sellSize = 4414;
     const sellPrice = 62329750000000;
     const buySize = 18812;
     const buyPrice = 63649539999990;
 
+    const eth = TOKENS_BY_SYMBOL["ETH"];
+    const balance = await spark.fetchWalletBalance(eth);
+
     console.log("Wallet address: ", wallet.address);
-    console.log(
-      "Eth balance   : ",
-      await wallet.getBalance(BaseAssetId).then((b) => b.toString()),
-      " ETH"
-    );
+    console.log("Eth balance   : ", balance, " ETH");
 
     const byteCode = readFileSync(`./contract/out/debug/orderbook.bin`);
     const abi = JSON.parse(readFileSync(`./contract/out/debug/orderbook-abi.json`, "utf8"));
 
-    const orderbookfactory = new ContractFactory(byteCode, abi, wallet);
+    const orderbookFactory = new ContractFactory(byteCode, abi, wallet);
     const { minGasPrice: gasPrice } = wallet.provider.getGasConfig();
 
-    const btc = fuelNetwork.getTokenBySymbol("BTC");
-    const usdc = fuelNetwork.getTokenBySymbol("USDC");
+    const btc = TOKENS_BY_SYMBOL["BTC"];
+    const usdc = TOKENS_BY_SYMBOL["USDC"];
 
     const configurableConstants = {
-      QUOTE_TOKEN: { value: usdc.assetId },
+      QUOTE_TOKEN: { value: usdc.address },
       QUOTE_TOKEN_DECIMALS: 6,
       PRICE_DECIMALS: 9,
     };
-    const blockNumber = await fuelNetwork
-      .getProviderWallet()
-      .then((res) => res.provider.getBlockNumber())
-      .then((res) => res.toNumber());
-    const contract = await orderbookfactory.deployContract({ gasPrice, configurableConstants });
-    const contractId = contract.id.toHexString();
-    console.log({ contractId, blockNumber });
+    const contract = await orderbookFactory.deployContract({ gasPrice, configurableConstants });
 
-    writeFileSync("./tests/orderbookAddresses.json", JSON.stringify({ contractId, blockNumber }));
+    blockNumber = await wallet.provider.getBlockNumber().then((res) => res.toNumber());
+    contractId = contract.id.toHexString();
 
-    const api = new Api();
+    console.log("Current", { contractId, blockNumber });
 
-    await api.createSpotMarket(btc, 8, wallet, contractId);
-    console.log("Market created: ", btc.assetId);
-    await fuelNetwork.mintToken(btc.assetId, sellSize);
+    const orderbookAbi = OrderbookAbi__factory.connect(contractId, wallet);
+
+    const btcAssetId: AssetIdInput = {
+      value: btc.address,
+    };
+
+    await orderbookAbi.functions.create_market(btcAssetId, 8);
+
+    console.log("Market created: ", btc.address);
+    await spark.mintToken(btc, String(sellSize));
     console.log(`${sellSize / 1e8} btc Token minted`);
-    const { orderId: sellOrderId } = await api.createSpotOrder(
+    const { value: sellOrderId } = await spark.createSpotOrder(
       btc,
       usdc,
       "-" + sellSize.toString(),
-      sellPrice.toString(),
-      wallet,
-      contractId
+      sellPrice.toString()
     );
     console.log({ sellOrderId });
 
     const usdcAmount = Math.ceil(
       new BN(buySize).times(buySize).div(1e8).div(1e8).times(1e6).toNumber()
     );
-    await fuelNetwork.mintToken(usdc.assetId, usdcAmount);
+    await spark.mintToken(usdc, String(usdcAmount));
     console.log(`${usdcAmount / 1e6} USDC Token minted`);
-    const { orderId: buyOrderId } = await api.createSpotOrder(
+    const { value: buyOrderId } = await spark.createSpotOrder(
       btc,
       usdc,
       buySize.toString(),
-      buyPrice.toString(),
-      wallet,
-      contractId
+      buyPrice.toString()
     );
 
     await sleep(1000);
-    const orderbookAbi = OrderbookAbi__factory.connect(contractId, wallet);
+    const sellOrder = await spark.fetchSpotOrderById(sellOrderId as string);
+    const buyOrder = await spark.fetchSpotOrderById(buyOrderId as string);
+    console.log({ sellOrder, buyOrder });
 
-    const sellOrder = await orderbookAbi.functions
-      .order_by_id(sellOrderId)
-      .simulate()
-      .then((res) => res.value);
-    const buyOrder = await orderbookAbi.functions
-      .order_by_id(buyOrderId)
-      .simulate()
-      .then((res) => res.value);
-    console.log({ sellOrder: decodeOrder(sellOrder), buyOrder: decodeOrder(buyOrder) });
-    await api
-      .matchSpotOrders(sellOrderId, buyOrderId, wallet, contractId)
+    await spark
+      .matchSpotOrders(sellOrderId as string, buyOrderId as string)
       .catch((e) => console.error(e.cause.logs));
     console.log("Orders matched");
     await sleep(1000);
@@ -108,36 +112,29 @@ describe("Envio indexer data encode test", () => {
     const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, +blockNumber + 1000, [
       contractId,
     ]);
-    const events = decodeOrderbookReceipts(receiptsResult?.receipts!, orderbookAbi);
+
+    if (!receiptsResult) {
+      throw new Error("Receipt is undefined");
+    }
+
+    const events = decodeOrderbookReceipts(receiptsResult.receipts, orderbookAbi);
     console.log(events);
   }, 60_000);
   it("match orders", async () => {
-    const wallet = fuelNetwork.walletManager.wallet!;
-
-    const api = new Api();
-    const contractId = "0x72175cdd41bbf890f8cddfe54fa55ac0f311f963c010746337f1c2ac3d79ffbb";
-    const orderbookAbi = OrderbookAbi__factory.connect(contractId, wallet);
     const sellOrderId = "0x4d8e67903374b36c22fcf0fb07bd9a9060a9fbae37fd2c2a8f478335c9363ed8";
     const buyOrderId = "0x4285de56c7b84da6417f5bae151087b0dc8aa9b2746feed34d968d2d09fca62a";
-    const sellOrder = await orderbookAbi.functions
-      .order_by_id(sellOrderId)
-      .simulate()
-      .then((res) => res.value);
-    const buyOrder = await orderbookAbi.functions
-      .order_by_id(buyOrderId)
-      .simulate()
-      .then((res) => res.value);
-    console.log({ sellOrder: decodeOrder(sellOrder), buyOrder: decodeOrder(buyOrder) });
 
-    await api
-      .matchSpotOrders(sellOrderId, buyOrderId, wallet, contractId)
+    const sellOrder = await spark.fetchSpotOrderById(sellOrderId);
+    const buyOrder = await spark.fetchSpotOrderById(buyOrderId);
+    console.log({ sellOrder, buyOrder });
+
+    await spark
+      .matchSpotOrders(sellOrderId, buyOrderId)
       .then(() => console.log("Orders matched"))
-      .catch((e) => console.error(e));
+      .catch((e: any) => console.error(e));
   }, 60_000);
 
   it("should create and cancel order", async () => {
-    const wallet = fuelNetwork.walletManager.wallet!;
-
     console.log("Wallet address: ", wallet.address);
     console.log(
       "Eth balance   : ",
@@ -145,52 +142,29 @@ describe("Envio indexer data encode test", () => {
       " ETH"
     );
 
-    const { contractId, blockNumber } = JSON.parse(
-      readFileSync("./tests/orderbookAddresses.json").toString()
-    );
-    console.log({ contractId, blockNumber });
-
-    const btc = fuelNetwork.getTokenBySymbol("BTC");
-    const usdc = fuelNetwork.getTokenBySymbol("USDC");
-
-    const api = new Api();
-
-    await fuelNetwork.mintToken(btc.assetId, 0.001 * 1e8);
+    const btc = TOKENS_BY_SYMBOL["BTC"];
+    const usdc = TOKENS_BY_SYMBOL["USDC"];
+    await spark.mintToken(btc, String(0.001 * 1e8));
     console.log(`0.001 btc Token minted`);
-    const { orderId: sellOrderId } = await api.createSpotOrder(
+
+    const { value: sellOrderId } = await spark.createSpotOrder(
       btc,
       usdc,
       "-100000",
-      (69111 * 1e9).toString(),
-      wallet,
-      contractId
+      (69111 * 1e9).toString()
     );
     console.log({ sellOrderId });
-
-    await api.cancelSpotOrder(sellOrderId, wallet, contractId);
+    await spark.cancelSpotOrder(sellOrderId as string);
   }, 60_000);
 
   it("should decode data", async () => {
-    const wallet = fuelNetwork.walletManager.wallet!;
-    const { contractId, blockNumber } = JSON.parse(
-      readFileSync("./tests/orderbookAddresses.json").toString()
-    );
-
     const receiptsResult = await fetchReceiptsFromEnvio(blockNumber, blockNumber + 5000, [
       contractId,
     ]);
+
     const orderbookAbi = OrderbookAbi__factory.connect(contractId, wallet);
     if (receiptsResult === null) return;
-    console.log(decodeOrderbookReceipts(receiptsResult.receipts, orderbookAbi!));
+
+    console.log(decodeOrderbookReceipts(receiptsResult.receipts, orderbookAbi));
   }, 60_000);
 });
-
-function decodeOrder(order: any) {
-  return {
-    id: order.id,
-    trader: order.trader.value,
-    base_token: order.base_token.value,
-    base_size: (order.base_size.negative ? "-" : "") + order.base_size.value.toString(),
-    base_price: order.base_price.toString(),
-  };
-}

@@ -23,13 +23,26 @@ import {
 import SystemSettings from "./models/settings";
 import fetchReceiptsFromEnvio from "./utils/fetchReceiptsFromEnvio";
 import formatCountdown from "./utils/formatCountDown";
-import { sleep } from "fuels";
+import { Provider, Wallet, WalletUnlocked, sleep } from "fuels";
 import sequelize from "./db";
 import { handleOrderbookReceipts } from "./handlers/handleOrderbookReceipts";
 import { handleAccountBalanceReceipts } from "./handlers/handleAccountBalanceReceipts";
 import { handleClearingHouseReceipts } from "./handlers/handleClearingHouseReceipts";
 import { handlePerpMarketReceipts } from "./handlers/handlePerpMarketReceipts";
 import spotStatistics from "./routes/spotStatistics";
+import Spark, {
+  BETA_NETWORK,
+  BETA_CONTRACT_ADDRESSES,
+  BETA_INDEXER_URL,
+  AccountBalanceAbi,
+  AccountBalanceAbi__factory,
+  ClearingHouseAbi,
+  ClearingHouseAbi__factory,
+  OrderbookAbi,
+  OrderbookAbi__factory,
+  PerpMarketAbi,
+  PerpMarketAbi__factory,
+} from "@compolabs/spark-ts-sdk";
 
 const app = express();
 
@@ -69,7 +82,8 @@ enum STATUS {
 }
 
 class Indexer {
-  private fuelNetwork = new FuelNetwork();
+  sdk: Spark;
+  wallet: WalletUnlocked;
   public initialized = false;
   private orderbookAbi?: OrderbookAbi;
   private accountBalanceAbi?: AccountBalanceAbi;
@@ -84,17 +98,34 @@ class Indexer {
 
   constructor(settings: TIndexerSettings) {
     this.settings = settings;
-    this.fuelNetwork
-      .connectWalletByPrivateKey(PRIVATE_KEY)
+
+    this.sdk = new Spark({
+      networkUrl: BETA_NETWORK.url,
+      contractAddresses: BETA_CONTRACT_ADDRESSES,
+      indexerApiUrl: BETA_INDEXER_URL,
+    });
+
+    this.wallet = Wallet.fromPrivateKey(PRIVATE_KEY);
+
+    new Promise(async (resolve) => {
+      const provider = await Provider.create(BETA_NETWORK.url);
+      this.wallet.provider = provider;
+      this.sdk.setActiveWallet(this.wallet);
+      resolve(true);
+    })
       .then(() => {
-        const wallet = this.fuelNetwork.walletManager.wallet!;
-        this.orderbookAbi = OrderbookAbi__factory.connect(ORDERBOOK_ID, wallet);
-        this.clearingHouseAbi = ClearingHouseAbi__factory.connect(CLEARING_HOUSE_ID, wallet);
-        this.accountBalanceAbi = AccountBalanceAbi__factory.connect(ACCOUNT_BALANCE_ID, wallet);
-        this.perpMarketAbi = PerpMarketAbi__factory.connect(PERP_MARKET_ID, wallet);
+        this.orderbookAbi = OrderbookAbi__factory.connect(ORDERBOOK_ID, this.wallet);
+        this.clearingHouseAbi = ClearingHouseAbi__factory.connect(CLEARING_HOUSE_ID, this.wallet);
+        this.accountBalanceAbi = AccountBalanceAbi__factory.connect(
+          ACCOUNT_BALANCE_ID,
+          this.wallet
+        );
+        this.perpMarketAbi = PerpMarketAbi__factory.connect(PERP_MARKET_ID, this.wallet);
       })
-      .then(() => (this.initialized = true))
-      .catch((e: any) => console.error(e));
+      .then(() => {
+        console.log("🐅 Spark Indexer is ready to spark index!");
+        this.initialized = true;
+      });
   }
 
   run() {
@@ -150,9 +181,14 @@ class Indexer {
     const toBlock = fromBlock + STEP;
     const receiptsResult = await fetchReceiptsFromEnvio(fromBlock, toBlock, this.contracts);
 
+    if (!receiptsResult) {
+      console.log("No receipt found");
+      return;
+    }
+
     // console.log({fromBlock, toBlock, archiveHeight: receiptsResult?.archiveHeight, nextBlock: receiptsResult?.nextBlock})
     const secLeft =
-      ((receiptsResult?.archiveHeight! - receiptsResult?.nextBlock!) * this.lastIterationDuration) /
+      ((receiptsResult.archiveHeight - receiptsResult.nextBlock) * this.lastIterationDuration) /
       STEP;
     const syncTime = formatCountdown(secLeft);
     this.iterationCounter === 0 &&

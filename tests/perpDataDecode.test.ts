@@ -1,24 +1,26 @@
 import { describe, it } from "@jest/globals";
 
 import { readFileSync } from "fs";
-import { FuelNetwork } from "../src/sdk/blockchain";
 import fetchReceiptsFromEnvio from "../src/utils/fetchReceiptsFromEnvio";
-import { ClearingHouseAbi__factory } from "../src/sdk/blockchain/fuel/types/clearing-house";
 import { PRIVATE_KEY } from "../src/config";
-import { AccountBalanceAbi__factory } from "../src/sdk/blockchain/fuel/types/account-balance";
 import { decodeClearingHouseReceipts } from "../src/decoders/decodeClearingHouseReceipts";
 import { decodeAccountBalanceReceipts } from "../src/decoders/decodeAccountBalanceReceipts";
+import {
+  BETA_NETWORK,
+  ClearingHouseAbi__factory,
+  AccountBalanceAbi__factory,
+} from "@compolabs/spark-ts-sdk";
+import { WalletUnlocked, Provider, Wallet } from "fuels";
 
 describe("Envio indexer data encode test", () => {
-  let fuelNetwork: FuelNetwork;
+  let wallet: WalletUnlocked;
 
   beforeEach(async () => {
-    fuelNetwork = new FuelNetwork();
-    await fuelNetwork.connectWalletByPrivateKey(PRIVATE_KEY);
+    const provider = await Provider.create(BETA_NETWORK.url);
+    wallet = Wallet.fromPrivateKey(PRIVATE_KEY, provider);
   });
 
   it("should decode clearing house data", async () => {
-    const wallet = fuelNetwork.walletManager.wallet!;
     const { clearingHouse: contractId, blockNumber } = JSON.parse(
       readFileSync("./tests/perpAddresses.json").toString()
     );
@@ -43,7 +45,6 @@ describe("Envio indexer data encode test", () => {
   }, 60_000);
 
   it("should decode account balance data", async () => {
-    const wallet = fuelNetwork.walletManager.wallet!;
     const { accountBalance: contractId, blockNumber } = JSON.parse(
       readFileSync("./tests/perpAddresses.json").toString()
     );
@@ -52,7 +53,6 @@ describe("Envio indexer data encode test", () => {
       contractId,
     ]);
     const accountBalanceAbi = AccountBalanceAbi__factory.connect(contractId, wallet);
-    // console.log(receiptsResult)
     if (receiptsResult === null) return;
 
     for (let i = 0; i < receiptsResult.receipts.length; i++) {

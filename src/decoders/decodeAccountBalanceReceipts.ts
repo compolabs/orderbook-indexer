@@ -2,6 +2,7 @@ import { Contract, TransactionResultReceipt } from "fuels";
 import { decodeReceipts } from "../utils/decodeReceipts";
 import isEvent from "../utils/isEvent";
 import tai64ToDate from "../utils/tai64ToDate";
+import { AccountBalanceAbi } from "@compolabs/spark-ts-sdk";
 
 export function decodeAccountBalanceReceipts(
   receipts: TransactionResultReceipt[],

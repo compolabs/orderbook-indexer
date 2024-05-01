@@ -1,6 +1,7 @@
 import { Contract, getDecodedLogs, TransactionResultReceipt } from "fuels";
 import isEvent from "../utils/isEvent";
 import tai64ToDate from "../utils/tai64ToDate";
+import { BN } from "@compolabs/spark-ts-sdk";
 
 type TMarketCreateEvent = {
   asset_id: string;
@@ -31,7 +32,7 @@ export function decodeOrderbookReceipts(
   abi: Contract
 ): TDecodedOrderbookEvent[] {
   try {
-    const logs = getDecodedLogs(receipts, abi.interface);
+    const logs = getDecodedLogs(receipts, abi.interface.jsonAbi);
     const decodedLogs = logs.map((log: any) => {
       // MarketCreateEvent
       if (isEvent("MarketCreateEvent", log, abi)) {
