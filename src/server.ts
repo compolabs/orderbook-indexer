@@ -11,30 +11,16 @@ import perpMarkets from "./routes/perpMarkets";
 import perpPositions from "./routes/perpPositions";
 import perpOrders from "./routes/perpOrders";
 import perpTradeEvents from "./routes/perpTradeEvents";
-import {
-    ACCOUNT_BALANCE_ID,
-    CLEARING_HOUSE_ID,
-    ORDERBOOK_ID,
-    PERP_MARKET_ID,
-    PORT,
-    PRIVATE_KEY,
-    START_BLOCK
-} from "./config";
+import {PORT, PRIVATE_KEY, PROXY_ID, START_BLOCK} from "./config";
 import {FuelNetwork} from "./sdk/blockchain";
-import {OrderbookAbi, OrderbookAbi__factory} from "./sdk/blockchain/fuel/types/orderbook";
 import SystemSettings from "./models/settings";
 import fetchReceiptsFromEnvio from "./utils/fetchReceiptsFromEnvio";
 import formatCountdown from "./utils/formatCountDown";
 import {sleep} from "fuels";
 import sequelize from "./db";
-import {AccountBalanceAbi, AccountBalanceAbi__factory} from "./sdk/blockchain/fuel/types/account-balance";
-import {ClearingHouseAbi, ClearingHouseAbi__factory} from "./sdk/blockchain/fuel/types/clearing-house";
-import {handleOrderbookReceipts} from "./handlers/handleOrderbookReceipts";
-import {handleAccountBalanceReceipts} from "./handlers/handleAccountBalanceReceipts";
-import {handleClearingHouseReceipts} from "./handlers/handleClearingHouseReceipts";
-import {PerpMarketAbi, PerpMarketAbi__factory} from "./sdk/blockchain/fuel/types/perp-market";
-import {handlePerpMarketReceipts} from "./handlers/handlePerpMarketReceipts";
 import spotStatistics from "./routes/spotStatistics";
+import {ProxyContractAbi, ProxyContractAbi__factory} from "./sdk/blockchain/fuel/types/proxy";
+import {handleProxyReceipts} from "./handlers/handleProxyReceipts";
 
 const app = express();
 
@@ -67,7 +53,6 @@ app.use("/perp/orders", perpOrders);
 // app.use("/perp/orderEvents", () => perpOrderEvents);
 
 
-
 type TIndexerSettings = { startBlock: number; };
 
 enum STATUS {
@@ -78,16 +63,13 @@ enum STATUS {
 class Indexer {
     private fuelNetwork = new FuelNetwork();
     public initialized = false;
-    private orderbookAbi?: OrderbookAbi;
-    private accountBalanceAbi?: AccountBalanceAbi;
-    private clearingHouseAbi?: ClearingHouseAbi;
-    private perpMarketAbi?: PerpMarketAbi;
+    private proxyAbi?: ProxyContractAbi;
     private readonly settings: TIndexerSettings;
 
     private status = STATUS.CHILL;
     private lastIterationDuration = 1000;
     private iterationCounter = 0;
-    private contracts = [ORDERBOOK_ID, ACCOUNT_BALANCE_ID, CLEARING_HOUSE_ID]
+    private contracts = [PROXY_ID]
 
     constructor(settings: TIndexerSettings) {
         this.settings = settings;
@@ -95,10 +77,7 @@ class Indexer {
             .connectWalletByPrivateKey(PRIVATE_KEY)
             .then(() => {
                 const wallet = this.fuelNetwork.walletManager.wallet!
-                this.orderbookAbi = OrderbookAbi__factory.connect(ORDERBOOK_ID, wallet)
-                this.clearingHouseAbi = ClearingHouseAbi__factory.connect(CLEARING_HOUSE_ID, wallet)
-                this.accountBalanceAbi = AccountBalanceAbi__factory.connect(ACCOUNT_BALANCE_ID, wallet)
-                this.perpMarketAbi = PerpMarketAbi__factory.connect(PERP_MARKET_ID, wallet)
+                this.proxyAbi = ProxyContractAbi__factory.connect(PROXY_ID, wallet)
             })
             .then(() => (this.initialized = true))
             .catch(e => console.error(e));
@@ -173,17 +152,7 @@ class Indexer {
             return;
         }
 
-        //MarketCreateEvent
-        // OrderChangeEvent
-        // TradeEvent
-        await handleOrderbookReceipts(receiptsResult.receipts.filter(({contract_id}: any) => contract_id == ORDERBOOK_ID), this.orderbookAbi!)
-        //MarketEvent
-        await handleClearingHouseReceipts(receiptsResult.receipts.filter(({contract_id}: any) => contract_id == CLEARING_HOUSE_ID), this.clearingHouseAbi!)
-        //AccountBalanceChangeEvent
-        await handleAccountBalanceReceipts(receiptsResult.receipts.filter(({contract_id}: any) => contract_id == ACCOUNT_BALANCE_ID), this.accountBalanceAbi!)
-        //TradeEvent
-        // OrderEvent
-        await handlePerpMarketReceipts(receiptsResult.receipts.filter(({contract_id}: any) => contract_id == PERP_MARKET_ID), this.perpMarketAbi!)
+        await handleProxyReceipts(receiptsResult.receipts.filter(({contract_id}: any) => contract_id == PROXY_ID), this.proxyAbi!)
 
         await this.updateSettings(receiptsResult.nextBlock);
         await sleep(100);

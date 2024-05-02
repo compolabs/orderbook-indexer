@@ -9,6 +9,6 @@
   Fuel-Core version: 0.22.1
 */
 
-export type { ProxyAbi } from './ProxyAbi';
+export type { ProxyContractAbi } from './ProxyContractAbi';
 
-export { ProxyAbi__factory } from './factories/ProxyAbi__factory';
+export { ProxyContractAbi__factory } from './factories/ProxyContractAbi__factory';

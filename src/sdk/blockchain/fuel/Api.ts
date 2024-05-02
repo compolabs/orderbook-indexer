@@ -15,7 +15,6 @@ import {ClearingHouseAbi__factory} from "./types/clearing-house";
 import {OrderbookAbi__factory} from "./types/orderbook";
 import {AssetIdInput, I64Input} from "./types/orderbook/OrderbookAbi";
 import {PerpMarketAbi__factory} from "./types/perp-market";
-import {ProxyAbi__factory} from "./types/proxy";
 import {PythContractAbi__factory} from "./types/pyth";
 import {TokenAbi__factory} from "./types/src-20";
 import {IdentityInput} from "./types/src-20/TokenAbi";
@@ -220,43 +219,43 @@ export class Api {
         updateData: string[],
         wallet: WalletLocked | WalletUnlocked,
     ) => {
-        const vaultFactory = VaultAbi__factory.connect(
-            CONTRACT_ADDRESSES.vault,
-            wallet,
-        );
+        // const vaultFactory = VaultAbi__factory.connect(
+        //     CONTRACT_ADDRESSES.vault,
+        //     wallet,
+        // );
+        //
+        // const eth = TOKENS_BY_SYMBOL["ETH"];
+        //
+        // const assetIdInput: AssetIdInput = {
+        //     value: assetAddress,
+        // };
+        //
+        // const parsedUpdateData = updateData.map((v) => Array.from(arrayify(v)));
+        //
+        // const forward: CoinQuantityLike = {
+        //     amount: "10",
+        //     assetId: eth.assetId,
+        // };
 
-        const eth = TOKENS_BY_SYMBOL["ETH"];
-
-        const assetIdInput: AssetIdInput = {
-            value: assetAddress,
-        };
-
-        const parsedUpdateData = updateData.map((v) => Array.from(arrayify(v)));
-
-        const forward: CoinQuantityLike = {
-            amount: "10",
-            assetId: eth.assetId,
-        };
-
-        await vaultFactory.functions
-            .withdraw_collateral(amount, assetIdInput, parsedUpdateData)
-            .callParams({forward})
-            .txParams({gasPrice: 1, gasLimit: GAS_LIMIT})
-            .addContracts([
-                ProxyAbi__factory.connect(CONTRACT_ADDRESSES.proxy, wallet),
-                PerpMarketAbi__factory.connect(CONTRACT_ADDRESSES.perpMarket, wallet),
-                AccountBalanceAbi__factory.connect(
-                    CONTRACT_ADDRESSES.accountBalance,
-                    wallet,
-                ),
-                ClearingHouseAbi__factory.connect(
-                    CONTRACT_ADDRESSES.clearingHouse,
-                    wallet,
-                ),
-                VaultAbi__factory.connect(CONTRACT_ADDRESSES.vault, wallet),
-                PythContractAbi__factory.connect(CONTRACT_ADDRESSES.pyth, wallet),
-            ])
-            .call();
+        // await vaultFactory.functions
+        //     .withdraw_collateral(amount, assetIdInput, parsedUpdateData)
+        //     .callParams({forward})
+        //     .txParams({gasPrice: 1, gasLimit: GAS_LIMIT})
+        //     .addContracts([
+        //         ProxyAbi__factory.connect(CONTRACT_ADDRESSES.proxy, wallet),
+        //         PerpMarketAbi__factory.connect(CONTRACT_ADDRESSES.perpMarket, wallet),
+        //         AccountBalanceAbi__factory.connect(
+        //             CONTRACT_ADDRESSES.accountBalance,
+        //             wallet,
+        //         ),
+        //         ClearingHouseAbi__factory.connect(
+        //             CONTRACT_ADDRESSES.clearingHouse,
+        //             wallet,
+        //         ),
+        //         VaultAbi__factory.connect(CONTRACT_ADDRESSES.vault, wallet),
+        //         PythContractAbi__factory.connect(CONTRACT_ADDRESSES.pyth, wallet),
+        //     ])
+        //     .call();
     };
 
     openPerpOrder = async (
@@ -303,21 +302,21 @@ export class Api {
             assetId: eth.assetId,
         };
 
-        await clearingHouseFactory.functions
-            .open_order(assetIdInput, baseSize, price, parsedUpdateData)
-            .callParams({forward})
-            .txParams({gasPrice: 1, gasLimit: GAS_LIMIT})
-            .addContracts([
-                ProxyAbi__factory.connect(CONTRACT_ADDRESSES.proxy, wallet),
-                PerpMarketAbi__factory.connect(CONTRACT_ADDRESSES.perpMarket, wallet),
-                AccountBalanceAbi__factory.connect(
-                    CONTRACT_ADDRESSES.accountBalance,
-                    wallet,
-                ),
-                VaultAbi__factory.connect(CONTRACT_ADDRESSES.vault, wallet),
-                PythContractAbi__factory.connect(CONTRACT_ADDRESSES.pyth, wallet),
-            ])
-            .call();
+        // await clearingHouseFactory.functions
+        //     .open_order(assetIdInput, baseSize, price, parsedUpdateData)
+        //     .callParams({forward})
+        //     .txParams({gasPrice: 1, gasLimit: GAS_LIMIT})
+        //     .addContracts([
+        //         ProxyAbi__factory.connect(CONTRACT_ADDRESSES.proxy, wallet),
+        //         PerpMarketAbi__factory.connect(CONTRACT_ADDRESSES.perpMarket, wallet),
+        //         AccountBalanceAbi__factory.connect(
+        //             CONTRACT_ADDRESSES.accountBalance,
+        //             wallet,
+        //         ),
+        //         VaultAbi__factory.connect(CONTRACT_ADDRESSES.vault, wallet),
+        //         PythContractAbi__factory.connect(CONTRACT_ADDRESSES.pyth, wallet),
+        //     ])
+        //     .call();
     };
 
     removePerpOrder = async (
@@ -329,17 +328,17 @@ export class Api {
             wallet,
         );
 
-        await clearingHouseFactory.functions
-            .remove_order(orderId)
-            .txParams({gasPrice: 1, gasLimit: GAS_LIMIT})
-            .addContracts([
-                ProxyAbi__factory.connect(CONTRACT_ADDRESSES.proxy, wallet),
-                PerpMarketAbi__factory.connect(CONTRACT_ADDRESSES.perpMarket, wallet),
-                ClearingHouseAbi__factory.connect(
-                    CONTRACT_ADDRESSES.clearingHouse,
-                    wallet,
-                ),
-            ])
-            .call();
+        // await clearingHouseFactory.functions
+        //     .remove_order(orderId)
+        //     .txParams({gasPrice: 1, gasLimit: GAS_LIMIT})
+        //     .addContracts([
+        //         ProxyAbi__factory.connect(CONTRACT_ADDRESSES.proxy, wallet),
+        //         PerpMarketAbi__factory.connect(CONTRACT_ADDRESSES.perpMarket, wallet),
+        //         ClearingHouseAbi__factory.connect(
+        //             CONTRACT_ADDRESSES.clearingHouse,
+        //             wallet,
+        //         ),
+        //     ])
+        //     .call();
     };
 }

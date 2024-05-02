@@ -1,6 +1,13 @@
 import {Contract} from "fuels";
 
-const isEvent = (eventName: string, object: any, abi: Contract) => checkFieldsInObject(object, getEventFields(eventName, abi)!)
+const isEvent = (eventName: string, object: any, abi: Contract) => {
+    const fields = getEventFields(eventName, abi);
+    if (fields != null) {
+        return checkFieldsInObject(object, fields)
+    } else {
+        return false
+    }
+}
 export default isEvent
 
 
