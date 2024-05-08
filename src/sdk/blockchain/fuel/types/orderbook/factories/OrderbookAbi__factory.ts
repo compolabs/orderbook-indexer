@@ -671,6 +671,47 @@ const _abi = {
     {
       "inputs": [
         {
+          "name": "order_sell_ids",
+          "type": 21,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 2,
+              "typeArguments": null
+            }
+          ]
+        },
+        {
+          "name": "order_buy_ids",
+          "type": 21,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 2,
+              "typeArguments": null
+            }
+          ]
+        }
+      ],
+      "name": "match_orders_many",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
           "name": "base_token",
           "type": 12,
           "typeArguments": null
@@ -694,15 +735,15 @@ const _abi = {
       },
       "attributes": [
         {
+          "name": "payable",
+          "arguments": []
+        },
+        {
           "name": "storage",
           "arguments": [
             "read",
             "write"
           ]
-        },
-        {
-          "name": "payable",
-          "arguments": []
         }
       ]
     },
@@ -874,7 +915,7 @@ const _abi = {
       "logId": 13,
       "loggedType": {
         "name": "",
-        "type": 4,
+        "type": 8,
         "typeArguments": []
       }
     },
@@ -970,7 +1011,7 @@ const _abi = {
       "logId": 25,
       "loggedType": {
         "name": "",
-        "type": 18,
+        "type": 4,
         "typeArguments": []
       }
     },
@@ -986,7 +1027,7 @@ const _abi = {
       "logId": 27,
       "loggedType": {
         "name": "",
-        "type": 20,
+        "type": 18,
         "typeArguments": []
       }
     },
@@ -994,7 +1035,7 @@ const _abi = {
       "logId": 28,
       "loggedType": {
         "name": "",
-        "type": 8,
+        "type": 20,
         "typeArguments": []
       }
     },
@@ -1010,7 +1051,7 @@ const _abi = {
       "logId": 30,
       "loggedType": {
         "name": "",
-        "type": 4,
+        "type": 8,
         "typeArguments": []
       }
     },
@@ -1018,7 +1059,7 @@ const _abi = {
       "logId": 31,
       "loggedType": {
         "name": "",
-        "type": 4,
+        "type": 8,
         "typeArguments": []
       }
     },
@@ -1122,7 +1163,7 @@ const _abi = {
       "logId": 44,
       "loggedType": {
         "name": "",
-        "type": 4,
+        "type": 18,
         "typeArguments": []
       }
     },
@@ -1130,12 +1171,164 @@ const _abi = {
       "logId": 45,
       "loggedType": {
         "name": "",
-        "type": 4,
+        "type": 18,
         "typeArguments": []
       }
     },
     {
       "logId": 46,
+      "loggedType": {
+        "name": "",
+        "type": 20,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 47,
+      "loggedType": {
+        "name": "",
+        "type": 8,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 48,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 49,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 50,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 51,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 52,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 53,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 54,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 55,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 56,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 57,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 58,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 59,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 60,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 61,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 62,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 63,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 64,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 65,
       "loggedType": {
         "name": "",
         "type": 18,
@@ -1152,7 +1345,7 @@ const _abi = {
         "type": 12,
         "typeArguments": []
       },
-      "offset": 115076
+      "offset": 158828
     },
     {
       "name": "QUOTE_TOKEN_DECIMALS",
@@ -1161,7 +1354,7 @@ const _abi = {
         "type": 22,
         "typeArguments": null
       },
-      "offset": 115012
+      "offset": 158764
     },
     {
       "name": "PRICE_DECIMALS",
@@ -1170,7 +1363,7 @@ const _abi = {
         "type": 22,
         "typeArguments": null
       },
-      "offset": 114996
+      "offset": 158748
     }
   ]
 };
