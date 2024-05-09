@@ -91,7 +91,12 @@ class Indexer {
   private status = STATUS.CHILL;
   private lastIterationDuration = 1000;
   private iterationCounter = 0;
-  private contracts = [ORDERBOOK_ID, ACCOUNT_BALANCE_ID, CLEARING_HOUSE_ID];
+  private contracts: string[] = [
+    ORDERBOOK_ID,
+    ACCOUNT_BALANCE_ID,
+    CLEARING_HOUSE_ID,
+    PERP_MARKET_ID,
+  ].filter((v) => v != undefined) as any;
 
   constructor(settings: TIndexerSettings) {
     this.settings = settings;
