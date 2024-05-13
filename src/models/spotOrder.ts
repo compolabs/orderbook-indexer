@@ -2,6 +2,7 @@ import Sequelize from 'sequelize';
 import sequelize from '../db';
 
 const SpotOrder = sequelize.define('spotOrders', {
+    index: { type: Sequelize.STRING, },
     order_id: {type: Sequelize.STRING,},
     trader: {type: Sequelize.STRING,},
     base_token: {type: Sequelize.STRING,},

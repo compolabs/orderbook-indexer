@@ -8,19 +8,19 @@ import { decodeOrderbookReceipts, TDecodedOrderbookEvent, TOrderChangeEvent } fr
 
 export async function handleOrderbookReceipts(receipts: TransactionResultReceipt[], abi: Contract) {
     const decodedEvents = decodeOrderbookReceipts(receipts, abi).sort((a, b) => {
-        if (+a.timestamp < +b.timestamp) return -1;
-        if (+a.timestamp > +b.timestamp) return 1;
+        if (+a.index < +b.index) return -1;
+        if (+a.index > +b.index) return 1;
 
-        if (isOrderChangeEvent(a) && isOrderChangeEvent(b)) {
-            return parseInt(a.index) - parseInt(b.index);
-        }
+        // if (isOrderChangeEvent(a) && isOrderChangeEvent(b)) {
+        //     return parseInt(a.index) - parseInt(b.index);
+        // }
 
         return 0;
     });
 
-    function isOrderChangeEvent(event: TDecodedOrderbookEvent): event is TOrderChangeEvent {
-        return (event as TOrderChangeEvent).index !== undefined;
-    }
+    // function isOrderChangeEvent(event: TDecodedOrderbookEvent): event is TOrderChangeEvent {
+    //     return (event as TOrderChangeEvent).index !== undefined;
+    // }
 
     for (let eventIndex = 0; eventIndex < decodedEvents.length; eventIndex++) {
         const event: any = decodedEvents[eventIndex];

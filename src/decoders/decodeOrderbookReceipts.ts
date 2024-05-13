@@ -4,9 +4,10 @@ import BN from "../utils/BN";
 import tai64ToDate from "../utils/tai64ToDate";
 
 type TMarketCreateEvent = {
+    index: string,
     asset_id: string,
     asset_decimals: number,
-    timestamp: string
+    timestamp: string,
 }
 export type TOrderChangeEvent = {
     index: string,
@@ -18,7 +19,8 @@ export type TOrderChangeEvent = {
     timestamp: string
 }
 type TTradeEvent = {
-    base_token: string
+    index: string,
+    base_token: string,
     order_matcher: string
     seller: string
     buyer: string
@@ -37,6 +39,7 @@ export function decodeOrderbookReceipts(receipts: TransactionResultReceipt[], ab
             // MarketCreateEvent
             if (isEvent("MarketCreateEvent", log, abi)) {
                 return {
+                    index: log.index,
                     asset_id: log.asset_id.value,
                     asset_decimals: log.asset_decimals,
                     timestamp: tai64ToDate(log.timestamp.toString()),
@@ -64,6 +67,7 @@ export function decodeOrderbookReceipts(receipts: TransactionResultReceipt[], ab
             // TradeEvent
             if (isEvent("TradeEvent", log, abi)) {
                 return {
+                    index: log.index,
                     tx_id: log.tx_id,
                     base_token: log.base_token.value,
                     order_matcher: log.order_matcher.value,
