@@ -3,21 +3,31 @@ import SpotOrderChangeEvent from "../models/spotOrderChangeEvent";
 import SpotOrder from "../models/spotOrder";
 import TradeEvent from "../models/spotTradeEvent";
 import isEvent from "../utils/isEvent";
-import {Contract, TransactionResultReceipt} from "fuels";
-import {decodeOrderbookReceipts} from "../decoders/decodeOrderbookReceipts";
+import { Contract, TransactionResultReceipt } from "fuels";
+import { decodeOrderbookReceipts, TDecodedOrderbookEvent, TOrderChangeEvent } from "../decoders/decodeOrderbookReceipts";
 
 export async function handleOrderbookReceipts(receipts: TransactionResultReceipt[], abi: Contract) {
     const decodedEvents = decodeOrderbookReceipts(receipts, abi).sort((a, b) => {
         if (+a.timestamp < +b.timestamp) return -1;
         if (+a.timestamp > +b.timestamp) return 1;
+
+        if (isOrderChangeEvent(a) && isOrderChangeEvent(b)) {
+            return parseInt(a.index) - parseInt(b.index);
+        }
+
         return 0;
     });
+
+    function isOrderChangeEvent(event: TDecodedOrderbookEvent): event is TOrderChangeEvent {
+        return (event as TOrderChangeEvent).index !== undefined;
+    }
+
     for (let eventIndex = 0; eventIndex < decodedEvents.length; eventIndex++) {
         const event: any = decodedEvents[eventIndex];
 
         console.log(event);
         if (isEvent("MarketCreateEvent", event, abi)) {
-            await MarketCreateEvent.create({...event});
+            await MarketCreateEvent.create({ ...event });
         } else if (isEvent("OrderChangeEvent", event, abi)) {
             await SpotOrderChangeEvent.create({
                 order_id: event.order_id,
@@ -32,7 +42,7 @@ export async function handleOrderbookReceipts(receipts: TransactionResultReceipt
                 timestamp: event.timestamp
             }
             const [order, created] = await SpotOrder.findOrCreate({
-                where: {order_id: (event as any).order_id},
+                where: { order_id: (event as any).order_id },
                 defaults: defaultOrder,
             });
 

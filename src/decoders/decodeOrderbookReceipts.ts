@@ -1,4 +1,4 @@
-import {Contract, getDecodedLogs, TransactionResultReceipt} from "fuels";
+import { Contract, getDecodedLogs, TransactionResultReceipt } from "fuels";
 import isEvent from "../utils/isEvent";
 import BN from "../utils/BN";
 import tai64ToDate from "../utils/tai64ToDate";
@@ -8,7 +8,8 @@ type TMarketCreateEvent = {
     asset_decimals: number,
     timestamp: string
 }
-type TOrderChangeEvent = {
+export type TOrderChangeEvent = {
+    index: string,
     order_id: string,
     trader: string,
     base_token: string,
@@ -45,6 +46,7 @@ export function decodeOrderbookReceipts(receipts: TransactionResultReceipt[], ab
             // OrderChangeEvent
             if (isEvent("OrderChangeEvent", log, abi)) {
                 return {
+                    index: log.index,
                     order_id: log.order_id,
                     timestamp: tai64ToDate(log.timestamp.toString()),
                     tx_id: log.tx_id,
