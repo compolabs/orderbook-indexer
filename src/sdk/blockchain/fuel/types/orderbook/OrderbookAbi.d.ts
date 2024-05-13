@@ -45,8 +45,8 @@ export type MarketCreateEventInput = { asset_id: AssetIdInput, asset_decimals: B
 export type MarketCreateEventOutput = { asset_id: AssetIdOutput, asset_decimals: number, timestamp: BN, tx_id: string };
 export type OrderInput = { id: string, trader: AddressInput, base_token: AssetIdInput, base_size: I64Input, base_price: BigNumberish };
 export type OrderOutput = { id: string, trader: AddressOutput, base_token: AssetIdOutput, base_size: I64Output, base_price: BN };
-export type OrderChangeEventInput = { order_id: string, sender: IdentityInput, timestamp: BigNumberish, identifier: OrderChangeEventIdentifierInput, tx_id: string, order: Option<OrderInput> };
-export type OrderChangeEventOutput = { order_id: string, sender: IdentityOutput, timestamp: BN, identifier: OrderChangeEventIdentifierOutput, tx_id: string, order: Option<OrderOutput> };
+export type OrderChangeEventInput = { order_id: string, sender: IdentityInput, timestamp: BigNumberish, identifier: OrderChangeEventIdentifierInput, index: BigNumberish, tx_id: string, order: Option<OrderInput> };
+export type OrderChangeEventOutput = { order_id: string, sender: IdentityOutput, timestamp: BN, identifier: OrderChangeEventIdentifierOutput, index: BN, tx_id: string, order: Option<OrderOutput> };
 export type TradeEventInput = { base_token: AssetIdInput, order_matcher: AddressInput, seller: AddressInput, buyer: AddressInput, trade_size: BigNumberish, trade_price: BigNumberish, sell_order_id: string, buy_order_id: string, timestamp: BigNumberish, tx_id: string };
 export type TradeEventOutput = { base_token: AssetIdOutput, order_matcher: AddressOutput, seller: AddressOutput, buyer: AddressOutput, trade_size: BN, trade_price: BN, sell_order_id: string, buy_order_id: string, timestamp: BN, tx_id: string };
 
@@ -65,6 +65,7 @@ interface OrderbookAbiInterface extends Interface {
     get_order_change_events_by_order: FunctionFragment;
     market_exists: FunctionFragment;
     match_orders: FunctionFragment;
+    match_orders_many: FunctionFragment;
     open_order: FunctionFragment;
     order_by_id: FunctionFragment;
     orders_by_trader: FunctionFragment;
@@ -77,6 +78,7 @@ interface OrderbookAbiInterface extends Interface {
   encodeFunctionData(functionFragment: 'get_order_change_events_by_order', values: [string]): Uint8Array;
   encodeFunctionData(functionFragment: 'market_exists', values: [AssetIdInput]): Uint8Array;
   encodeFunctionData(functionFragment: 'match_orders', values: [string, string]): Uint8Array;
+  encodeFunctionData(functionFragment: 'match_orders_many', values: [Vec<string>, Vec<string>]): Uint8Array;
   encodeFunctionData(functionFragment: 'open_order', values: [AssetIdInput, I64Input, BigNumberish]): Uint8Array;
   encodeFunctionData(functionFragment: 'order_by_id', values: [string]): Uint8Array;
   encodeFunctionData(functionFragment: 'orders_by_trader', values: [AddressInput]): Uint8Array;
@@ -88,6 +90,7 @@ interface OrderbookAbiInterface extends Interface {
   decodeFunctionData(functionFragment: 'get_order_change_events_by_order', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'market_exists', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'match_orders', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'match_orders_many', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'open_order', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'order_by_id', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'orders_by_trader', data: BytesLike): DecodedValue;
@@ -103,6 +106,7 @@ export class OrderbookAbi extends Contract {
     get_order_change_events_by_order: InvokeFunction<[order: string], Vec<OrderChangeEventOutput>>;
     market_exists: InvokeFunction<[asset_id: AssetIdInput], boolean>;
     match_orders: InvokeFunction<[order_sell_id: string, order_buy_id: string], void>;
+    match_orders_many: InvokeFunction<[order_sell_ids: Vec<string>, order_buy_ids: Vec<string>], void>;
     open_order: InvokeFunction<[base_token: AssetIdInput, base_size: I64Input, base_price: BigNumberish], string>;
     order_by_id: InvokeFunction<[order: string], Option<OrderOutput>>;
     orders_by_trader: InvokeFunction<[trader: AddressInput], Vec<string>>;
