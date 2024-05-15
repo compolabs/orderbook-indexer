@@ -365,7 +365,7 @@ const _abi = {
         "type": 1,
         "typeArguments": null
       },
-      "offset": 8616
+      "offset": 8600
     },
     {
       "name": "USDC_ADDRESS",
@@ -374,7 +374,7 @@ const _abi = {
         "type": 9,
         "typeArguments": []
       },
-      "offset": 8840
+      "offset": 8824
     },
     {
       "name": "PROXY_ADDRESS",
@@ -383,7 +383,7 @@ const _abi = {
         "type": 8,
         "typeArguments": []
       },
-      "offset": 8784
+      "offset": 8768
     }
   ]
 };

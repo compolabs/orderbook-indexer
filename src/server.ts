@@ -14,7 +14,7 @@ import perpTradeEvents from "./routes/perpTradeEvents";
 import {
   ACCOUNT_BALANCE_ID,
   CLEARING_HOUSE_ID,
-  ORDERBOOK_ID,
+  END_BLOCK,ORDERBOOK_ID,
   PERP_MARKET_ID,
   PORT,
   PRIVATE_KEY,
@@ -96,7 +96,7 @@ class Indexer {
     ACCOUNT_BALANCE_ID,
     CLEARING_HOUSE_ID,
     PERP_MARKET_ID,
-  ].filter((v) => v != undefined) as any;
+  ].filter((v) => v != null && v != "") as any;
 
   constructor(settings: TIndexerSettings) {
     this.settings = settings;
@@ -166,7 +166,8 @@ class Indexer {
 
     const currentBlock = await this.getSettings();
     const fromBlock = currentBlock === 0 ? +START_BLOCK : currentBlock;
-    const toBlock = fromBlock + STEP;
+    if (END_BLOCK != null && fromBlock > +END_BLOCK) return;
+    const toBlock = END_BLOCK == null ? fromBlock + STEP : +END_BLOCK;
     const receiptsResult = await fetchReceiptsFromEnvio(fromBlock, toBlock, this.contracts);
 
     // console.log({fromBlock, toBlock, archiveHeight: receiptsResult?.archiveHeight, nextBlock: receiptsResult?.nextBlock})

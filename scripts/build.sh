@@ -21,5 +21,5 @@ sleep 5
 for folder in "${CONTRACT_FOLDERS[@]}"
 do
 #  npx fuels typegen -i "../../perp-contracts/${folder}/out/debug/*-abi.json" -o "$BASE_TYPES_DIR/$folder/"
-  npx fuels typegen -i "/Users/alexey/projects/fuel/spark-perps/perp-contracts/${folder}/out/debug/*-abi.json" -o "$BASE_TYPES_DIR/$folder/"
+  npx fuels typegen -i "/Users/alexey/Desktop/spark-perps/perp-contracts/${folder}/out/debug/*-abi.json" -o "$BASE_TYPES_DIR/$folder/"
 done

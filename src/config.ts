@@ -15,3 +15,4 @@ export const CLEARING_HOUSE_ID = loadVar("CLEARING_HOUSE_ID", true);
 export const ACCOUNT_BALANCE_ID = loadVar("ACCOUNT_BALANCE_ID", true);
 export const PERP_MARKET_ID = loadVar("PERP_MARKET_ID", true);
 export const START_BLOCK = loadVar("START_BLOCK");
+export const END_BLOCK = loadVar("END_BLOCK", true);
