@@ -1,7 +1,6 @@
 import { Contract, getDecodedLogs, TransactionResultReceipt } from "fuels";
 import isEvent from "../utils/isEvent";
 import tai64ToDate from "../utils/tai64ToDate";
-import { BN } from "@compolabs/spark-ts-sdk";
 
 type TMarketCreateEvent = {
   asset_id: string;
