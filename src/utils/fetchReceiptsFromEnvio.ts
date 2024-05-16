@@ -23,10 +23,11 @@ export default async function fetchReceiptsFromEnvio(
       { root_contract_id: contracts, receipt_type: [6] },
     ],
     field_selection: {
-      transaction: ["id", "status"],
+      transaction: ["id", "status", "time"],
       receipt: [
         "tx_id",
         "receipt_type",
+        "receipt_index",
         "contract_id",
         "ra",
         "rb",
@@ -49,6 +50,13 @@ export default async function fetchReceiptsFromEnvio(
   const failedTxIds = (indexerData as any).data.flatMap(({ transactions }: any) =>
     transactions.filter(({ status }: any) => status != 3).map(({ id }: any) => id)
   );
+  const txTimestampMap = (indexerData as any).data
+    .flatMap(({ transactions }: any) => transactions)
+    .reduce((acc: any, item: any) => {
+      acc[item.id] = item.time;
+      return acc;
+    }, {});
+
   const receipts: TransactionResultReceipt[] = rawReceipts
     .filter((receipt: any) => failedTxIds.includes(receipt.tx_id))
     .map(
@@ -66,12 +74,16 @@ export default async function fetchReceiptsFromEnvio(
           is: new BN(receipt.is),
           data: receipt.data,
           contract_id: receipt.contract_id ?? receipt.root_contract_id,
+          receipt_index: receipt.receipt_index,
+          time: txTimestampMap[receipt.tx_id],
         } as ReceiptLogData & { data: string })
+    )
+    .sort((a: any, b: any) =>
+      a.time === b.time ? a.receipt_index - b.receipt_index : a.time - b.time
     );
-
   return {
     archiveHeight: indexerData.archive_height,
     nextBlock: indexerData.next_block,
-    receipts,
+    receipts: receipts,
   };
 }

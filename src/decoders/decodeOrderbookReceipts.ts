@@ -81,11 +81,7 @@ export function decodeOrderbookReceipts(
         } as any;
       }
     });
-    return decodedLogs
-      .filter((e) => e !== undefined)
-      .sort((a: any, b: any) =>
-        new BN(a.timestamp).gt(b.timestamp) ? 1 : -1
-      ) as TDecodedOrderbookEvent[];
+    return decodedLogs.filter((e) => e !== undefined);
   } catch (e) {
     console.error(e, receipts);
     return [];

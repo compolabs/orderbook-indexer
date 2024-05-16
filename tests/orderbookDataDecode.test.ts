@@ -49,7 +49,7 @@ describe("Envio indexer data encode test", () => {
     const byteCode = readFileSync(`./contract/out/debug/orderbook.bin`);
     const abi = JSON.parse(readFileSync(`./contract/out/debug/orderbook-abi.json`, "utf8"));
 
-    const orderbookFactory = new ContractFactory(byteCode, abi, wallet);
+    const orderbookfactory = new ContractFactory(byteCode, abi, wallet);
     const { minGasPrice: gasPrice } = wallet.provider.getGasConfig();
 
     const btc = TOKENS_BY_SYMBOL["BTC"];
@@ -60,7 +60,7 @@ describe("Envio indexer data encode test", () => {
       QUOTE_TOKEN_DECIMALS: 6,
       PRICE_DECIMALS: 9,
     };
-    const contract = await orderbookFactory.deployContract({ gasPrice, configurableConstants });
+    const contract = await orderbookfactory.deployContract({ gasPrice, configurableConstants });
 
     blockNumber = await wallet.provider.getBlockNumber().then((res) => res.toNumber());
     contractId = contract.id.toHexString();
@@ -168,3 +168,13 @@ describe("Envio indexer data encode test", () => {
     console.log(decodeOrderbookReceipts(receiptsResult.receipts, orderbookAbi));
   }, 60_000);
 });
+
+function decodeOrder(order: any) {
+  return {
+    id: order.id,
+    trader: order.trader.value,
+    base_token: order.base_token.value,
+    base_size: (order.base_size.negative ? "-" : "") + order.base_size.value.toString(),
+    base_price: order.base_price.toString(),
+  };
+}

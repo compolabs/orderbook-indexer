@@ -7,15 +7,12 @@ import { Contract, TransactionResultReceipt } from "fuels";
 import { decodeOrderbookReceipts } from "../decoders/decodeOrderbookReceipts";
 
 export async function handleOrderbookReceipts(receipts: TransactionResultReceipt[], abi: Contract) {
-  const decodedEvents = decodeOrderbookReceipts(receipts, abi).sort((a, b) => {
-    if (+a.timestamp < +b.timestamp) return -1;
-    if (+a.timestamp > +b.timestamp) return 1;
-    return 0;
-  });
+  const decodedEvents = decodeOrderbookReceipts(receipts, abi);
   for (let eventIndex = 0; eventIndex < decodedEvents.length; eventIndex++) {
     const event: any = decodedEvents[eventIndex];
 
     console.log(event);
+
     if (isEvent("MarketCreateEvent", event, abi)) {
       await MarketCreateEvent.create({ ...event });
     } else if (isEvent("OrderChangeEvent", event, abi)) {

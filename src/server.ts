@@ -14,12 +14,14 @@ import perpTradeEvents from "./routes/perpTradeEvents";
 import {
   ACCOUNT_BALANCE_ID,
   CLEARING_HOUSE_ID,
+  END_BLOCK,
   ORDERBOOK_ID,
   PERP_MARKET_ID,
   PORT,
   PRIVATE_KEY,
   START_BLOCK,
 } from "./config";
+
 import SystemSettings from "./models/settings";
 import fetchReceiptsFromEnvio from "./utils/fetchReceiptsFromEnvio";
 import formatCountdown from "./utils/formatCountDown";
@@ -94,7 +96,7 @@ class Indexer {
   private status = STATUS.CHILL;
   private lastIterationDuration = 1000;
   private iterationCounter = 0;
-  private contracts = [ORDERBOOK_ID, ACCOUNT_BALANCE_ID, CLEARING_HOUSE_ID];
+  private contracts = [ORDERBOOK_ID, ACCOUNT_BALANCE_ID, CLEARING_HOUSE_ID, PERP_MARKET_ID].filter((v) => v != null && v != "") as any;
 
   constructor(settings: TIndexerSettings) {
     this.settings = settings;
@@ -114,13 +116,10 @@ class Indexer {
       resolve(true);
     })
       .then(() => {
-        this.orderbookAbi = OrderbookAbi__factory.connect(ORDERBOOK_ID, this.wallet);
-        this.clearingHouseAbi = ClearingHouseAbi__factory.connect(CLEARING_HOUSE_ID, this.wallet);
-        this.accountBalanceAbi = AccountBalanceAbi__factory.connect(
-          ACCOUNT_BALANCE_ID,
-          this.wallet
-        );
-        this.perpMarketAbi = PerpMarketAbi__factory.connect(PERP_MARKET_ID, this.wallet);
+        this.orderbookAbi = ORDERBOOK_ID ? OrderbookAbi__factory.connect(ORDERBOOK_ID, this.wallet) : undefined;
+        this.clearingHouseAbi = CLEARING_HOUSE_ID ? ClearingHouseAbi__factory.connect(CLEARING_HOUSE_ID, this.wallet) : undefined;
+        this.accountBalanceAbi = ACCOUNT_BALANCE_ID ? AccountBalanceAbi__factory.connect(ACCOUNT_BALANCE_ID, this.wallet) : undefined;
+        this.perpMarketAbi = PERP_MARKET_ID ? PerpMarketAbi__factory.connect(PERP_MARKET_ID, this.wallet) : undefined;
       })
       .then(() => {
         console.log("🐅 Spark Indexer is ready to spark index!");
@@ -178,7 +177,8 @@ class Indexer {
 
     const currentBlock = await this.getSettings();
     const fromBlock = currentBlock === 0 ? +START_BLOCK : currentBlock;
-    const toBlock = fromBlock + STEP;
+    if (END_BLOCK != null && fromBlock > +END_BLOCK) return;
+    const toBlock = END_BLOCK == null ? fromBlock + STEP : +END_BLOCK;
     const receiptsResult = await fetchReceiptsFromEnvio(fromBlock, toBlock, this.contracts);
 
     if (!receiptsResult) {
@@ -193,8 +193,7 @@ class Indexer {
     const syncTime = formatCountdown(secLeft);
     this.iterationCounter === 0 &&
       console.log(
-        `♻️ Processing: ${receiptsResult?.nextBlock} / ${receiptsResult?.archiveHeight} | ${
-          secLeft > 1 ? `(~ ${syncTime} left)` : "synchronized"
+        `♻️ Processing: ${receiptsResult?.nextBlock} / ${receiptsResult?.archiveHeight} | ${secLeft > 1 ? `(~ ${syncTime} left)` : "synchronized"
         }`
       );
 
