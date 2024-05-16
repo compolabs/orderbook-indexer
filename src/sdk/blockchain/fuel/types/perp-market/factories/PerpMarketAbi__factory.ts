@@ -551,6 +551,10 @@ const _abi = {
       },
       "attributes": [
         {
+          "name": "payable",
+          "arguments": []
+        },
+        {
           "name": "storage",
           "arguments": [
             "read",
@@ -579,6 +583,10 @@ const _abi = {
         "typeArguments": null
       },
       "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1282,6 +1290,10 @@ const _storageSlots: StorageSlot[] = [
   {
     "key": "94b2b70d20da552763c7614981b2a4d984380d7ed4e54c01b28c914e79e44bd5",
     "value": "0000000000000e10000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "a9203bbb8366ca9d708705dce980acbb54d44fb753370ffe4c7d351b46b2abbc",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
   }
 ];
 

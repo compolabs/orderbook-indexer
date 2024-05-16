@@ -418,50 +418,6 @@ const _abi = {
       ]
     },
     {
-      "inputs": [
-        {
-          "name": "price_feed_ids",
-          "type": 14,
-          "typeArguments": [
-            {
-              "name": "",
-              "type": 1,
-              "typeArguments": null
-            }
-          ]
-        },
-        {
-          "name": "price_update_data",
-          "type": 14,
-          "typeArguments": [
-            {
-              "name": "",
-              "type": 9,
-              "typeArguments": null
-            }
-          ]
-        }
-      ],
-      "name": "update_price",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read"
-          ]
-        },
-        {
-          "name": "payable",
-          "arguments": []
-        }
-      ]
-    },
-    {
       "inputs": [],
       "name": "get_all_spark_contracts_versions",
       "output": {
@@ -565,6 +521,39 @@ const _abi = {
       ]
     },
     {
+      "inputs": [
+        {
+          "name": "price_update_data",
+          "type": 14,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 9,
+              "typeArguments": null
+            }
+          ]
+        }
+      ],
+      "name": "update_price",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        },
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
       "inputs": [],
       "name": "version",
       "output": {
@@ -641,7 +630,7 @@ const _abi = {
         "type": 7,
         "typeArguments": []
       },
-      "offset": 23928
+      "offset": 20548
     },
     {
       "name": "DEBUG_STEP",
@@ -656,16 +645,7 @@ const _abi = {
           }
         ]
       },
-      "offset": 23680
-    },
-    {
-      "name": "SETTLEMENT_TOKEN_PRICE_FEED",
-      "configurableType": {
-        "name": "",
-        "type": 1,
-        "typeArguments": null
-      },
-      "offset": 24048
+      "offset": 20300
     }
   ]
 };
