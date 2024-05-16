@@ -31,7 +31,7 @@ export function decodeOrderbookReceipts(
   abi: Contract
 ): TDecodedOrderbookEvent[] {
   try {
-    const logs = getDecodedLogs(receipts, abi.interface);
+    const logs = getDecodedLogs(receipts, abi.interface.jsonAbi);
     const decodedLogs = logs.map((log: any) => {
       // MarketCreateEvent
       if (isEvent("MarketCreateEvent", log, abi)) {
