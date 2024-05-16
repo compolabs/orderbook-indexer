@@ -21,30 +21,27 @@ import {
   PRIVATE_KEY,
   START_BLOCK,
 } from "./config";
-
+import { FuelNetwork } from "./sdk/blockchain";
+import { OrderbookAbi, OrderbookAbi__factory } from "./sdk/blockchain/fuel/types/orderbook";
 import SystemSettings from "./models/settings";
 import fetchReceiptsFromEnvio from "./utils/fetchReceiptsFromEnvio";
 import formatCountdown from "./utils/formatCountDown";
-import { Provider, Wallet, WalletUnlocked, sleep } from "fuels";
+import { sleep } from "fuels";
 import sequelize from "./db";
+import {
+  AccountBalanceAbi,
+  AccountBalanceAbi__factory,
+} from "./sdk/blockchain/fuel/types/account-balance";
+import {
+  ClearingHouseAbi,
+  ClearingHouseAbi__factory,
+} from "./sdk/blockchain/fuel/types/clearing-house";
 import { handleOrderbookReceipts } from "./handlers/handleOrderbookReceipts";
 import { handleAccountBalanceReceipts } from "./handlers/handleAccountBalanceReceipts";
 import { handleClearingHouseReceipts } from "./handlers/handleClearingHouseReceipts";
+import { PerpMarketAbi, PerpMarketAbi__factory } from "./sdk/blockchain/fuel/types/perp-market";
 import { handlePerpMarketReceipts } from "./handlers/handlePerpMarketReceipts";
 import spotStatistics from "./routes/spotStatistics";
-import Spark, {
-  BETA_NETWORK,
-  BETA_CONTRACT_ADDRESSES,
-  BETA_INDEXER_URL,
-  AccountBalanceAbi,
-  AccountBalanceAbi__factory,
-  ClearingHouseAbi,
-  ClearingHouseAbi__factory,
-  OrderbookAbi,
-  OrderbookAbi__factory,
-  PerpMarketAbi,
-  PerpMarketAbi__factory,
-} from "@compolabs/spark-ts-sdk";
 
 const app = express();
 
@@ -84,8 +81,7 @@ enum STATUS {
 }
 
 class Indexer {
-  sdk: Spark;
-  wallet: WalletUnlocked;
+  private fuelNetwork = new FuelNetwork();
   public initialized = false;
   private orderbookAbi?: OrderbookAbi;
   private accountBalanceAbi?: AccountBalanceAbi;
@@ -96,35 +92,29 @@ class Indexer {
   private status = STATUS.CHILL;
   private lastIterationDuration = 1000;
   private iterationCounter = 0;
-  private contracts = [ORDERBOOK_ID, ACCOUNT_BALANCE_ID, CLEARING_HOUSE_ID, PERP_MARKET_ID].filter((v) => v != null && v != "") as any;
+  private contracts: string[] = [
+    ORDERBOOK_ID,
+    ACCOUNT_BALANCE_ID,
+    CLEARING_HOUSE_ID,
+    PERP_MARKET_ID,
+  ].filter((v) => v != null && v != "") as any;
 
   constructor(settings: TIndexerSettings) {
     this.settings = settings;
-
-    this.sdk = new Spark({
-      networkUrl: BETA_NETWORK.url,
-      contractAddresses: BETA_CONTRACT_ADDRESSES,
-      indexerApiUrl: BETA_INDEXER_URL,
-    });
-
-    this.wallet = Wallet.fromPrivateKey(PRIVATE_KEY);
-
-    new Promise(async (resolve) => {
-      const provider = await Provider.create(BETA_NETWORK.url);
-      this.wallet.provider = provider;
-      this.sdk.setActiveWallet(this.wallet);
-      resolve(true);
-    })
+    this.fuelNetwork
+      .connectWalletByPrivateKey(PRIVATE_KEY)
       .then(() => {
-        this.orderbookAbi = ORDERBOOK_ID ? OrderbookAbi__factory.connect(ORDERBOOK_ID, this.wallet) : undefined;
-        this.clearingHouseAbi = CLEARING_HOUSE_ID ? ClearingHouseAbi__factory.connect(CLEARING_HOUSE_ID, this.wallet) : undefined;
-        this.accountBalanceAbi = ACCOUNT_BALANCE_ID ? AccountBalanceAbi__factory.connect(ACCOUNT_BALANCE_ID, this.wallet) : undefined;
-        this.perpMarketAbi = PERP_MARKET_ID ? PerpMarketAbi__factory.connect(PERP_MARKET_ID, this.wallet) : undefined;
+        const wallet = this.fuelNetwork.walletManager.wallet!;
+        ORDERBOOK_ID && (this.orderbookAbi = OrderbookAbi__factory.connect(ORDERBOOK_ID, wallet));
+        CLEARING_HOUSE_ID &&
+          (this.clearingHouseAbi = ClearingHouseAbi__factory.connect(CLEARING_HOUSE_ID, wallet));
+        ACCOUNT_BALANCE_ID &&
+          (this.accountBalanceAbi = AccountBalanceAbi__factory.connect(ACCOUNT_BALANCE_ID, wallet));
+        PERP_MARKET_ID &&
+          (this.perpMarketAbi = PerpMarketAbi__factory.connect(PERP_MARKET_ID, wallet));
       })
-      .then(() => {
-        console.log("🐅 Spark Indexer is ready to spark index!");
-        this.initialized = true;
-      });
+      .then(() => (this.initialized = true))
+      .catch((e) => console.error(e));
   }
 
   run() {
@@ -181,19 +171,15 @@ class Indexer {
     const toBlock = END_BLOCK == null ? fromBlock + STEP : +END_BLOCK;
     const receiptsResult = await fetchReceiptsFromEnvio(fromBlock, toBlock, this.contracts);
 
-    if (!receiptsResult) {
-      console.log("No receipt found");
-      return;
-    }
-
     // console.log({fromBlock, toBlock, archiveHeight: receiptsResult?.archiveHeight, nextBlock: receiptsResult?.nextBlock})
     const secLeft =
-      ((receiptsResult.archiveHeight - receiptsResult.nextBlock) * this.lastIterationDuration) /
+      ((receiptsResult?.archiveHeight! - receiptsResult?.nextBlock!) * this.lastIterationDuration) /
       STEP;
     const syncTime = formatCountdown(secLeft);
     this.iterationCounter === 0 &&
       console.log(
-        `♻️ Processing: ${receiptsResult?.nextBlock} / ${receiptsResult?.archiveHeight} | ${secLeft > 1 ? `(~ ${syncTime} left)` : "synchronized"
+        `♻️ Processing: ${receiptsResult?.nextBlock} / ${receiptsResult?.archiveHeight} | ${
+          secLeft > 1 ? `(~ ${syncTime} left)` : "synchronized"
         }`
       );
 
@@ -205,26 +191,30 @@ class Indexer {
     //MarketCreateEvent
     // OrderChangeEvent
     // TradeEvent
-    await handleOrderbookReceipts(
-      receiptsResult.receipts.filter(({ contract_id }: any) => contract_id == ORDERBOOK_ID),
-      this.orderbookAbi!
-    );
+    this.orderbookAbi != null &&
+      (await handleOrderbookReceipts(
+        receiptsResult.receipts.filter(({ contract_id }: any) => contract_id == ORDERBOOK_ID),
+        this.orderbookAbi
+      ));
     //MarketEvent
-    await handleClearingHouseReceipts(
-      receiptsResult.receipts.filter(({ contract_id }: any) => contract_id == CLEARING_HOUSE_ID),
-      this.clearingHouseAbi!
-    );
+    this.clearingHouseAbi != null &&
+      (await handleClearingHouseReceipts(
+        receiptsResult.receipts.filter(({ contract_id }: any) => contract_id == CLEARING_HOUSE_ID),
+        this.clearingHouseAbi
+      ));
     //AccountBalanceChangeEvent
-    await handleAccountBalanceReceipts(
-      receiptsResult.receipts.filter(({ contract_id }: any) => contract_id == ACCOUNT_BALANCE_ID),
-      this.accountBalanceAbi!
-    );
+    this.accountBalanceAbi != null &&
+      (await handleAccountBalanceReceipts(
+        receiptsResult.receipts.filter(({ contract_id }: any) => contract_id == ACCOUNT_BALANCE_ID),
+        this.accountBalanceAbi
+      ));
     //TradeEvent
     // OrderEvent
-    await handlePerpMarketReceipts(
-      receiptsResult.receipts.filter(({ contract_id }: any) => contract_id == PERP_MARKET_ID),
-      this.perpMarketAbi!
-    );
+    this.perpMarketAbi != null &&
+      (await handlePerpMarketReceipts(
+        receiptsResult.receipts.filter(({ contract_id }: any) => contract_id == PERP_MARKET_ID),
+        this.perpMarketAbi
+      ));
 
     await this.updateSettings(receiptsResult.nextBlock);
     await sleep(100);

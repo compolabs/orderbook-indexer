@@ -4,39 +4,41 @@ import Sequelize from "sequelize";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  try {
-    const { trader, baseToken, limit } = req.query;
 
-    const conditions: any = {};
+router.get('/', async (req, res) => {
+    try {
+        const {trader, baseToken, limit} = req.query;
 
-    if (trader != null) conditions[Sequelize.Op.or] = [{ buyer: trader }, { seller: trader }];
+        const conditions: any = {};
 
-    if (baseToken) conditions.base_token = baseToken;
+        if (trader != null) conditions[Sequelize.Op.or] = [{buyer: trader}, {seller: trader}]
 
-    const orders = await TradeEvent.findAll({
-      where: conditions,
-      limit: limit != null ? +limit : 80,
-    });
+        if (baseToken) conditions.base_token = baseToken;
 
-    res.json(orders);
-  } catch (error) {
-    res.status(500).json({ message: "Failed to fetch event." });
-  }
+        const orders = await TradeEvent.findAll({
+            where: conditions,
+            limit: limit != null ? +limit : 80
+        });
+
+        res.json(orders);
+    } catch (error) {
+        res.status(500).json({message: 'Failed to fetch event.'});
+    }
 });
 
 // Get event by ID
-router.get("/:id", async (req, res) => {
-  try {
-    const event = await TradeEvent.findByPk(req.params.id);
-    if (!event) {
-      res.status(404).json({ message: "Event not found." });
-    } else {
-      res.json(event);
+router.get('/:id', async (req, res) => {
+    try {
+        const event = await TradeEvent.findByPk(req.params.id);
+        if (!event) {
+            res.status(404).json({message: 'Event not found.'});
+        } else {
+            res.json(event);
+        }
+    } catch (error) {
+        res.status(500).json({message: 'Failed to fetch event.'});
     }
-  } catch (error) {
-    res.status(500).json({ message: "Failed to fetch event." });
-  }
 });
+
 
 export default router;

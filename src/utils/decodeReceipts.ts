@@ -1,3 +1,4 @@
+import BN from "./BN";
 import { Contract, getDecodedLogs, TransactionResultReceipt } from "fuels";
 
 export function decodeReceipts(
@@ -6,7 +7,7 @@ export function decodeReceipts(
   decoders: any[]
 ): any[] {
   try {
-    const logs = getDecodedLogs(receipts, abi.interface.jsonAbi);
+    const logs = getDecodedLogs(receipts, abi.interface);
     const decodedLogs = logs.map((log: any) => {
       for (let i = 0; i < decoders.length; i++) {
         const result = decoders[i](log, abi);
